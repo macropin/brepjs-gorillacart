@@ -19,3 +19,9 @@ Measured facts about the cutouts in the top rim of the cart body. All accessorie
 | Total cutouts | 8 |
 | Gap between adjacent cutouts | 11 in (279.4 mm) |
 | Width across the cart (short side) | 655 mm, centre to centre between cutouts on opposite long sides |
+
+### Cutout layout
+
+![Cutout layout: plan view of the rim and section through a single cutout](docs/cutout-layout.svg)
+
+The drawing assumes the 11 in gap is edge to edge, that the handle-end pair uses the same gap, and that the long axis of each cutout runs along the rim.
