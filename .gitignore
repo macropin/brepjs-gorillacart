@@ -1,2 +1,6 @@
 .DS_Store
 context/
+node_modules/
+out/
+
+# media/ is tracked — it holds the README previews

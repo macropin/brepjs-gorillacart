@@ -1,0 +1,20 @@
+{
+  "name": "gorillacart",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "3D-printable accessories that plug into the rim cutouts of the Gorilla Carts 200L poly dump cart",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "verify": "make verify",
+    "render": "make render",
+    "preview": "make preview",
+    "export": "make export"
+  },
+  "devDependencies": {
+    "brepjs-cad": "^0.178.0"
+  }
+}
