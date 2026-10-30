@@ -1,30 +1,18 @@
 /**
  * Machete sleeve.
  *
- * A rounded rectangular bar. The bottom drops into a rim cutout; the part that
- * stands above the rim has a 3mm stadium slot running right through it, open
- * on both narrow faces, which the machete blade passes through. What is left
- * is two plates joined by solid ends.
+ * The key bar, with a 3mm stadium slot running right through the part that
+ * stands above the rim, open on both narrow faces, which the machete blade
+ * passes through. What is left is two plates joined by solid ends.
  *
- * Units: millimetres. Z is up; the bar stands on the print bed at z = 0, which
- * is also the floor of the cutout once fitted. Centred on the origin in X/Y.
- * X is across the rim (cutout width), Y along it (cutout length).
+ * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
+ * in X/Y, X across the rim, Y along it.
  */
-import {
-  box,
-  cut,
-  cylinder,
-  edgeFinder,
-  fillet,
-  fuse,
-  getSolids,
-  unwrap,
-  validSolid,
-  type AnyShape,
-  type ValidSolid,
-} from 'brepjs';
+import { box, cut, cylinder, fuse, unwrap, type ValidSolid } from 'brepjs';
 
 import { cart, plug } from './cart.js';
+import { key, keySectionArea } from './key.js';
+import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
 // Parameters
@@ -46,9 +34,6 @@ export const params = {
    * design does), this leaves 8.35mm of solid at each end of the slot.
    */
   headroom: 20,
-
-  /** Fillet on the four upright edges. */
-  cornerRadius: 3,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -74,11 +59,7 @@ const OVER = 1;
 // ---------------------------------------------------------------------------
 
 export default function macheteSleeve(): ValidSolid {
-  const blank = box(plug.x, plug.y, height, { centered: true, at: [0, 0, height / 2] });
-
-  // Round the corners BEFORE cutting the slot: on a plain box `inDirection('Z')`
-  // matches exactly the four upright edges.
-  const bar = unwrap(fillet(blank, edgeFinder().inDirection('Z'), params.cornerRadius));
+  const bar = key(height);
 
   // The slot: a stadium in XZ, extruded through along Y. Built as a box between
   // the arc centres plus a cylinder at each end.
@@ -102,22 +83,6 @@ export default function macheteSleeve(): ValidSolid {
   return single(unwrap(cut(bar, slot)));
 }
 
-/**
- * OCCT hands back a Compound from a boolean even when the result is one body.
- * Collapse it to a single solid — and fail loudly if a boolean ever fragments
- * the part into several.
- */
-function single(shape: AnyShape): ValidSolid {
-  const solids = getSolids(shape);
-  const [solid] = solids;
-  if (solids.length !== 1 || !solid) {
-    throw new Error(
-      `expected exactly 1 solid, got ${solids.length} — a boolean fragmented the part`,
-    );
-  }
-  return unwrap(validSolid(solid));
-}
-
 // ---------------------------------------------------------------------------
 // Declared intent — asserted by `brep verify --check`
 // ---------------------------------------------------------------------------
@@ -126,11 +91,10 @@ function single(shape: AnyShape): ValidSolid {
 // bounding box is the plug section by the full height. The volume is the
 // analytic figure: filleted bar minus the stadium slot across the full 51mm.
 const r = params.slotWidth / 2;
-const barArea = plug.x * plug.y - (4 - Math.PI) * params.cornerRadius ** 2;
 const slotArea = params.slotWidth * params.slotSpan + Math.PI * r ** 2;
 
 export const expected = {
-  volume: barArea * height - slotArea * plug.y,
+  volume: keySectionArea * height - slotArea * plug.y,
   bounds: {
     xMin: -plug.x / 2,
     xMax: plug.x / 2,
