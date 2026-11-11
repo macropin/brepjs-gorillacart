@@ -77,24 +77,24 @@ Verified against the OCCT kernel: valid single solid, manifold, 23 faces, boundi
 
 ![The side extension post: a straight insert with a post above it leaning slightly outward, grooved down both narrow faces](media/side-extension.png)
 
-Eight identical posts, one per cutout, that raise the bucket walls to carry more than 200L. Each post stands 150 mm above the rim, leaning 3° outward. A groove down each face that points along the rim takes the edge of a side panel. The panel drops in from the top and spans to the next post. Source: [src/side-extension.brep.ts](src/side-extension.brep.ts).
+Eight identical posts, one per cutout, that raise the bucket walls to carry more than 200L. Each post stands 150 mm above the rim, leaning 6° outward. A groove down each face that points along the rim takes the edge of a side panel. The panel drops in from the top and spans to the next post. Source: [src/side-extension.brep.ts](src/side-extension.brep.ts).
 
 | | |
 |---|---|
 | Insert | 19.2 × 51.0 mm key, bottom 63.5 mm straight down into the cutout |
 | Post | Same section, 150 mm above the rim measured along its axis |
-| Lean | 3° outward (toward +X), pivoting about the rim line; trimmed flat where it meets the insert |
+| Lean | 6° outward (toward +X), pivoting about the rim line; trimmed flat where it meets the insert |
 | Grooves | 4 mm wide × 8 mm deep, centred on both ±Y faces, open at the top, floor at rim height |
 | Material left | 7.6 mm either side of each groove, 35 mm core between the groove floors |
-| Overall | 27.05 (X) × 51.0 (Y) × 213.8 (Z) mm; top 150.3 mm above the rim |
+| Overall | 34.88 (X) × 51.0 (Y) × 213.7 (Z) mm; top 150.2 mm above the rim |
 
-Fit each post with its lean pointing out of the cart. All posts on a side lean the same way, so the panel between two of them lies flat in a plane leaning 3° out.
+Fit each post with its lean pointing out of the cart. All posts on a side lean the same way, so the panel between two of them lies flat in a plane leaning 6° out.
 
-Panels only span posts on the same side: two panels on each long side and one across the handle end, five in all. The corners and the end away from the handle stay open. If the 11 in gap is edge to edge, it is 295.4 mm between groove floors. Panels should be cut shorter than that and thinner than 4 mm for clearance.
+Panels only span posts on the same side: two panels on each long side and one across the handle end, five in all. Corner panels close the two handle-end corners; the end away from the handle stays open. If the 11 in gap is edge to edge, it is 295.4 mm between groove floors. Panels should be cut shorter than that and thinner than 4 mm for clearance.
 
 The insert takes no height off for fit tolerance, unlike the machete sleeve.
 
-Verified against the OCCT kernel: valid single solid, manifold, 30 faces, bounding box 27.05 × 51 × 213.8. Measured volume 197809.77 mm³ matches the analytic figure, and the lean shows in the bounds: the top outer corner reaches x = 17.44. Not yet printed or test-fitted.
+Verified against the OCCT kernel: valid single solid, manifold, 30 faces, bounding box 34.88 × 51 × 213.7. Measured volume 197809.77 mm³ matches the analytic figure, and the lean shows in the bounds: the top outer corner reaches x = 25.23. Not yet printed or test-fitted.
 
 ### Side panels
 
@@ -122,18 +122,18 @@ Closes each handle-end corner, from the long-side post nearest the handle to the
 | | |
 |---|---|
 | Legs | 144.5 mm from the corner to each end, 3.7 mm thick, 150 mm up the slope |
-| Bend | 50 mm radius on the centreline at the bottom, growing to 57.85 at the top |
-| Lean | Each leg leans 3° outward to match its posts' grooves, so the bend is a slice of a cone |
+| Bend | 50 mm radius on the centreline at the bottom, growing to 65.68 at the top |
+| Lean | Each leg leans 6° outward to match its posts' grooves, so the bend is a slice of a cone |
 | Ends | Square to their legs and the same length top to bottom; 0.15 mm clear of each groove floor |
-| Overall | 154.2 × 154.2 × 149.8 mm, printed standing on its bottom edge |
+| Overall | 162.0 × 162.0 × 149.2 mm, printed standing on its bottom edge |
 
-The corner panel prints as modelled, standing up. The 3° lean is the only overhang. Use a brim, since it's a tall thin wall.
+The corner panel prints as modelled, standing up. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
 
-The two legs lean in different directions, so the panel can't slide straight down into posts that are already fitted. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
+The two legs lean in different directions, so the panel can't slide straight down into posts that are already fitted: at 6° the ends would have to travel 15.7 mm sideways, almost twice the 8 mm groove depth. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
 
 **The corner layout is not measured.** The handle-end leg comes from the 655 mm span and the assumed handle-end gap. The long-side leg is a placeholder set equal to it, which makes the corner square, so one part fits both corners. Measure the distance along the cart from the handle-end cutouts' centreline to the centre of the nearest long-side cutout, and set `corner.along` in [src/cart.ts](src/cart.ts). If it differs from 162.15, the two corners need mirrored parts.
 
-Verified: valid single solid, manifold, 10 faces, bounding box 154.2 × 154.2 × 149.8. Measured volume 151906.55 mm³ matches the analytic figure.
+Verified: valid single solid, manifold, 10 faces, bounding box 162.0 × 162.0 × 149.2. Measured volume 155319.13 mm³ matches the analytic figure.
 
 ## Toolchain
 

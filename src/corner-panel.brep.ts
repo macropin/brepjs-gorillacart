@@ -6,7 +6,7 @@
  * the groove of the handle-end post on that side with the other. The legs meet
  * in a rounded bend rather than a sharp corner.
  *
- * Each leg leans 3° outward to sit in its posts' grooves, so the bend is a
+ * Each leg leans 6° outward to sit in its posts' grooves, so the bend is a
  * slice of a cone, flaring like the corners of the bucket itself. Both legs stay
  * the same length top to bottom, so their ends sit square in the grooves.
  *
@@ -42,8 +42,8 @@ export const params = {
 const rad = (post.lean * Math.PI) / 180;
 
 /** Vertical height, and how far each leg has leaned out by the top. */
-const rise = params.height * Math.cos(rad); // 149.79
-const lean = params.height * Math.sin(rad); // 7.85
+const rise = params.height * Math.cos(rad); // 149.18
+const lean = params.height * Math.sin(rad); // 15.68
 
 /**
  * Half the panel's thickness measured horizontally. The legs lean, so this is

@@ -29,7 +29,7 @@ export const params = {
   extension: 150,
 
   /** Outward lean of the post from vertical, in degrees. */
-  lean: 3,
+  lean: 6,
 
   /** Panel groove across the face (X) and into it (Y). Centred on the face. */
   grooveWidth: 4,
@@ -45,7 +45,7 @@ const pivot: [number, number, number] = [0, 0, params.insertDepth];
 
 /**
  * The leaning post is built upright, starting this far below the rim, then
- * tilted and trimmed flat at the rim. Enough to cover the 0.5mm the tilt lifts
+ * tilted and trimmed flat at the rim. Enough to cover the 1mm the tilt lifts
  * its bottom edge on the inner side.
  */
 const BELOW = 2;
