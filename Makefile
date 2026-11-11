@@ -50,6 +50,11 @@ render: node_modules
 # into the corner, so the raw iso frame is mostly empty. Drop the label, trim to
 # the part, pad, and scale up for a preview that fills its frame. Falls back to
 # the raw frame where ImageMagick is unavailable.
+#
+# The renderer is deterministic, so the preview is too, as long as ImageMagick
+# writes no metadata: by default it stamps date:create/date:modify text chunks
+# and a tIME chunk, which would change the file on every render. -strip and the
+# chunk exclusions keep an unchanged model's preview byte-identical.
 $(MEDIA)/%.png: $(OUT)/%/shots/iso.png
 	@mkdir -p $(MEDIA)
 	@if command -v magick >/dev/null 2>&1; then \
@@ -59,6 +64,7 @@ $(MEDIA)/%.png: $(OUT)/%/shots/iso.png
 			-bordercolor 'srgb(6,6,12)' -border 26 \
 			-filter Lanczos -resize $(PREVIEW_WIDTH)x \
 			-unsharp 0x0.6+0.7+0.01 \
+			-strip -define png:exclude-chunks=date,time \
 			$@ && echo "preview -> $@ ($$(magick identify -format '%wx%h' $@))"; \
 	else \
 		cp $< $@; \
