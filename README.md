@@ -17,16 +17,51 @@ Measured facts about the cutouts in the top rim of the cart body. All accessorie
 | Cutouts per long side | 3 on each long side (6 total) |
 | Cutouts on short side nearest the handle | 2 |
 | Total cutouts | 8 |
-| Gap between adjacent cutouts | 11 in (279.4 mm) |
+| Gap between adjacent cutouts along a side | 11 in (279.4 mm) edge to edge, so 330.7 mm centre to centre |
 | Width across the cart (short side) | 655 mm, centre to centre between cutouts on opposite long sides |
+| Gap between the handle-end cutouts | 275.5 mm edge to edge, 326.8 mm centre to centre (from photos) |
+| Handle-end cutouts along the cart | 136.5 mm from the nearest long-side cutouts, centre to centre (from photos) |
+| Rim corners at the handle end | A round, a flat about 64.5° from the long side, and a second round (from photos) |
 
 ### Cutout layout
 
 ![Cutout layout: plan view of the rim and section through a single cutout](docs/cutout-layout.svg)
 
-The drawing assumes the 11 in gap is edge to edge, that the handle-end pair uses the same gap, and that the long axis of each cutout runs along the rim.
+The long axis of each cutout runs along the rim, which the photos below confirm.
 
 These facts live in code in [src/cart.ts](src/cart.ts), which every accessory imports.
+
+### Derived from product photos
+
+The rows marked "from photos" weren't measured on the cart. They come from three of Gorilla's own product photos that show the rim from above:
+
+- [GCG-7 Image 12](https://gorillamade.com/wp-content/uploads/2019/03/GCG-7-Image_12.jpg): an overhead shot of the tub at 2000 × 2000 px, from the gallery on the [GCG-7 listing](https://gorillamade.com/product/gcg-7/)
+- the top-down view in the [GCG-7 capacity and dimensions infographic](https://gorillamade.com/wp-content/uploads/2019/03/GCG-7_Infographic_CapacityDimensions_576px_UPDATED-DIMS-2025-10-03.jpg), a smaller copy of the same shot
+- the overhead tub shot on the [Gorilla Carts ANZ product page](https://gorillacarts.com.au/cdn/shop/products/ScreenShot2019-04-02at12.06.00pm.png), taken from a different angle
+
+Method: in each photo, I picked out the centres of all the cutout openings, then corrected for the camera's perspective. The six long-side cutouts were the reference points, at the measured 655 mm across and 330.7 mm pitch. That correction fits the long-side cutouts to within 1–3 px, then places the other features on the rim:
+
+| Result | Image 12 | Infographic | ANZ photo | Model |
+| --- | --- | --- | --- | --- |
+| Handle-end cutouts across, from the centreline | ±163.4 / 163.5 mm | ±163.3 mm | ±163.1 / 163.8 mm | ±163.4 mm |
+| Handle-end cutouts along, toward the handle | 135.7 mm | 135.3 mm | 137.5 mm | 136.5 mm |
+
+In Image 12, the tub's outline against the white background measures 672 mm across, constant along the whole length. It runs 979 mm from the far end to the outer edge of the handle-end rim. The [GCG-7 listing](https://gorillamade.com/product/gcg-7/) gives the bed as 39.5 × 27 in (1003 × 686 mm):
+
+- **Proportions:** the photo's length to width (1.457) matches the listing's (1.463) to within 0.4%.
+- **Overall size:** the photo comes out about 2% smaller in both directions.
+
+Scaling everything up to match the listing would put the long-side cutouts 669 mm apart instead of the 655 mm measured on the cart. The listing more likely rounds the figures or measures over the cutout housings, which bulge slightly past the rim. A 279.4 mm centre-to-centre pitch would make the tub only about 840 mm long, so the 11 in is an edge-to-edge gap.
+
+The corner shape came from tracing the inside edge of the rim around both handle-end corners in Image 12 and the infographic. All four traces agree:
+
+- a straight flat at 64.1–64.7° to the long side, straight to within 0.25–0.4 mm, with its ends within 2 mm across the traces
+- a round into the end rim of 35–60 mm radius. This round turns only 25°, so the radius changes the path by under 1 mm.
+- a round into the side rim of 40–57 mm radius
+
+The cutouts sit about 17 mm outside that inside edge, roughly in the middle of the rim.
+
+Expect a few millimetres of error in anything derived this way. Gorilla's US listing is the same GCG-7 tub as the AU 200L cart, but if your cart differs, measure it and update [src/cart.ts](src/cart.ts).
 
 ## Accessories
 
@@ -90,7 +125,7 @@ Eight identical posts, one per cutout, that raise the bucket walls to carry more
 
 Fit each post with its lean pointing out of the cart. All posts on a side lean the same way, so the panel between two of them lies flat in a plane leaning 6° out.
 
-Panels only span posts on the same side: two panels on each long side and one across the handle end, five in all. Corner panels close the two handle-end corners; the end away from the handle stays open. If the 11 in gap is edge to edge, it is 295.4 mm between groove floors. Panels should be cut shorter than that and thinner than 4 mm for clearance.
+Two side panels fill each long side, an end panel fills the handle end, and a corner panel closes each handle-end corner. The end away from the handle stays open.
 
 The insert takes no height off for fit tolerance, unlike the machete sleeve.
 
@@ -100,7 +135,7 @@ Verified against the OCCT kernel: valid single solid, manifold, 30 faces, boundi
 
 ![The side panel: a flat rectangular plate](media/side-panel.png)
 
-Flat plates that slide down into the grooves of two neighbouring posts on the same side. You need five: two on each long side and one across the handle end. Source: [src/side-panel.brep.ts](src/side-panel.brep.ts).
+Flat plates that slide down into the grooves of two neighbouring posts on the same long side. You need four: two on each long side. Source: [src/side-panel.brep.ts](src/side-panel.brep.ts).
 
 | | |
 |---|---|
@@ -113,27 +148,49 @@ Print flat. At 295.4 mm long the panel needs a print bed at least 296 mm in one 
 
 Verified: valid solid, 295.4 × 150 × 3.7, volume 163947 mm³.
 
-### Corner panels
+### End panel
 
-![The corner panel: an L-shaped panel whose legs meet in a rounded bend](media/corner-panel.png)
+![The end panel: a flat rectangular plate](media/end-panel.png)
 
-Closes each handle-end corner, from the long-side post nearest the handle to the handle-end post on that side. The two legs meet in a 50 mm radius bend instead of a sharp corner. Source: [src/corner-panel.brep.ts](src/corner-panel.brep.ts).
+The side panel cut to fit between the two handle-end posts. Their cutouts sit about 4 mm closer together than those along the sides, so a side panel won't fit there. You need one. Source: [src/end-panel.brep.ts](src/end-panel.brep.ts).
 
 | | |
 |---|---|
-| Legs | 144.5 mm from the corner to each end, 3.7 mm thick, 150 mm up the slope |
-| Bend | 50 mm radius on the centreline at the bottom, growing to 65.68 at the top |
-| Lean | Each leg leans 6° outward to match its posts' grooves, so the bend is a slice of a cone |
+| Size | 291.5 (length) × 150 (height) × 3.7 (thickness) mm |
+| Length | 291.8 mm groove floor to groove floor (326.8 pitch − 2 × 17.5), less 0.3 mm |
+
+The handle-end spacing comes from photos. If the true gap turns out to be the same 11 in as the sides, this panel still holds, with about 6 mm of each end in its groove.
+
+Verified: valid solid, 291.5 × 150 × 3.7, volume 161782.5 mm³.
+
+### Corner panels
+
+![The left corner panel: an L-shaped panel whose legs meet through a round, a flat and a second round](media/corner-panel-left.png)
+
+Closes each handle-end corner, from the long-side post nearest the handle to the handle-end post on that side. Between its legs it follows the rim's own corner: a round, a flat and a second round. The handle-end post sits nearer the corner than the long-side post does, so the corner isn't symmetric. The left and right corners take mirror-image parts. Sources: [src/corner-panel.ts](src/corner-panel.ts) for the shape, with [src/corner-panel-left.brep.ts](src/corner-panel-left.brep.ts) and [src/corner-panel-right.brep.ts](src/corner-panel-right.brep.ts) as the parts. Left and right are as you stand at the handle end facing the tub.
+
+| | |
+|---|---|
+| Long-side leg | 118.85 mm from the corner to its end (136.5 − 17.5 − 0.15) |
+| Handle-end leg | 146.45 mm from the corner to its end (164.1 − 17.5 − 0.15) |
+| Flat | Meets the long-side line 43 mm from the corner and the handle-end line 90 mm from it, about 64.5° to the long side |
+| Rounds | 63 mm radius into the long side and 51 mm into the handle end, on the centreline at the bottom; each grows by 15.7 mm at the top |
+| Lean | Legs and flat all lean 6° outward, so the rounds are slices of cones |
+| Section | 3.7 mm thick, 150 mm up the slope |
 | Ends | Square to their legs and the same length top to bottom; 0.15 mm clear of each groove floor |
-| Overall | 162.0 × 162.0 × 149.2 mm, printed standing on its bottom edge |
+| Overall | 136.4 × 164.0 × 149.2 mm, printed standing on its bottom edge |
+
+The corner's path is the inside edge of the rim moved 17 mm outward, onto the line through the cutouts. So the panel's bottom edge sits on the rim all the way round the corner.
 
 The corner panel prints as modelled, standing up. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
 
-The two legs lean in different directions, so the panel can't slide straight down into posts that are already fitted: at 6° the ends would have to travel 15.7 mm sideways, almost twice the 8 mm groove depth. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
+The legs lean in different directions, so the panel can't slide straight down into posts that are already fitted: at 6° the ends would have to travel 15.7 mm sideways, almost twice the 8 mm groove depth. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
 
-**The corner layout is not measured.** The handle-end leg comes from the 655 mm span and the assumed handle-end gap. The long-side leg is a placeholder set equal to it, which makes the corner square, so one part fits both corners. Measure the distance along the cart from the handle-end cutouts' centreline to the centre of the nearest long-side cutout, and set `corner.along` in [src/cart.ts](src/cart.ts). If it differs from 162.15, the two corners need mirrored parts.
+Verified: each part is a valid single solid, manifold, 14 faces, bounding box 136.4 × 164.0 × 149.2. Measured volume 130654.19 mm³ matches the analytic figure.
 
-Verified: valid single solid, manifold, 10 faces, bounding box 162.0 × 162.0 × 149.2. Measured volume 155319.13 mm³ matches the analytic figure.
+### Capacity
+
+With the far end closed straight across between the two farthest long-side posts, the posts and panels hold about 80 litres above the rim. That's 79.9 L to the panels' inside faces, or 80.6 L to their mid-planes, and takes the cart to about 280 L. At the rim, the panel outline is 797.9 × 655 mm between centre lines. With the 6° lean it grows to about 829 × 686 mm at the top, 149.2 mm higher.
 
 ## Toolchain
 
@@ -143,7 +200,7 @@ Modelled in [brepjs](https://github.com/andymai/brepjs), code-first B-rep CAD in
 make install
 ```
 
-Each accessory is a `src/<name>.brep.ts` module that default-exports a zero-arg function returning the shape, with its dimensions in a `params` block at the top and its declared intent in an `expected` block at the bottom. Shared code lives alongside: [src/cart.ts](src/cart.ts) for the cutout measurements, [src/key.ts](src/key.ts) for the bar and [src/solid.ts](src/solid.ts) for boolean result handling.
+Each accessory is a `src/<name>.brep.ts` module that default-exports a zero-arg function returning the shape, with its dimensions in a `params` block at the top and its declared intent in an `expected` block at the bottom. Shared code lives alongside: [src/cart.ts](src/cart.ts) for the cutout measurements, [src/key.ts](src/key.ts) for the bar, [src/corner-panel.ts](src/corner-panel.ts) for the corner panel shape both corner parts share, and [src/solid.ts](src/solid.ts) for boolean result handling.
 
 ```bash
 make            # list the targets and parts

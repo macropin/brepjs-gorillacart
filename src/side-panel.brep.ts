@@ -2,8 +2,9 @@
  * Side panel.
  *
  * A flat plate that slides down into the grooves of two neighbouring side
- * extension posts on the same side of the cart, filling the wall between them.
- * Five are needed: two on each long side and one across the handle end.
+ * extension posts on the same long side of the cart, filling the wall between
+ * them. Four are needed: two on each long side. The handle end, whose cutouts
+ * sit closer together, takes ./end-panel.brep.ts instead.
  *
  * Modelled flat, as printed: X along the panel's length (post to post), Y up
  * its height once fitted, Z through its thickness. Centred on the origin in X/Y,
