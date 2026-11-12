@@ -26,17 +26,14 @@ export const cart = {
   /** Across the cart, centre to centre between cutouts on opposite long sides. */
   cutoutSpanAcross: 655,
 
-  /**
-   * Clear gap between the two handle-end cutouts. Derived from Gorilla's product
-   * photos, not measured on the cart: centres 326.8 apart (see the README).
-   */
-  handleEndGap: 275.5,
+  /** Clear gap between the two handle-end cutouts. Measured: the same as along the sides. */
+  handleEndGap: 279.4,
 } as const;
 
 /** Centre to centre between neighbouring cutouts along a side: 330.7. */
 export const cutoutPitch = cart.cutoutGap + cart.cutoutLength;
 
-/** Centre to centre between the two handle-end cutouts: 326.8. */
+/** Centre to centre between the two handle-end cutouts: 330.7. */
 export const handleEndPitch = cart.handleEndGap + cart.cutoutLength;
 
 /**
@@ -45,7 +42,7 @@ export const handleEndPitch = cart.handleEndGap + cart.cutoutLength;
  */
 export const corner = {
   /** Across the cart: long-side cutout centre to handle-end cutout centre. */
-  across: cart.cutoutSpanAcross / 2 - handleEndPitch / 2, // 164.1
+  across: cart.cutoutSpanAcross / 2 - handleEndPitch / 2, // 162.15
 
   /**
    * Along the cart: handle-end cutout centre to long-side cutout centre.

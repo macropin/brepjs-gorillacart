@@ -19,7 +19,7 @@ Measured facts about the cutouts in the top rim of the cart body. All accessorie
 | Total cutouts | 8 |
 | Gap between adjacent cutouts along a side | 11 in (279.4 mm) edge to edge, so 330.7 mm centre to centre |
 | Width across the cart (short side) | 655 mm, centre to centre between cutouts on opposite long sides |
-| Gap between the handle-end cutouts | 275.5 mm edge to edge, 326.8 mm centre to centre (from photos) |
+| Gap between the handle-end cutouts | 11 in (279.4 mm) edge to edge, the same as along the sides |
 | Handle-end cutouts along the cart | 136.5 mm from the nearest long-side cutouts, centre to centre (from photos) |
 | Rim corners at the handle end | A round, a flat about 64.5° from the long side, and a second round (from photos) |
 
@@ -43,8 +43,10 @@ Method: in each photo, I picked out the centres of all the cutout openings, then
 
 | Result | Image 12 | Infographic | ANZ photo | Model |
 | --- | --- | --- | --- | --- |
-| Handle-end cutouts across, from the centreline | ±163.4 / 163.5 mm | ±163.3 mm | ±163.1 / 163.8 mm | ±163.4 mm |
+| Handle-end cutouts across, from the centreline | ±163.4 / 163.5 mm | ±163.3 mm | ±163.1 / 163.8 mm | ±165.35 mm (measured) |
 | Handle-end cutouts along, toward the handle | 135.7 mm | 135.3 mm | 137.5 mm | 136.5 mm |
+
+Measured on the cart, the handle-end gap is the same 11 in as the sides, which puts those cutouts at ±165.35 mm. The photos placed them about 2 mm closer to the centreline, so expect the photo-derived distance along the cart to carry a similar error.
 
 In Image 12, the tub's outline against the white background measures 672 mm across, constant along the whole length. It runs 979 mm from the far end to the outer edge of the handle-end rim. The [GCG-7 listing](https://gorillamade.com/product/gcg-7/) gives the bed as 39.5 × 27 in (1003 × 686 mm):
 
@@ -125,7 +127,7 @@ Eight identical posts, one per cutout, that raise the bucket walls to carry more
 
 Fit each post with its lean pointing out of the cart. All posts on a side lean the same way, so the panel between two of them lies flat in a plane leaning 6° out.
 
-Two side panels fill each long side, an end panel fills the handle end, and a corner panel closes each handle-end corner. The end away from the handle stays open.
+Two side panels fill each long side, one fills the handle end, and a corner panel closes each handle-end corner. The end away from the handle stays open.
 
 The insert takes no height off for fit tolerance, unlike the machete sleeve.
 
@@ -135,7 +137,7 @@ Verified against the OCCT kernel: valid single solid, manifold, 30 faces, boundi
 
 ![The side panel: a flat rectangular plate](media/side-panel.png)
 
-Flat plates that slide down into the grooves of two neighbouring posts on the same long side. You need four: two on each long side. Source: [src/side-panel.brep.ts](src/side-panel.brep.ts).
+Flat plates that slide down into the grooves of two neighbouring posts on the same side. You need five: two on each long side and one across the handle end. Source: [src/side-panel.brep.ts](src/side-panel.brep.ts).
 
 | | |
 |---|---|
@@ -148,21 +150,6 @@ Print flat. At 295.4 mm long the panel needs a print bed at least 296 mm in one 
 
 Verified: valid solid, 295.4 × 150 × 3.7, volume 163947 mm³.
 
-### End panel
-
-![The end panel: a flat rectangular plate](media/end-panel.png)
-
-The side panel cut to fit between the two handle-end posts. Their cutouts sit about 4 mm closer together than those along the sides, so a side panel won't fit there. You need one. Source: [src/end-panel.brep.ts](src/end-panel.brep.ts).
-
-| | |
-|---|---|
-| Size | 291.5 (length) × 150 (height) × 3.7 (thickness) mm |
-| Length | 291.8 mm groove floor to groove floor (326.8 pitch − 2 × 17.5), less 0.3 mm |
-
-The handle-end spacing comes from photos. If the true gap turns out to be the same 11 in as the sides, this panel still holds, with about 6 mm of each end in its groove.
-
-Verified: valid solid, 291.5 × 150 × 3.7, volume 161782.5 mm³.
-
 ### Corner panels
 
 ![The left corner panel: an L-shaped panel whose legs meet through a round, a flat and a second round](media/corner-panel-left.png)
@@ -172,13 +159,13 @@ Closes each handle-end corner, from the long-side post nearest the handle to the
 | | |
 |---|---|
 | Long-side leg | 118.85 mm from the corner to its end (136.5 − 17.5 − 0.15) |
-| Handle-end leg | 146.45 mm from the corner to its end (164.1 − 17.5 − 0.15) |
+| Handle-end leg | 144.5 mm from the corner to its end (162.15 − 17.5 − 0.15) |
 | Flat | Meets the long-side line 43 mm from the corner and the handle-end line 90 mm from it, about 64.5° to the long side |
 | Rounds | 63 mm radius into the long side and 51 mm into the handle end, on the centreline at the bottom; each grows by 15.7 mm at the top |
 | Lean | Legs and flat all lean 6° outward, so the rounds are slices of cones |
 | Section | 3.7 mm thick, 150 mm up the slope |
 | Ends | Square to their legs and the same length top to bottom; 0.15 mm clear of each groove floor |
-| Overall | 136.4 × 164.0 × 149.2 mm, printed standing on its bottom edge |
+| Overall | 136.4 × 162.0 × 149.2 mm, printed standing on its bottom edge |
 
 The corner's path is the inside edge of the rim moved 17 mm outward, onto the line through the cutouts. So the panel's bottom edge sits on the rim all the way round the corner.
 
@@ -186,7 +173,7 @@ The corner panel prints as modelled, standing up. The 6° lean is the only overh
 
 The legs lean in different directions, so the panel can't slide straight down into posts that are already fitted: at 6° the ends would have to travel 15.7 mm sideways, almost twice the 8 mm groove depth. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
 
-Verified: each part is a valid single solid, manifold, 14 faces, bounding box 136.4 × 164.0 × 149.2. Measured volume 130654.19 mm³ matches the analytic figure.
+Verified: each part is a valid single solid, manifold, 14 faces, bounding box 136.4 × 162.0 × 149.2. Measured volume 129571.94 mm³ matches the analytic figure.
 
 ### Capacity
 
