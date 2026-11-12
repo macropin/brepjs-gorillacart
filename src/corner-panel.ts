@@ -82,7 +82,7 @@ const toGrooveFloor = plug.y / 2 - post.grooveDepth; // 17.5
  * Leg ends, from the corner: each stops short of its groove floor by half the
  * fit tolerance, as the side panel does at each end.
  */
-const endA = corner.along - toGrooveFloor - cart.fitTolerance / 2; // 118.85
+const endA = corner.along - toGrooveFloor - cart.fitTolerance / 2; // 122.05
 const endB = corner.across - toGrooveFloor - cart.fitTolerance / 2; // 144.5
 
 const dot = (a: Vec, b: Vec) => a[0] * b[0] + a[1] * b[1];

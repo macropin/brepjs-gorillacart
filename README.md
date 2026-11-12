@@ -20,7 +20,7 @@ Measured facts about the cutouts in the top rim of the cart body. All accessorie
 | Gap between adjacent cutouts along a side | 11 in (279.4 mm) edge to edge, so 330.7 mm centre to centre |
 | Width across the cart (short side) | 655 mm, centre to centre between cutouts on opposite long sides |
 | Gap between the handle-end cutouts | 11 in (279.4 mm) edge to edge, the same as along the sides |
-| Handle-end cutouts along the cart | 136.5 mm from the nearest long-side cutouts, centre to centre (from photos) |
+| Handle-end cutouts along the cart | 5.5 in (139.7 mm) from the nearest long-side cutouts, centre to centre (measured 139.65 mm) |
 | Rim corners at the handle end | A round, a flat about 64.5° from the long side, and a second round (from photos) |
 
 ### Cutout layout
@@ -44,9 +44,9 @@ Method: in each photo, I picked out the centres of all the cutout openings, then
 | Result | Image 12 | Infographic | ANZ photo | Model |
 | --- | --- | --- | --- | --- |
 | Handle-end cutouts across, from the centreline | ±163.4 / 163.5 mm | ±163.3 mm | ±163.1 / 163.8 mm | ±165.35 mm (measured) |
-| Handle-end cutouts along, toward the handle | 135.7 mm | 135.3 mm | 137.5 mm | 136.5 mm |
+| Handle-end cutouts along, toward the handle | 135.7 mm | 135.3 mm | 137.5 mm | 139.7 mm (measured) |
 
-Measured on the cart, the handle-end gap is the same 11 in as the sides, which puts those cutouts at ±165.35 mm. The photos placed them about 2 mm closer to the centreline, so expect the photo-derived distance along the cart to carry a similar error.
+Measured on the cart, the handle-end gap is the same 11 in as the sides, which puts those cutouts at ±165.35 mm. Measured along the cart, they sit 5.5 in (139.65 mm on the tape) from the nearest long-side cutouts. The photos placed them about 2 mm too close to the centreline and about 3 mm too close to the side cutouts: they underestimate distances beyond the reference cutouts by 1–2%. The corner shape is kept relative to the handle-end cutouts, so it moves with them.
 
 In Image 12, the tub's outline against the white background measures 672 mm across, constant along the whole length. It runs 979 mm from the far end to the outer edge of the handle-end rim. The [GCG-7 listing](https://gorillamade.com/product/gcg-7/) gives the bed as 39.5 × 27 in (1003 × 686 mm):
 
@@ -158,14 +158,14 @@ Closes each handle-end corner, from the long-side post nearest the handle to the
 
 | | |
 |---|---|
-| Long-side leg | 118.85 mm from the corner to its end (136.5 − 17.5 − 0.15) |
+| Long-side leg | 122.05 mm from the corner to its end (139.7 − 17.5 − 0.15) |
 | Handle-end leg | 144.5 mm from the corner to its end (162.15 − 17.5 − 0.15) |
 | Flat | Meets the long-side line 43 mm from the corner and the handle-end line 90 mm from it, about 64.5° to the long side |
 | Rounds | 63 mm radius into the long side and 51 mm into the handle end, on the centreline at the bottom; each grows by 15.7 mm at the top |
 | Lean | Legs and flat all lean 6° outward, so the rounds are slices of cones |
 | Section | 3.7 mm thick, 150 mm up the slope |
 | Ends | Square to their legs and the same length top to bottom; 0.15 mm clear of each groove floor |
-| Overall | 136.4 × 162.0 × 149.2 mm, printed standing on its bottom edge |
+| Overall | 139.6 × 162.0 × 149.2 mm, printed standing on its bottom edge |
 
 The corner's path is the inside edge of the rim moved 17 mm outward, onto the line through the cutouts. So the panel's bottom edge sits on the rim all the way round the corner.
 
@@ -173,11 +173,11 @@ The corner panel prints as modelled, standing up. The 6° lean is the only overh
 
 The legs lean in different directions, so the panel can't slide straight down into posts that are already fitted: at 6° the ends would have to travel 15.7 mm sideways, almost twice the 8 mm groove depth. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
 
-Verified: each part is a valid single solid, manifold, 14 faces, bounding box 136.4 × 162.0 × 149.2. Measured volume 129571.94 mm³ matches the analytic figure.
+Verified: each part is a valid single solid, manifold, 14 faces, bounding box 139.6 × 162.0 × 149.2. Measured volume 131347.94 mm³ matches the analytic figure.
 
 ### Capacity
 
-With the far end closed straight across between the two farthest long-side posts, the posts and panels hold about 80 litres above the rim. That's 79.9 L to the panels' inside faces, or 80.6 L to their mid-planes, and takes the cart to about 280 L. At the rim, the panel outline is 797.9 × 655 mm between centre lines. With the 6° lean it grows to about 829 × 686 mm at the top, 149.2 mm higher.
+With the far end closed straight across between the two farthest long-side posts, the posts and panels hold about 80 litres above the rim. That's 80.2 L to the panels' inside faces, or 81.0 L to their mid-planes, and takes the cart to about 280 L. At the rim, the panel outline is 801.1 × 655 mm between centre lines. With the 6° lean it grows to about 832 × 686 mm at the top, 149.2 mm higher.
 
 ## Toolchain
 

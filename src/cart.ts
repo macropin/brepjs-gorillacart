@@ -46,10 +46,9 @@ export const corner = {
 
   /**
    * Along the cart: handle-end cutout centre to long-side cutout centre.
-   * Derived from Gorilla's product photos (0.413 of a side pitch), not
-   * measured on the cart.
+   * 5.5 in, taken as the design figure; measured 139.65 on the cart.
    */
-  along: 136.5,
+  along: 5.5 * 25.4, // 139.7
 } as const;
 
 /** Section of a plug that drops into a cutout, fit tolerance applied. */

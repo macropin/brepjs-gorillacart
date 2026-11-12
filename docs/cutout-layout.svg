@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="680" height="740" viewBox="0 0 680 740" role="img">
 <title>Gorilla cart rim cutout layout</title>
-<desc>Plan view of the cart rim with 3 cutouts on each long side and 2 on the handle end: 655 mm centre to centre across the cart, 11 inch gaps along the sides, an 11 inch gap between the handle-end cutouts too, set 136.5 mm along from the nearest side cutouts, and corners with a round, a flat and a round. Plus top and section views of a single 51.3 by 19.5 by 63.5 mm cutout.</desc>
+<desc>Plan view of the cart rim with 3 cutouts on each long side and 2 on the handle end: 655 mm centre to centre across the cart, 11 inch gaps along the sides, an 11 inch gap between the handle-end cutouts too, set 5.5 inches along from the nearest side cutouts, and corners with a round, a flat and a round. Plus top and section views of a single 51.3 by 19.5 by 63.5 mm cutout.</desc>
 <style>
   text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
   .ts { font-size: 12px; fill: #5F5E5A; }
@@ -33,25 +33,25 @@
 <text class="ts" x="80" y="300" text-anchor="middle">Handle</text>
 <text class="ts" x="80" y="318" text-anchor="middle">end</text>
 
-<rect class="cut" x="177.05" y="105.7" width="23.1" height="8.8"/>
-<rect class="cut" x="325.85" y="105.7" width="23.1" height="8.8"/>
-<rect class="cut" x="474.75" y="105.7" width="23.1" height="8.8"/>
-<rect class="cut" x="177.05" y="400.5" width="23.1" height="8.8"/>
-<rect class="cut" x="325.85" y="400.5" width="23.1" height="8.8"/>
-<rect class="cut" x="474.75" y="400.5" width="23.1" height="8.8"/>
+<rect class="cut" x="178.5" y="105.7" width="23.1" height="8.8"/>
+<rect class="cut" x="327.3" y="105.7" width="23.1" height="8.8"/>
+<rect class="cut" x="476.2" y="105.7" width="23.1" height="8.8"/>
+<rect class="cut" x="178.5" y="400.5" width="23.1" height="8.8"/>
+<rect class="cut" x="327.3" y="400.5" width="23.1" height="8.8"/>
+<rect class="cut" x="476.2" y="400.5" width="23.1" height="8.8"/>
 <rect class="cut" x="122.8" y="171.55" width="8.8" height="23.1"/>
 <rect class="cut" x="122.8" y="320.35" width="8.8" height="23.1"/>
 <text class="ts" x="350" y="160" text-anchor="middle">Long side: 3 cutouts</text>
 <text class="ts" x="350" y="362" text-anchor="middle">Long side: 3 cutouts</text>
 
-<line class="leader" x1="200.2" y1="104" x2="200.2" y2="56"/>
-<line class="leader" x1="325.9" y1="104" x2="325.9" y2="56"/>
-<line class="leader" x1="349" y1="104" x2="349" y2="56"/>
-<line class="leader" x1="474.8" y1="104" x2="474.8" y2="56"/>
-<line class="dim" x1="202.5" y1="62" x2="323.6" y2="62" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-<line class="dim" x1="351.3" y1="62" x2="472.5" y2="62" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-<text class="ts" x="263" y="50" text-anchor="middle">279.4 mm (11 in)</text>
-<text class="ts" x="411.9" y="50" text-anchor="middle">279.4 mm (11 in)</text>
+<line class="leader" x1="201.6" y1="104" x2="201.6" y2="56"/>
+<line class="leader" x1="327.3" y1="104" x2="327.3" y2="56"/>
+<line class="leader" x1="350.4" y1="104" x2="350.4" y2="56"/>
+<line class="leader" x1="476.2" y1="104" x2="476.2" y2="56"/>
+<line class="dim" x1="203.9" y1="62" x2="325" y2="62" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<line class="dim" x1="352.7" y1="62" x2="473.9" y2="62" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text class="ts" x="264.4" y="50" text-anchor="middle">279.4 mm (11 in)</text>
+<text class="ts" x="413.3" y="50" text-anchor="middle">279.4 mm (11 in)</text>
 
 <line class="leader" x1="499" y1="110.1" x2="604" y2="110.1"/>
 <line class="leader" x1="499" y1="404.9" x2="604" y2="404.9"/>
@@ -67,10 +67,10 @@
 <text class="ts" x="184" y="270">gap</text>
 
 <line class="leader" x1="127.2" y1="345" x2="127.2" y2="440"/>
-<line class="leader" x1="188.6" y1="411" x2="188.6" y2="440"/>
-<line class="dim" x1="129.5" y1="434" x2="186.3" y2="434" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-<text class="ts" x="158" y="452" text-anchor="middle">136.5 mm</text>
-<text class="ts" x="340" y="470" text-anchor="middle">Plan view, to scale. The 136.5 mm and the corner shape come from Gorilla's photos</text>
+<line class="leader" x1="190" y1="411" x2="190" y2="440"/>
+<line class="dim" x1="129.5" y1="434" x2="187.7" y2="434" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text class="ts" x="158.6" y="452" text-anchor="middle">139.7 mm (5.5 in)</text>
+<text class="ts" x="340" y="470" text-anchor="middle">Plan view, to scale. The corner shape comes from Gorilla's photos</text>
 
 <line class="rule" x1="40" y1="480" x2="640" y2="480"/>
 
