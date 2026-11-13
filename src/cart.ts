@@ -12,7 +12,7 @@ export const cart = {
    */
   cutoutLength: 51.3,
   cutoutWidth: 19.5,
-  cutoutDepth: 63.5,
+  cutoutDepth: 63.5, // 2.5 in
 
   /**
    * Printed-fit slop, taken off each cutout dimension in total — 0.15 per side.

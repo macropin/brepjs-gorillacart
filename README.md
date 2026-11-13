@@ -12,7 +12,7 @@ Measured facts about the cutouts in the top rim of the cart body. All accessorie
 | --- | --- |
 | Cutout shape | Rectangle |
 | Cutout size | 51.3 × 19.5 mm |
-| Cutout depth | 63.5 mm |
+| Cutout depth | 63.5 mm (2.5 in) |
 | Fitment tolerance | 0.3 mm in total per dimension (0.15 mm per side), so a plug is 51.0 × 19.2 mm |
 | Cutouts per long side | 3 on each long side (6 total) |
 | Cutouts on short side nearest the handle | 2 |
