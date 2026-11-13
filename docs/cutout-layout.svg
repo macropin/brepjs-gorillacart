@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="680" height="740" viewBox="0 0 680 740" role="img">
 <title>Gorilla cart rim cutout layout</title>
-<desc>Plan view of the cart rim with 3 cutouts on each long side and 2 on the handle end: 655 mm centre to centre across the cart, 11 inch gaps along the sides, an 11 inch gap between the handle-end cutouts too, set 5.5 inches along from the nearest side cutouts, and corners with a round, a flat and a round. Plus top and section views of a single 51.3 by 19.5 by 63.5 mm (2.5 inch deep) cutout.</desc>
+<desc>Plan view of the cart rim with 3 cutouts on each long side and 2 on the handle end: 656 mm centre to centre across the cart, 11 inch gaps along the sides, an 11 inch gap between the handle-end cutouts too, set 5.5 inches along from the nearest side cutouts, and corners with a round, a flat and a round. Plus top and section views of a single 51.3 by 19.5 by 63.5 mm (2.5 inch deep) cutout.</desc>
 <style>
   text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
   .ts { font-size: 12px; fill: #5F5E5A; }
@@ -56,7 +56,7 @@
 <line class="leader" x1="499" y1="110.1" x2="604" y2="110.1"/>
 <line class="leader" x1="499" y1="404.9" x2="604" y2="404.9"/>
 <line class="dim" x1="592" y1="113" x2="592" y2="402" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-<text class="th" x="602" y="250">655 mm</text>
+<text class="th" x="602" y="250">656 mm</text>
 <text class="ts" x="602" y="268">centre to</text>
 <text class="ts" x="602" y="284">centre</text>
 

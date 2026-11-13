@@ -24,7 +24,7 @@ export const cart = {
   cutoutGap: 279.4,
 
   /** Across the cart, centre to centre between cutouts on opposite long sides. */
-  cutoutSpanAcross: 655,
+  cutoutSpanAcross: 656,
 
   /** Clear gap between the two handle-end cutouts. Measured: the same as along the sides. */
   handleEndGap: 279.4,
@@ -42,7 +42,7 @@ export const handleEndPitch = cart.handleEndGap + cart.cutoutLength;
  */
 export const corner = {
   /** Across the cart: long-side cutout centre to handle-end cutout centre. */
-  across: cart.cutoutSpanAcross / 2 - handleEndPitch / 2, // 162.15
+  across: cart.cutoutSpanAcross / 2 - handleEndPitch / 2, // 162.65
 
   /**
    * Along the cart: handle-end cutout centre to long-side cutout centre.
