@@ -86,8 +86,6 @@ A bar that drops into a cutout and stands up above the rim. A 3 mm slot runs rig
 
 The overall height is 63.5 + 110 + 20 − 0.3. The 0.3 mm fit tolerance is also taken off the height, as in the original design, although no fit depends on it there.
 
-Verified against the OCCT kernel: valid single solid, manifold, 14 faces, bounding box 19.2 × 51 × 193.2. Measured volume 170498.34 mm³ matches the analytic figure. Its centre of mass sits at z = 93.40, as expected with the slot at z = 128.35. Not yet printed or test-fitted.
-
 ### Pole tool holder
 
 ![The pole tool holder: a rounded bar with a U-shaped snap clip on top](media/pole-holder.png)
@@ -108,7 +106,26 @@ The bar is 50 mm above the rim, as the original file's comment intends, rather t
 
 The clip is a plain extrusion, so its four bottom corners are square where they meet the bar's 3 mm rounded corners. That leaves a slight overhang of up to 1.2 mm at each corner. The original's hull blended these corners into a small twist near the base. A 3 mm fillet doesn't reproduce that here: OCCT carries it up the outer arc to the top lips.
 
-Verified against the OCCT kernel: valid single solid, manifold, 23 faces, bounding box 31.6 × 51 × 133. Measured volume 119653.92 mm³ matches the analytic figure. Not yet printed or test-fitted.
+### Tie-down block
+
+![The tie-down block: a key with a trapezoid head on top, pierced by two strap holes](media/tie-down-block.png)
+
+A strap point for holding down an oversize load such as branches. The key drops into a cutout. The head on top rests on the rim either side of the cutout and has two holes through it, across the rim, for a strap, rope or hook. Fit one per cutout, as many as you need. Source: [src/tie-down-block.brep.ts](src/tie-down-block.brep.ts).
+
+| | |
+|---|---|
+| Insert | 19.2 × 51.0 mm key, bottom 63.5 mm into the cutout |
+| Head | Trapezoid standing on the rim: 72 mm along the rim at the base, 56 mm at the top, 40 mm high; top corners rounded at 6 mm |
+| Shoulders | 10.5 mm of the head's base overhangs the cutout at each end and rests on the rim |
+| Thickness | 19.2 mm across the rim, flush with the key on both faces |
+| Holes | Two Ø20 mm through the head across the rim, 28 mm apart, centred 20 mm above the rim |
+| Material around the holes | 8 mm between them, 7.7 mm to each sloping end (measured square to the slope), 10 mm above and 10 mm below to the rim |
+| Edges | 1 mm chamfer on every edge of both broad faces above the rim, hole mouths included, so straps don't wear on a sharp edge |
+| Overall | 19.2 (X) × 72 (Y) × 103.5 (Z) mm; head top 40 mm above the rim |
+
+Print it lying on one broad face. Both faces are flat, so the holes print upright and nothing needs support. Lying down, the layers also run the length of the key, which is stronger when a strap pulls sideways on the head.
+
+The head is flush with the key across the rim, so it doesn't overhang the rim's inner or outer edge. It's held in by friction fit alone. Pinning or bolting it would mean drilling the cart, but in use that isn't needed: run the strap through one hole and down to the cart to pull the block into its cutout, and through the other to tie down the load.
 
 ### Side extension posts
 
@@ -131,8 +148,6 @@ Two side panels fill each long side, one fills the handle end, and a corner pane
 
 The insert takes no height off for fit tolerance, unlike the machete sleeve.
 
-Verified against the OCCT kernel: valid single solid, manifold, 30 faces, bounding box 34.88 × 51 × 213.7. Measured volume 197809.77 mm³ matches the analytic figure, and the lean shows in the bounds: the top outer corner reaches x = 25.23. Not yet printed or test-fitted.
-
 ### Side panels
 
 ![The side panel: a flat rectangular plate](media/side-panel.png)
@@ -147,8 +162,6 @@ Flat plates that slide down into the grooves of two neighbouring posts on the sa
 | Height | Matches the posts, 150 mm above the rim |
 
 Print flat. At 295.4 mm long the panel needs a print bed at least 296 mm in one direction, so it won't fit a 256 mm bed.
-
-Verified: valid solid, 295.4 × 150 × 3.7, volume 163947 mm³.
 
 ### Corner panels
 
@@ -172,8 +185,6 @@ The corner's path is the inside edge of the rim moved 17 mm outward, onto the li
 The corner panel prints as modelled, standing up. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
 
 The legs lean in different directions, so the panel can't slide straight down into posts that are already fitted: at 6° the ends would have to travel 15.7 mm sideways, almost twice the 8 mm groove depth. Instead, fit it into the two posts' grooves first, then lower the posts and the panel into the cutouts together.
-
-Verified: each part is a valid single solid, manifold, 14 faces, bounding box 139.6 × 162.5 × 149.2. Measured volume 131625.44 mm³ matches the analytic figure.
 
 ### Capacity
 
