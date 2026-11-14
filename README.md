@@ -163,6 +163,8 @@ Flat plates that slide down into the grooves of two neighbouring posts on the sa
 
 Print flat. At 295.4 mm long the panel needs a print bed at least 296 mm in one direction, so it won't fit a 256 mm bed.
 
+**Material:** print the panel across the handle end, the one closest to the handle, in PETG or another impact-resistant plastic. The other side panels should be fine in PLA.
+
 ### Corner panels
 
 ![The left corner panel: an L-shaped panel whose legs meet through a round, a flat and a second round](media/corner-panel-left.png)
