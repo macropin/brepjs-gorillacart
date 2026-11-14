@@ -28,6 +28,13 @@ export const cart = {
 
   /** Clear gap between the two handle-end cutouts. Measured: the same as along the sides. */
   handleEndGap: 279.4,
+
+  /**
+   * Clear gap along the cart between each handle-end cutout and the nearest
+   * long-side cutout, edge to edge. The handle-end cutout runs across the cart
+   * here, so its narrow side faces the long-side cutout's end.
+   */
+  cornerGap: 105,
 } as const;
 
 /** Centre to centre between neighbouring cutouts along a side: 330.7. */
@@ -45,10 +52,11 @@ export const corner = {
   across: cart.cutoutSpanAcross / 2 - handleEndPitch / 2, // 162.65
 
   /**
-   * Along the cart: handle-end cutout centre to long-side cutout centre.
-   * 5.5 in, taken as the design figure; measured 139.65 on the cart.
+   * Along the cart: handle-end cutout centre to long-side cutout centre. The
+   * edge-to-edge gap plus half of each cutout along the cart: half the
+   * handle-end cutout's width and half the long-side cutout's length.
    */
-  along: 5.5 * 25.4, // 139.7
+  along: cart.cornerGap + cart.cutoutWidth / 2 + cart.cutoutLength / 2, // 140.4
 } as const;
 
 /** Section of a plug that drops into a cutout, fit tolerance applied. */
