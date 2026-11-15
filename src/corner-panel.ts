@@ -11,22 +11,27 @@
  * the bucket itself. Both legs stay the same length top to bottom, so their
  * ends sit square in the grooves.
  *
+ * Like the side panel, each leg end carries a lip on its inside face that drops
+ * into the recess at the bottom of the post's groove and stops the leg pulling
+ * out along its length.
+ *
  * The corner is not square — the handle-end post sits nearer the corner than
  * the long-side post does — so the left and right corners are mirror images.
  * This module builds the left one; corner-panel-right mirrors it.
  *
  * Modelled as fitted and as printed, standing on its bottom edge. Z is up from
- * the rim (the groove floors) at z = 0. The origin is where the two legs' centre
- * planes cross at the bottom. Leg A runs along +X to the long-side post and
- * leans toward +Y; leg B runs along -Y to the handle-end post and leans toward
- * -X. The outside of the bend faces -X/+Y. Standing at the handle end facing
- * the tub, +X points away from you and +Y to your left.
+ * the rim (the groove floors) at z = 0. The origin is where the lines through
+ * the two posts' cutout centres cross; the posts' grooves sit a little outside
+ * those lines, so the legs' centre planes do too. Leg A runs along +X to the
+ * long-side post and leans toward +Y; leg B runs along -Y to the handle-end
+ * post and leans toward -X. The outside of the bend faces -X/+Y. Standing at
+ * the handle end facing the tub, +X points away from you and +Y to your left.
  */
 import { Sketcher, type Sketch, type ValidSolid } from 'brepjs';
 
 import { cart, corner, plug } from './cart.js';
-import { params as post } from './side-extension.brep.js';
-import { thickness } from './side-panel.brep.js';
+import { grooveOffset, params as post } from './side-extension.brep.js';
+import { lipLength, lipStandoff, thickness } from './side-panel.brep.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
@@ -34,9 +39,10 @@ import { single } from './solid.js';
 // ---------------------------------------------------------------------------
 
 /**
- * The bend, on the panel's centreline at the bottom. Traced from the inside
- * edge of the rim in Gorilla's top-down product photo, then moved 17mm out to
- * the line through the cutouts, where the panel stands (see the README).
+ * The bend, on the lines through the cutouts at the bottom. Traced from the
+ * inside edge of the rim in Gorilla's top-down product photo, then moved 17mm
+ * out to those lines (see the README). The panel's centreline runs a further
+ * 2mm out, with the posts' grooves, and its rounds grow to match.
  */
 export const params = {
   /** Height up the panel, matching the posts and side panels. */
@@ -74,6 +80,15 @@ const lean = params.height * Math.sin(rad); // 15.68
  * a touch wider than half of `thickness`, which is measured square to the leg.
  */
 const halfWidth = thickness / Math.cos(rad) / 2;
+
+/**
+ * The posts' grooves sit outside their axes, so at the rim each leg's centre
+ * plane is this far out from its cutout line, measured horizontally.
+ */
+const grooveOut = grooveOffset / Math.cos(rad); // 2.01
+
+/** The side panel's lip, its stand-off likewise measured horizontally. */
+const lipWidth = lipStandoff / Math.cos(rad);
 
 /** Post centre to its groove floor, along the rim. */
 const toGrooveFloor = plug.y / 2 - post.grooveDepth; // 17.5
@@ -135,8 +150,8 @@ if (-endCentre[1] + halfWidth > corner.across - plug.y / 2) {
 export function cornerPanel(): ValidSolid {
   // Bottom and top sections share their topology edge for edge, so a ruled loft
   // joins straight to straight (planes) and arc to arc (cones).
-  const bottom = section(0, 0);
-  const top = section(rise, lean);
+  const bottom = section(0, grooveOut);
+  const top = section(rise, grooveOut + lean);
   return single(bottom.loftWith(top, { ruled: true }));
 }
 
@@ -168,12 +183,16 @@ function section(z: number, out: number): Sketch {
     .lineTo(o.flatEnd)
     .threePointsArcTo(o.b, o.endMid)
     .lineTo([-outer, -endB])
-    .lineTo([-inner, -endB])
+    .lineTo([-inner + lipWidth, -endB])
+    .lineTo([-inner + lipWidth, -endB + lipLength])
+    .lineTo([-inner, -endB + lipLength])
     .lineTo(i.b)
     .threePointsArcTo(i.flatEnd, i.endMid)
     .lineTo(i.flatSide)
     .threePointsArcTo(i.a, i.sideMid)
-    .lineTo([endA, inner])
+    .lineTo([endA - lipLength, inner])
+    .lineTo([endA - lipLength, inner - lipWidth])
+    .lineTo([endA, inner - lipWidth])
     .close();
 }
 
@@ -184,24 +203,24 @@ function section(z: number, out: number): Sketch {
 // Each horizontal section is a strip of constant width along the centreline:
 // three straight runs that keep their length, plus two rounds whose radii grow
 // linearly with height. Its volume is the width times the centreline length at
-// mid-height.
+// mid-height. The two lips add a constant rectangle each.
 const sideTurn = Math.acos(dot(nA, nF));
 const endTurn = Math.acos(dot(nF, nB));
 const centreline =
   runA +
   runB +
   runFlat +
-  sideTurn * (params.sideRadius + lean / 2) +
-  endTurn * (params.endRadius + lean / 2);
+  sideTurn * (params.sideRadius + grooveOut + lean / 2) +
+  endTurn * (params.endRadius + grooveOut + lean / 2);
 
-export const volume = 2 * halfWidth * centreline * rise;
+export const volume = (2 * halfWidth * centreline + 2 * lipLength * lipWidth) * rise;
 
 /** Bounds of the left part; the right part is the same mirrored in Y. */
 export const extent = {
-  xMin: -lean - halfWidth,
+  xMin: -grooveOut - lean - halfWidth,
   xMax: endA,
   yMin: -endB,
-  yMax: lean + halfWidth,
+  yMax: grooveOut + lean + halfWidth,
   zMin: 0,
   zMax: rise,
 };

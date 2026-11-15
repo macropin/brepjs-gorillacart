@@ -138,11 +138,12 @@ Eight identical posts, one per cutout, that raise the bucket walls to carry more
 | Insert | 19.2 × 51.0 mm key, bottom 63.5 mm straight down into the cutout |
 | Post | Same section, 150 mm above the rim measured along its axis |
 | Lean | 6° outward (toward +X), pivoting about the rim line; trimmed flat where it meets the insert |
-| Grooves | 4 mm wide × 8 mm deep, centred on both ±Y faces, open at the top, floor at rim height |
-| Material left | 7.6 mm either side of each groove, 35 mm core between the groove floors |
+| Grooves | 4 mm wide × 8 mm deep on both ±Y faces, open at the top, floor at rim height. Centred 2 mm toward the outside (+X) of the post's axis, so the groove and its lip recess together sit centred in the post |
+| Lip recesses | 4 × 4 mm at the bottom of each groove, opening sideways into the inside wall (−X), full height and open at the top. The groove is L-shaped in section |
+| Material left | 5.6 mm on both sides at the thinnest: outside the groove and inside the lip recess. 9.6 mm beside the groove on the inside, in front of the recess, as the shoulder that catches the lip. 35 mm core between the groove floors |
 | Overall | 34.88 (X) × 51.0 (Y) × 213.7 (Z) mm; top 150.2 mm above the rim |
 
-Fit each post with its lean pointing out of the cart. All posts on a side lean the same way, so the panel between two of them lies flat in a plane leaning 6° out.
+Fit each post with its lean pointing out of the cart. All posts on a side lean the same way, so the panel between two of them lies flat in a plane leaning 6° out. The lip recesses are on the inside wall, so they end up on the cart side once the lean points out.
 
 Two side panels fill each long side, one fills the handle end, and a corner panel closes each handle-end corner. The end away from the handle stays open.
 
@@ -156,12 +157,13 @@ Flat plates that slide down into the grooves of two neighbouring posts on the sa
 
 | | |
 |---|---|
-| Size | 295.4 (length) × 150 (height) × 3.7 (thickness) mm |
+| Size | 295.4 (length) × 150 (height) × 3.7 (thickness) mm, 7.7 mm at the lips |
 | Thickness | 4 mm groove less the 0.3 mm fit tolerance |
 | Length | 295.7 mm groove floor to groove floor (330.7 pitch − 2 × 17.5), less 0.3 mm, so 0.15 mm clear at each end |
 | Height | Matches the posts, 150 mm above the rim |
+| Lips | One at each end on the inside face, full height: 3.7 mm along the panel and standing 4 mm off it. Each drops into its post's lip recess with 0.15 mm clearance all round, so the panel can't pull out of the groove along its length |
 
-Print flat. At 295.4 mm long the panel needs a print bed at least 296 mm in one direction, so it won't fit a 256 mm bed.
+Print flat on the plain outside face, lips up. At 295.4 mm long the panel needs a print bed at least 296 mm in one direction, so it won't fit a 256 mm bed.
 
 **Material:** print the panel across the handle end, the one closest to the handle, in PETG or another impact-resistant plastic. The other side panels should be fine in PLA.
 
@@ -175,14 +177,15 @@ Closes each handle-end corner, from the long-side post nearest the handle to the
 |---|---|
 | Long-side leg | 122.75 mm from the corner to its end (140.4 − 17.5 − 0.15) |
 | Handle-end leg | 145.0 mm from the corner to its end (162.65 − 17.5 − 0.15) |
-| Flat | Meets the long-side line 43 mm from the corner and the handle-end line 90 mm from it, about 64.5° to the long side |
-| Rounds | 63 mm radius into the long side and 51 mm into the handle end, on the centreline at the bottom; each grows by 15.7 mm at the top |
+| Flat | Meets the long-side cutout line 43 mm from the corner and the handle-end line 90 mm from it, about 64.5° to the long side |
+| Rounds | 63 mm radius into the long side and 51 mm into the handle end on the cutout lines; 65 and 53 mm on the panel's centreline at the bottom, each growing by 15.7 mm at the top |
 | Lean | Legs and flat all lean 6° outward, so the rounds are slices of cones |
 | Section | 3.7 mm thick, 150 mm up the slope |
 | Ends | Square to their legs and the same length top to bottom; 0.15 mm clear of each groove floor |
-| Overall | 140.3 × 162.5 × 149.2 mm, printed standing on its bottom edge |
+| Lips | The side panel's 3.7 × 4 mm lip on the inside face at each leg end |
+| Overall | 142.3 × 164.6 × 149.2 mm, printed standing on its bottom edge |
 
-The corner's path is the inside edge of the rim moved 17 mm outward, onto the line through the cutouts. So the panel's bottom edge sits on the rim all the way round the corner.
+The corner's path is the inside edge of the rim moved 17 mm outward, onto the line through the cutouts. The panel stands 2 mm further out again, in line with the posts' grooves, so its bottom edge sits on the rim all the way round the corner.
 
 The corner panel prints as modelled, standing up. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
 
