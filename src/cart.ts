@@ -20,7 +20,7 @@ export const cart = {
    */
   fitTolerance: 0.3,
 
-  /** Clear gap between adjacent cutouts along a side: 11 in, edge to edge (the photos confirm it). */
+  /** Clear gap between adjacent cutouts along a side: 11 in, edge to edge. */
   cutoutGap: 279.4,
 
   /** Across the cart, centre to centre between cutouts on opposite long sides. */

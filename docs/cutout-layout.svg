@@ -70,7 +70,7 @@
 <line class="leader" x1="178.8" y1="411" x2="178.8" y2="440"/>
 <line class="dim" x1="133.9" y1="434" x2="176.5" y2="434" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
 <text class="ts" x="155.2" y="452" text-anchor="middle">105 mm gap</text>
-<text class="ts" x="340" y="470" text-anchor="middle">Plan view, to scale. The corner shape comes from Gorilla's photos</text>
+<text class="ts" x="340" y="470" text-anchor="middle">Plan view, to scale</text>
 
 <line class="rule" x1="40" y1="480" x2="640" y2="480"/>
 

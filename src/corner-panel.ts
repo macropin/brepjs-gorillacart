@@ -41,7 +41,7 @@ import { single } from './solid.js';
 /**
  * The bend, on the lines through the cutouts at the bottom. Traced from the
  * inside edge of the rim in Gorilla's top-down product photo, then moved 17mm
- * out to those lines (see the README). The panel's centreline runs a further
+ * out to those lines. The panel's centreline runs a further
  * 2mm out, with the posts' grooves, and its rounds grow to match.
  */
 export const params = {

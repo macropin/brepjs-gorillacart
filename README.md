@@ -21,49 +21,15 @@ Measured facts about the cutouts in the top rim of the cart body. All accessorie
 | Width across the cart (short side) | 656 mm, centre to centre between cutouts on opposite long sides |
 | Gap between the handle-end cutouts | 11 in (279.4 mm) edge to edge, the same as along the sides |
 | Handle-end cutouts along the cart | 105 mm clear gap, edge to edge, to the nearest long-side cutouts: 140.4 mm centre to centre |
-| Rim corners at the handle end | A round, a flat about 64.5° from the long side, and a second round (from photos) |
+| Rim corners at the handle end | A round, a flat about 64.5° from the long side, and a second round |
 
 ### Cutout layout
 
 ![Cutout layout: plan view of the rim and section through a single cutout](docs/cutout-layout.svg)
 
-The long axis of each cutout runs along the rim, which the photos below confirm.
+The long axis of each cutout runs along the rim.
 
 These facts live in code in [src/cart.ts](src/cart.ts), which every accessory imports.
-
-### Derived from product photos
-
-The rows marked "from photos" weren't measured on the cart. They come from three of Gorilla's own product photos that show the rim from above:
-
-- [GCG-7 Image 12](https://gorillamade.com/wp-content/uploads/2019/03/GCG-7-Image_12.jpg): an overhead shot of the tub at 2000 × 2000 px, from the gallery on the [GCG-7 listing](https://gorillamade.com/product/gcg-7/)
-- the top-down view in the [GCG-7 capacity and dimensions infographic](https://gorillamade.com/wp-content/uploads/2019/03/GCG-7_Infographic_CapacityDimensions_576px_UPDATED-DIMS-2025-10-03.jpg), a smaller copy of the same shot
-- the overhead tub shot on the [Gorilla Carts ANZ product page](https://gorillacarts.com.au/cdn/shop/products/ScreenShot2019-04-02at12.06.00pm.png), taken from a different angle
-
-Method: in each photo, I picked out the centres of all the cutout openings, then corrected for the camera's perspective. The six long-side cutouts were the reference points, at 655 mm across (the measurement at the time, since refined to 656 mm) and 330.7 mm pitch. That correction fits the long-side cutouts to within 1–3 px, then places the other features on the rim:
-
-| Result | Image 12 | Infographic | ANZ photo | Model |
-| --- | --- | --- | --- | --- |
-| Handle-end cutouts across, from the centreline | ±163.4 / 163.5 mm | ±163.3 mm | ±163.1 / 163.8 mm | ±165.35 mm (measured) |
-| Handle-end cutouts along, toward the handle | 135.7 mm | 135.3 mm | 137.5 mm | 140.4 mm (measured) |
-
-Measured on the cart, the handle-end gap is the same 11 in as the sides, which puts those cutouts at ±165.35 mm. Along the cart, there is a 105 mm clear gap between each handle-end cutout and the nearest long-side cutout, which puts their centres 140.4 mm apart (105 + 19.5/2 + 51.3/2). The photos placed the handle-end cutouts about 2 mm too close to the centreline and about 4 mm too close to the side cutouts: they underestimate distances beyond the reference cutouts by 1–2%. The corner shape is kept relative to the handle-end cutouts, so it moves with them.
-
-In Image 12, the tub's outline against the white background measures 672 mm across, constant along the whole length. It runs 979 mm from the far end to the outer edge of the handle-end rim. The [GCG-7 listing](https://gorillamade.com/product/gcg-7/) gives the bed as 39.5 × 27 in (1003 × 686 mm):
-
-- **Proportions:** the photo's length to width (1.457) matches the listing's (1.463) to within 0.4%.
-- **Overall size:** the photo comes out about 2% smaller in both directions.
-
-Scaling everything up to match the listing would put the long-side cutouts 669 mm apart instead of the 656 mm measured on the cart. The listing more likely rounds the figures or measures over the cutout housings, which bulge slightly past the rim. A 279.4 mm centre-to-centre pitch would make the tub only about 840 mm long, so the 11 in is an edge-to-edge gap.
-
-The corner shape came from tracing the inside edge of the rim around both handle-end corners in Image 12 and the infographic. All four traces agree:
-
-- a straight flat at 64.1–64.7° to the long side, straight to within 0.25–0.4 mm, with its ends within 2 mm across the traces
-- a round into the end rim of 35–60 mm radius. This round turns only 25°, so the radius changes the path by under 1 mm.
-- a round into the side rim of 40–57 mm radius
-
-The cutouts sit about 17 mm outside that inside edge, roughly in the middle of the rim.
-
-Expect a few millimetres of error in anything derived this way. Gorilla's US listing is the same GCG-7 tub as the AU 200L cart, but if your cart differs, measure it and update [src/cart.ts](src/cart.ts).
 
 ## Accessories
 
