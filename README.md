@@ -38,7 +38,7 @@ A strap point for holding down an oversize load such as branches.
 
 A snap clip that carries a 25 mm tool pole along the rim.
 
-**Print:** one per cutout
+**Print:** two per pole
 
 </td>
 <td width="50%" valign="top">
@@ -67,12 +67,12 @@ Full measurements: [Cart cutout dimensions](docs/cart.md).
 
 | Part | Quantity | Overall size (mm) | Notes |
 | --- | --- | --- | --- |
-| [Side extension post](docs/side-extension-kit.md#posts) | 8 | 34.88 × 51.0 × 213.7 | |
+| [Side extension post](docs/side-extension-kit.md#posts) | 8 | 34.88 × 51.0 × 213.7 | Print standing |
 | [Side panel](docs/side-extension-kit.md#side-panels) | 5 | 295.4 × 150 × 7.7 | **Needs a bed at least 296 mm long.** Print flat, lips up. Print the handle-end panel in PETG |
 | [Corner panel](docs/side-extension-kit.md#corner-panels) | 1 left, 1 right | 142.3 × 164.6 × 149.2 | Print standing, with a brim |
 | [Tie-down block](docs/tie-down-block.md) | 1 per cutout | 19.2 × 72 × 103.5 | Print lying on a broad face, no supports |
-| [Pole tool holder](docs/pole-holder.md) | 1 per cutout | 31.6 × 51.0 × 133.0 | |
-| [Machete sleeve](docs/machete-sleeve.md) | 1 | 19.2 × 51.0 × 193.2 | |
+| [Pole tool holder](docs/pole-holder.md) | 2 per pole | 31.6 × 51.0 × 133.3 | Print standing |
+| [Machete sleeve](docs/machete-sleeve.md) | 1 | 19.2 × 51.0 × 193.5 | Print standing, with a brim |
 
 Each accessory's page has its printing and fitting instructions.
 

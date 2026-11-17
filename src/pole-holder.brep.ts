@@ -1,14 +1,15 @@
 /**
  * Pole tool holder.
  *
- * The key bar with a U-shaped clip on its top face. The clip's side profile is
- * the convex hull of the bar's top edge and a circle around the pole, cut flat
- * a little above the pole centre so the opening is narrower than the bore and
- * the pole snaps in. It is extruded the full 51mm along Y, and the pole lies
- * along the rim.
+ * Carries a long-handled tool along the rim, in a pair of holders in
+ * neighbouring cutouts. The key bar drops into a rim cutout and carries a
+ * U-shaped clip on its top face. The clip's side profile is the convex hull of
+ * the bar's top edge and a circle around the pole, cut flat a little above the
+ * pole centre so the opening is narrower than the bore and the pole snaps in.
+ * It is extruded the full 51mm along Y, and the pole lies along the rim.
  *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
- * in X/Y, X across the rim, Y along it.
+ * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
  */
 import { cut, cylinder, draw, fuse, unwrap, type ValidSolid } from 'brepjs';
 
@@ -44,8 +45,10 @@ export const params = {
 // Derived
 // ---------------------------------------------------------------------------
 
-/** Bar height: 63.5 + 50 - 0.3 = 113.2, the fit tolerance taken off as on the sleeve. */
-const height = params.insertDepth + params.standHeight - cart.fitTolerance;
+const rim = params.insertDepth; // 63.5
+
+/** Bar height: 63.5 + 50 = 113.5. */
+const height = rim + params.standHeight;
 
 const boreR = (params.poleDiameter + cart.fitTolerance) / 2; // 12.8
 const outerR = boreR + params.wall; // 15.8

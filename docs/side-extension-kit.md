@@ -22,6 +22,7 @@ The kit uses all eight cutouts, so it can't be fitted alongside the other access
 ## Printing
 
 - **Bed size:** the side panel is 295.4 mm long, so it needs a print bed at least 296 mm in one direction. It won't fit a 256 mm bed.
+- **Posts:** print standing, as they sit in the cart, on the bottom of the insert. The 6° lean is the only overhang.
 - **Side panels:** print flat on the plain outside face, lips up.
 - **Material:** print the panel across the handle end, the one closest to the handle, in PETG or another impact-resistant plastic. The other side panels should be fine in PLA.
 - **Corner panels:** print as modelled, standing on the bottom edge. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
@@ -55,8 +56,6 @@ Eight identical posts, one per cutout. Each post stands 150 mm above the rim, le
 | Lip recesses | 4 × 4 mm at the bottom of each groove, opening sideways into the inside wall (−X), full height and open at the top. The groove is L-shaped in section |
 | Material left | 5.6 mm on both sides at the thinnest: outside the groove and inside the lip recess. 9.6 mm beside the groove on the inside, in front of the recess, as the shoulder that catches the lip. 35 mm core between the groove floors |
 | Overall | 34.88 (X) × 51.0 (Y) × 213.7 (Z) mm; top 150.2 mm above the rim |
-
-The insert takes no height off for fit tolerance, unlike the [machete sleeve](machete-sleeve.md).
 
 ## Side panels
 
