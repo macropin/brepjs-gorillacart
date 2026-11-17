@@ -93,6 +93,14 @@ Print it lying on one broad face. Both faces are flat, so the holes print uprigh
 
 The head is flush with the key across the rim, so it doesn't overhang the rim's inner or outer edge. It's held in by friction fit alone. Pinning or bolting it would mean drilling the cart, but in use that isn't needed: run the strap through one hole and down to the cart to pull the block into its cutout, and through the other to tie down the load.
 
+### Side extension kit
+
+![The side extension kit fitted to the cart: eight posts, five side panels and two corner panels, shown in orange, standing on the rim of a dark schematic cart](media/side-extensions-assembled.png)
+
+The posts, side panels and corner panels described below fit together as one kit that raises the cart's walls on three sides. The render shows the whole kit in place, in orange: eight posts, five side panels, and the two corner panels at the handle end. The view looks in over the open far end, toward the handle.
+
+The cart is a schematic backdrop. Its rim, corners and cutouts are placed from the measurements above, so the kit sits where it would on the real cart. The tub's slope, the wheels, the frame and the handle are drawn only to look right. Sources: [src/assemblies/side-extensions.brep.ts](src/assemblies/side-extensions.brep.ts) places the kit, on the cart from [src/assemblies/cart.brep.ts](src/assemblies/cart.brep.ts).
+
 ### Side extension posts
 
 ![The side extension post: a straight insert with a post above it leaning slightly outward, grooved down both narrow faces](media/side-extension.png)
@@ -176,9 +184,12 @@ make            # list the targets and parts
 make verify     # kernel validity + assert declared dimensions
 make render     # multi-view PNGs into out/<name>/shots, refresh media/<name>.png
 make export     # STEP + STL into out/<name>/
-make all        # verify, render, export
+make assemblies # assembled renders into media/<name>-assembled.png
+make all        # verify, render, export, assemblies
 make preview PART=machete-sleeve   # live viewer, re-evaluates on save
 make clean      # drop out/
 ```
 
 Targets act on every part, or on one with `PART=<name>`. `verify` exits non-zero unless each part is a valid solid and matches its `expected` block, and `export` runs the same validity gate first.
+
+`make assemblies` renders each scene in `src/assemblies/`: accessories placed on a schematic cart. Scenes aren't parts, so they're never checked against dimensions or exported for printing. The viewer draws every body in the same grey, so [scripts/render-assembly.mjs](scripts/render-assembly.mjs) renders the scene and the bare cart through the same camera, then colours whatever the scene adds. It needs ImageMagick.

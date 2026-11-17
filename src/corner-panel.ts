@@ -156,25 +156,31 @@ export function cornerPanel(): ValidSolid {
 }
 
 /**
- * The panel's horizontal section at height `z`, where every part of the
- * centreline has leaned out by `out`.
+ * Points on the bend, `o` outside the lines through the cutouts (negative for
+ * inside): where each round meets its leg and the flat, and each round's
+ * midpoint. In this module's frame, running from leg A round to leg B. Also
+ * traces the rim's own corner for the cart in the assembly renders.
  */
-function section(z: number, out: number): Sketch {
-  const outer = out + halfWidth;
-  const inner = out - halfWidth;
-
-  // Points on the centreline offset by `o`: the feet of the round centres on
-  // each line, and each round's midpoint.
-  const at = (o: number) => ({
+export function bendPoints(o: number) {
+  return {
     a: along(sideCentre, nA, params.sideRadius + o),
     sideMid: along(sideCentre, unit([nA[0] + nF[0], nA[1] + nF[1]]), params.sideRadius + o),
     flatSide: along(sideCentre, nF, params.sideRadius + o),
     flatEnd: along(endCentre, nF, params.endRadius + o),
     endMid: along(endCentre, unit([nF[0] + nB[0], nF[1] + nB[1]]), params.endRadius + o),
     b: along(endCentre, nB, params.endRadius + o),
-  });
-  const o = at(outer);
-  const i = at(inner);
+  };
+}
+
+/**
+ * The panel's horizontal section at height `z`, where every part of the
+ * centreline has leaned out by `out`.
+ */
+function section(z: number, out: number): Sketch {
+  const outer = out + halfWidth;
+  const inner = out - halfWidth;
+  const o = bendPoints(outer);
+  const i = bendPoints(inner);
 
   return new Sketcher('XY', z)
     .movePointerTo([endA, outer])

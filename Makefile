@@ -4,10 +4,15 @@
 # brepjs CLI against them. Targets act on every part, or on one with
 # PART=<name> (e.g. `make verify PART=machete-sleeve`). Requires Node 24+
 # (`brew install node`).
+#
+# src/assemblies/ holds scenes, not parts: accessories placed on a schematic
+# cart (cart.brep.ts) for the README's assembled renders. They are never
+# verified against dimensions or exported for printing.
 
 PARTS   := $(patsubst src/%.brep.ts,%,$(wildcard src/*.brep.ts))
 PART    ?=
 SELECT  := $(or $(PART),$(PARTS))
+SCENES  := $(filter-out cart,$(patsubst src/assemblies/%.brep.ts,%,$(wildcard src/assemblies/*.brep.ts)))
 OUT     := out
 MEDIA   := media
 BREP    := npx brep
@@ -83,8 +88,25 @@ export: node_modules
 		$(BREP) export src/$$p.brep.ts --step --stl --out $(OUT)/$$p; \
 	done
 
-## all: verify, render, and export
-all: verify render export
+## assemblies: render each kit fitted to the cart, into media/<name>-assembled.png
+#
+# Each scene is exported to STEP alongside the bare cart, then
+# scripts/render-assembly.mjs renders the pair through the same camera and
+# colours whatever the scene adds to the cart. Needs ImageMagick.
+assemblies: node_modules
+	@set -e; mkdir -p $(MEDIA); for s in cart $(SCENES); do \
+		mkdir -p $(OUT)/assemblies/$$s; \
+		$(BREP) export src/assemblies/$$s.brep.ts --step --out $(OUT)/assemblies/$$s; \
+	done; \
+	for s in $(SCENES); do \
+		node scripts/render-assembly.mjs \
+			--scene $(OUT)/assemblies/$$s/$$s.step \
+			--base $(OUT)/assemblies/cart/cart.step \
+			--out $(MEDIA)/$$s-assembled.png; \
+	done
+
+## all: verify, render, export, and render the assemblies
+all: verify render export assemblies
 
 ## clean: remove generated artifacts (keeps the README previews)
 clean:
@@ -92,6 +114,7 @@ clean:
 
 ## distclean: clean, and drop node_modules and the README previews
 distclean: clean
-	rm -rf node_modules $(addprefix $(MEDIA)/,$(addsuffix .png,$(PARTS)))
+	rm -rf node_modules $(addprefix $(MEDIA)/,$(addsuffix .png,$(PARTS))) \
+		$(addprefix $(MEDIA)/,$(addsuffix -assembled.png,$(SCENES)))
 
-.PHONY: help install verify render preview export all clean distclean
+.PHONY: help install verify render preview export assemblies all clean distclean
