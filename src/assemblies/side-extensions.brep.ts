@@ -9,29 +9,12 @@
  */
 import { rotate, translate, type AnyShape, type Compound } from 'brepjs';
 
-import { cart, corner, cutoutPitch, handleEndPitch } from '../cart.js';
+import { cart, handleEndPitch } from '../cart.js';
 import cornerPanelLeft from '../corner-panel-left.brep.js';
 import cornerPanelRight from '../corner-panel-right.brep.js';
 import sideExtension, { grooveOffset, params as post } from '../side-extension.brep.js';
 import sidePanel, { params as panel, thickness } from '../side-panel.brep.js';
-import { cartBodies, half, stage, tub } from './cart.brep.js';
-
-/** Turns per side, about Z, that point a post's lean (+X in its own frame) out of the cart. */
-const LEFT = 90;
-const RIGHT = -90;
-const HANDLE_END = 180;
-
-/**
- * Moves something built in a post's frame (rim at the cutout depth, +X
- * outward, Y along the rim) to a point on the rim of the cart.
- */
-function onRim<T extends AnyShape>(shape: T, turn: number, x: number, y: number): T {
-  return translate(rotate(shape, turn, { axis: [0, 0, 1] }), [
-    x,
-    y,
-    tub.rimZ - cart.cutoutDepth,
-  ]);
-}
+import { cartBodies, half, HANDLE_END, LEFT, onRim, RIGHT, sideX, stage, tub } from './cart.brep.js';
 
 /**
  * The side panel stood up in a post's frame, as it sits in the grooves of the
@@ -53,7 +36,6 @@ function standingPanel() {
 export function kitBodies(): AnyShape[] {
   const upright = sideExtension();
   const board = standingPanel();
-  const sideX = (k: number) => corner.along + k * cutoutPitch;
 
   const posts = [
     ...[0, 1, 2].flatMap((k) => [

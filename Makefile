@@ -13,6 +13,9 @@ PARTS   := $(patsubst src/%.brep.ts,%,$(wildcard src/*.brep.ts))
 PART    ?=
 SELECT  := $(or $(PART),$(PARTS))
 SCENES  := $(filter-out cart,$(patsubst src/assemblies/%.brep.ts,%,$(wildcard src/assemblies/*.brep.ts)))
+# Scenes whose accessories are too small to read on a whole-cart render. These
+# are framed on the accessories instead.
+CLOSEUPS := machete-sleeve pole-holder tie-down-block
 OUT     := out
 MEDIA   := media
 BREP    := npx brep
@@ -92,7 +95,8 @@ export: node_modules
 #
 # Each scene is exported to STEP alongside the bare cart, then
 # scripts/render-assembly.mjs renders the pair through the same camera and
-# colours whatever the scene adds to the cart. Needs ImageMagick.
+# colours whatever the scene adds to the cart. Scenes listed in CLOSEUPS are
+# framed on the accessories rather than the whole cart. Needs ImageMagick.
 assemblies: node_modules
 	@set -e; mkdir -p $(MEDIA); for s in cart $(SCENES); do \
 		mkdir -p $(OUT)/assemblies/$$s; \
@@ -102,7 +106,8 @@ assemblies: node_modules
 		node scripts/render-assembly.mjs \
 			--scene $(OUT)/assemblies/$$s/$$s.step \
 			--base $(OUT)/assemblies/cart/cart.step \
-			--out $(MEDIA)/$$s-assembled.png; \
+			--out $(MEDIA)/$$s-assembled.png \
+			$$(echo " $(CLOSEUPS) " | grep -q " $$s " && echo "--closeup 1"); \
 	done
 
 ## all: verify, render, export, and render the assemblies

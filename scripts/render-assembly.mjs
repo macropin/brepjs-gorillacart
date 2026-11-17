@@ -2,7 +2,10 @@
 // Renders an assembly scene with the accessories picked out in colour against
 // the cart.
 //
-//   node scripts/render-assembly.mjs --scene <scene.step> --base <cart.step> --out <image.png>
+//   node scripts/render-assembly.mjs --scene <scene.step> --base <cart.step> --out <image.png> [--closeup 1]
+//
+// --closeup frames the accessories and the stretch of cart around them rather
+// than the whole cart, for accessories too small to read at full-cart scale.
 //
 // The brepjs viewer draws every body in one grey, so colour comes from two
 // renders through the same camera: the whole scene, and the cart alone. The
@@ -28,6 +31,10 @@ const READY_TIMEOUT_MS = 90_000;
 const WIDTH = 1200;
 const KIT_COLOUR = '#ff8a3d';
 const CART_SHADE = '45%';
+
+/** A close-up's frame: this many times the accessories' larger extent wide, at this width:height. */
+const CLOSEUP_SPAN = 2.4;
+const CLOSEUP_ASPECT = 4 / 3;
 
 function parseArgs(argv) {
   const args = {};
@@ -77,7 +84,7 @@ async function shoot(steps, outDir) {
 
 const magick = (...args) => execFileSync('magick', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] });
 
-const { scene, base, out } = parseArgs(process.argv.slice(2));
+const { scene, base, out, closeup } = parseArgs(process.argv.slice(2));
 const work = mkdtempSync(join(tmpdir(), 'render-assembly-'));
 try {
   const [sceneShot, baseShot] = await shoot([scene, base], work);
@@ -110,19 +117,31 @@ try {
     composite,
   );
 
-  // Trimmed to the scene, padded with the backdrop's own (darkened) colour,
-  // scaled, and stripped of metadata so an unchanged scene gives a
+  // Scaled, and stripped of metadata so an unchanged scene gives a
   // byte-identical file.
-  const backdrop = magick(composite, '-format', '%[pixel:p{0,0}]', 'info:').trim();
   mkdirSync(dirname(resolve(out)), { recursive: true });
-  magick(
-    composite,
-    '-fuzz', '6%', '-trim', '+repage',
-    '-bordercolor', backdrop, '-border', '60',
-    '-filter', 'Lanczos', '-resize', `${WIDTH}x`,
-    '-strip', '-define', 'png:exclude-chunks=date,time',
-    resolve(out),
-  );
+  const finish = ['-filter', 'Lanczos', '-resize', `${WIDTH}x`, '-strip', '-define', 'png:exclude-chunks=date,time'];
+  if (closeup) {
+    // Framed on the accessories: the mask's bounding box, widened to take in
+    // the cart around it and kept inside the render.
+    const [w, h, x, y] = magick(mask, '-format', '%@', 'info:').match(/\d+/g).map(Number);
+    const [fullW, fullH] = magick(composite, '-format', '%w %h', 'info:').split(' ').map(Number);
+    const cropW = Math.min(fullW, Math.round(Math.max(w, h * CLOSEUP_ASPECT) * CLOSEUP_SPAN));
+    const cropH = Math.min(fullH, Math.round(cropW / CLOSEUP_ASPECT));
+    const cropX = Math.min(fullW - cropW, Math.max(0, Math.round(x + w / 2 - cropW / 2)));
+    const cropY = Math.min(fullH - cropH, Math.max(0, Math.round(y + h / 2 - cropH / 2)));
+    magick(composite, '-crop', `${cropW}x${cropH}+${cropX}+${cropY}`, '+repage', ...finish, resolve(out));
+  } else {
+    // Trimmed to the scene and padded with the backdrop's own (darkened) colour.
+    const backdrop = magick(composite, '-format', '%[pixel:p{0,0}]', 'info:').trim();
+    magick(
+      composite,
+      '-fuzz', '6%', '-trim', '+repage',
+      '-bordercolor', backdrop, '-border', '60',
+      ...finish,
+      resolve(out),
+    );
+  }
   console.log(`assembly -> ${out}`);
 } finally {
   rmSync(work, { recursive: true, force: true });

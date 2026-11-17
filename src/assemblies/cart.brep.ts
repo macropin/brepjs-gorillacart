@@ -20,6 +20,7 @@ import {
   rotate,
   Sketcher,
   torus,
+  translate,
   type AnyShape,
   type Compound,
   type Sketch,
@@ -249,6 +250,23 @@ function frame(): ValidSolid[] {
 export function cartBodies(): AnyShape[] {
   return [tubBody(), ...wheels(), ...frame()];
 }
+
+/**
+ * Moves something built in a key's frame (cutout floor at z = 0, so the rim at
+ * the cutout depth; +X outward across the rim, Y along it) to a point on the
+ * rim of the cart, turned about Z by `turn` degrees.
+ */
+export function onRim<T extends AnyShape>(shape: T, turn: number, x: number, y: number): T {
+  return translate(rotate(shape, turn, { axis: [0, 0, 1] }), [x, y, tub.rimZ - cart.cutoutDepth]);
+}
+
+/** Turns about Z that point a key's +X out of the cart on each side. */
+export const LEFT = 90;
+export const RIGHT = -90;
+export const HANDLE_END = 180;
+
+/** Position along the cart of the k-th long-side cutout, counting from the handle end. */
+export const sideX = (k: number) => corner.along + k * cutoutPitch;
 
 /** Gathers bodies into one scene, turned to face the renderer's camera. */
 export function stage(bodies: AnyShape[]): Compound {
