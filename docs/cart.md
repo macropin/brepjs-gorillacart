@@ -27,4 +27,4 @@ These facts live in code in [src/cart.ts](../src/cart.ts), which every accessory
 
 ## The key
 
-Every accessory is built on the same key: a 19.2 × 51.0 mm bar with 3 mm fillets on its four upright edges, whose bottom 63.5 mm drops into a cutout ([src/key.ts](../src/key.ts)). The accessory is whatever stands above the rim.
+Every accessory is built on the same key: a 19.2 × 51.0 mm bar with 1 mm 45° chamfers on its four upright edges, whose bottom 63.5 mm drops into a cutout ([src/key.ts](../src/key.ts)). The accessory is whatever stands above the rim.

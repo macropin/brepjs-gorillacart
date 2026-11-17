@@ -14,7 +14,7 @@ For a different pole, change `poleDiameter`. For a taller or shorter stand, chan
 
 ## Printing
 
-Print it standing, as it sits in the cart, on the bottom of the key. The clip's side lines flare out at about 27° from vertical, and the bore prints as an open-topped channel, so neither needs support. Where the clip's square bottom corners meet the bar's rounded corners they overhang by up to 1.2 mm, which prints as a small ledge.
+Print it standing, as it sits in the cart, on the bottom of the key. The clip's side lines flare out at about 27° from vertical, and the bore prints as an open-topped channel, so neither needs support. Where the clip's square bottom corners sit over the bar's chamfered corners they overhang by a 1 × 1 mm triangle, which prints as a small ledge.
 
 ## Fitting
 
@@ -22,7 +22,7 @@ Fit two holders in neighbouring cutouts on the same side, 330.7 mm apart, with t
 
 ## Dimensions
 
-![The pole tool holder: a rounded bar with a U-shaped snap clip on top](../media/pole-holder.png)
+![The pole tool holder: a bar with a U-shaped snap clip on top](../media/pole-holder.png)
 
 | | |
 |---|---|
@@ -37,4 +37,4 @@ Fit two holders in neighbouring cutouts on the same side, 330.7 mm apart, with t
 
 ## Design notes
 
-The clip is a plain extrusion, so its four bottom corners are square where they meet the bar's 3 mm rounded corners. A 3 mm fillet to blend them doesn't work: OCCT carries it up the outer arc to the top lips.
+The clip is a plain extrusion, so its four bottom corners are square over the bar's 1 mm chamfered corners. Blending them with a 3 mm fillet doesn't work: OCCT carries it up the outer arc to the top lips.

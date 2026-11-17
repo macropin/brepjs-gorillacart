@@ -22,7 +22,7 @@ Drop the key into any cutout. Slide the blade through the slot along the rim, cu
 
 ## Dimensions
 
-![The machete sleeve: a tall rounded bar with a narrow slot through its upper part](../media/machete-sleeve.png)
+![The machete sleeve: a tall bar with a narrow slot through its upper part](../media/machete-sleeve.png)
 
 | | |
 |---|---|

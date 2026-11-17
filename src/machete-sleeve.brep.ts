@@ -110,9 +110,9 @@ export default function macheteSleeve(): ValidSolid {
 // Declared intent — asserted by `brep verify --check`
 // ---------------------------------------------------------------------------
 
-// The fillets and the slot remove material without moving the extents, so the
+// The chamfers and the slot remove material without moving the extents, so the
 // bounding box is the plug section by the full height. The volume is the
-// filleted bar, less the stadium slot across the full 51mm, less the chamfer
+// chamfered bar, less the stadium slot across the full 51mm, less the chamfer
 // round each mouth: a c²/2 triangle along each straight side, and the same
 // triangle swept round the two half-circle ends (Pappus, its centroid c/3
 // out from the arc).

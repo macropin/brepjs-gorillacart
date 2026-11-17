@@ -12,7 +12,7 @@ One block per cutout, as many as you need. The render shows two. Source: [src/ti
 
 ## Printing
 
-Print it lying on one broad face. Both faces are flat, so the holes print upright and nothing needs support. Lying down, the layers also run the length of the key, which is stronger when a strap pulls sideways on the head.
+Print it lying on one broad face. Both faces are flat, so the holes print upright and nothing needs support. The key's 1 mm chamfered edges rise from the bed at 45°. Lying down, the layers also run the length of the key, which is stronger when a strap pulls sideways on the head.
 
 ## Fitting
 
