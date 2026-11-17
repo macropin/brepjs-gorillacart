@@ -33,6 +33,7 @@ Fit two holders in neighbouring cutouts on the same side, 330.7 mm apart, with t
 | Bore | 25.6 mm (25.3 + 0.3) along Y, centre 15.8 mm above the bar top (z = 129.3) |
 | Wall | 3 mm around the bore and under it |
 | Opening | 24.32 mm, 1.28 mm narrower than the bore; 3.13 mm flat lip either side |
+| Edges | 1 mm chamfer round the clip's outer profile and the bore mouth, on both end faces; the clip's base is left square where it meets the bar |
 | Overall | 31.6 (X) × 51.0 (Y) × 133.3 (Z) mm; top 69.8 mm above the rim |
 
 ## Design notes

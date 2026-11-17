@@ -11,7 +11,18 @@
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
  */
-import { cut, cylinder, draw, fuse, unwrap, type ValidSolid } from 'brepjs';
+import {
+  chamfer,
+  curvePointAt,
+  cut,
+  cylinder,
+  draw,
+  edgeFinder,
+  fuse,
+  unwrap,
+  type Edge,
+  type ValidSolid,
+} from 'brepjs';
 
 import { cart, plug } from './cart.js';
 import { key, keySectionArea } from './key.js';
@@ -39,6 +50,13 @@ export const params = {
    * leaves the opening narrower than the bore, which is what retains the pole.
    */
   lipHeight: 4,
+
+  /**
+   * Breaks every edge of the clip's two end faces, outer profile and bore mouth
+   * alike, so the pole and hands meet no sharp edge. The base of the clip, where
+   * it meets the bar, is left square.
+   */
+  edgeChamfer: 1,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -104,14 +122,33 @@ export default function poleHolder(): ValidSolid {
 
   // The XZ plane's normal is -Y, so start the sketch at +Y and extrude back
   // across the full length.
-  const clip = single(profile.sketchOnPlane('XZ', [0, plug.y / 2, 0]).extrude(plug.y));
+  let clip = single(profile.sketchOnPlane('XZ', [0, plug.y / 2, 0]).extrude(plug.y));
 
   const bore = cylinder(boreR, plug.y + 2 * OVER, {
     at: [0, -plug.y / 2 - OVER, height + centreZ],
     axis: [0, 1, 0],
   });
 
-  return single(unwrap(cut(single(unwrap(fuse(bar, clip))), bore)));
+  // The end-face chamfer goes on in two steps, because OCCT fails to chamfer
+  // the outer profile once the clip is joined to the bar. First the outer
+  // profile on the clip alone: every edge of both end faces except the base,
+  // which is joined to the bar.
+  const onEnd = (edge: Edge) => Math.abs(Math.abs(curvePointAt(edge, 0.5)[1]) - plug.y / 2) < 1e-6;
+  const c = params.edgeChamfer;
+  if (c > 0) {
+    const onProfile = (edge: Edge) => onEnd(edge) && curvePointAt(edge, 0.5)[2] > height + 1e-6;
+    clip = single(unwrap(chamfer(clip, edgeFinder().when(onProfile), c)));
+  }
+
+  const part = single(unwrap(cut(single(unwrap(fuse(bar, clip))), bore)));
+  if (c <= 0) return part;
+
+  // Then the bore mouths, once the bore is cut.
+  const onBoreMouth = (edge: Edge) => {
+    const [x, , z] = curvePointAt(edge, 0.5);
+    return onEnd(edge) && Math.abs(Math.hypot(x, z - height - centreZ) - boreR) < 1e-6;
+  };
+  return single(unwrap(chamfer(part, edgeFinder().when(onBoreMouth), c)));
 }
 
 // ---------------------------------------------------------------------------
@@ -130,8 +167,23 @@ const clipArea =
   2 * (outerR * halfBase - outerR ** 2 * beta) -
   belowChord(boreR, params.lipHeight);
 
+// The end-face chamfer takes a c²/2 triangle along each edge of both end
+// profiles: straight along the side lines and lips, and swept round the arcs
+// (Pappus), its centroid c/3 in from the outer circle and c/3 out from the
+// bore. The mitres where the arcs meet the lips are left to the tolerance.
+const c = params.edgeChamfer;
+const sideLine = Math.hypot(tangent[0] - halfBase, tangent[1]);
+const outerArc = Math.atan2(params.lipHeight, outerAtCut) - (toCorner + beta);
+const boreArc = Math.PI + 2 * Math.asin(params.lipHeight / boreR);
+const chamferPerEnd =
+  (c ** 2 / 2) *
+  (2 * sideLine +
+    2 * lipWidth +
+    2 * outerArc * (outerR - c / 3) +
+    boreArc * (boreR + c / 3));
+
 export const expected = {
-  volume: keySectionArea * height + clipArea * plug.y,
+  volume: keySectionArea * height + clipArea * plug.y - 2 * chamferPerEnd,
   bounds: {
     xMin: -outerR,
     xMax: outerR,
