@@ -1,0 +1,71 @@
+# EGO battery holder
+
+[← All accessories](../README.md)
+
+![The EGO battery holder, in orange, standing in a cutout on one side of the cart's rim, its rails facing out of the cart](../media/ego-battery-holder-assembled.png)
+
+Carries an EGO POWER+ 56V battery on the rim. The key drops into a cutout. Above the rim, a base flares out to carry a pair of upright rails with the same T-section as an EGO wall mount. The battery slides down onto the rails from above and hangs there, as it would on a garage wall.
+
+## What to print
+
+One holder per battery. Source: [src/ego-battery-holder.brep.ts](../src/ego-battery-holder.brep.ts).
+
+If the battery is tight or loose on the rails, change `flangeWidth` and `flangeThickness`, which set how far the rails reach into the battery's channel. To stand the rails taller or shorter, change `railLength`.
+
+## Printing
+
+Print it standing, as it sits in the cart, on the bottom of the key. The flanges and the clearance behind them run straight up. The base flares at 45°, and the lead-ins at the top are 45°, so nothing needs support. Where the base's square bottom corners sit over the key's chamfered corners, they overhang by a 1 × 1 mm triangle, which prints as a small ledge. It is a tall part on a 19.2 mm base, so use a brim.
+
+Standing, the layers run across the part. The joint at the rim is the most heavily loaded section, and it is the key's full 19.2 × 51 mm, because the recess and the clearance behind the flanges stop at the top of the base.
+
+## Fitting
+
+1. Drop the key into any cutout. Point the rails out of the cart to hang the battery outside the rim, or into the cart to keep it inside.
+2. Hold the battery with its rail channel toward the holder and the open end of the channel down.
+3. Line the channel up over the top of the rails and slide the battery down until it stops. The lead-ins guide the channel on.
+
+To take the battery off, lift it straight up.
+
+Like the wall mounts it follows, the holder keeps the battery on by gravity alone. On rough ground, run a strap over the handle.
+
+The first time you fit it, check that the bottom of the battery clears the rim. See [Where the battery hangs](#where-the-battery-hangs).
+
+## Dimensions
+
+![The EGO battery holder: a key with a flared base and a pair of upright T-section rails on top](../media/ego-battery-holder.png)
+
+| | |
+|---|---|
+| Insert | 19.2 × 51.0 mm key, bottom 63.5 mm into the cutout |
+| Base | Flares at 45° along the rim, from the key's 51 mm at the rim to 92 mm, 20.5 mm higher. 19.2 mm across the rim, flush with the key. Solid |
+| Rails | T-section, 102.5 mm tall above the base. 92 mm across the flange tips, flanges 8 mm thick, 83 mm across the neck behind them |
+| Lip clearance | Each flange overhangs the neck by 4.5 mm. Behind it, 11.2 mm of clear depth for the battery's lips, open at the back |
+| Recess | 56 mm wide down the middle of the rails' front face, 10 mm deep below the battery face, running the full length of the rails |
+| Battery face | The flanges' front faces, flush with the key's face |
+| Lead-in | 45° on each rail's top corner, taking the rails from 92 mm across down to 72 mm at the top face |
+| Edges | 1 mm chamfer up the section's outside corners: flange tips, recess edges and back corners |
+| Overall | 19.2 (X) × 92 (Y) × 186.5 (Z) mm; top 123 mm above the rim |
+
+## Design notes
+
+### Rail section
+
+EGO's spec sheets give the pack's outside size but not its rail interface. The packs are 195 mm long and 148 to 159 mm wide, and 82 to 105 mm deep depending on capacity. The rail section is measured instead from the STLs of three published wall mounts. The first two agree to the millimetre, and this holder takes their numbers.
+
+| | Ego_Battery_Holder ([Printables 81326](https://www.printables.com/model/81326-ego-battery-holder)) | ego battery support with angle | 56v_Battery_Holder_v2 | This holder |
+| --- | --- | --- | --- | --- |
+| Across the flange tips | 92 | 92 | 93 | 92 |
+| Flange thickness | 8 | 8 | 9 | 8 |
+| Across the neck | 83 | 83 | 80 | 83 |
+| Clear depth behind the flanges | 9, then a back plate | Open to the wall | 11, then a base flange | 11.2, open |
+| Centre recess | 56 wide, 10 deep | 56 wide, 10 deep | 68 wide, 6.3 deep | 56 wide, 10 deep |
+| Rail length | 102.5 | 67.7, tilted about 6° off the wall | 30 | 102.5 |
+| Top of the rails | 10 mm 45° lead-in | 10 mm 45° lead-in | 2 mm rounds | 10 mm 45° lead-in |
+
+All three hold the battery the same way. The pack slides down onto upright rails and hangs from them, with no latch catch.
+
+### Where the battery hangs
+
+How low the battery hangs depends on how far its channel runs, which none of the references show. The rails are 102.5 mm long, as on the 81326 holder. If the channel is about that long, the bottom of the battery ends up about level with the bottom of the rails, 20.5 mm above the rim. If it's longer, the lips land on the top of the base, at the same height.
+
+The battery face is flush with the key's face, inside the rim's outer edge. So the battery has to stay above the rim; it can't hang down past it. If yours doesn't clear the rim, lengthen the rails with `railLength`.

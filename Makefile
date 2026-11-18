@@ -15,7 +15,7 @@ SELECT  := $(or $(PART),$(PARTS))
 SCENES  := $(filter-out cart,$(patsubst src/assemblies/%.brep.ts,%,$(wildcard src/assemblies/*.brep.ts)))
 # Scenes whose accessories are too small to read on a whole-cart render. These
 # are framed on the accessories instead.
-CLOSEUPS := machete-sleeve pole-holder tie-down-block
+CLOSEUPS := ego-battery-holder machete-sleeve pole-holder tie-down-block
 OUT     := out
 MEDIA   := media
 BREP    := npx brep

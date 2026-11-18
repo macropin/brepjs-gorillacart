@@ -53,6 +53,22 @@ A slotted bar that carries a machete on the rim.
 
 </td>
 </tr>
+<tr>
+<td width="50%" valign="top">
+
+[![The EGO battery holder standing in a cutout, in orange](media/ego-battery-holder-assembled.png)](docs/ego-battery-holder.md)
+
+### [EGO battery holder](docs/ego-battery-holder.md)
+
+Upright rails that an EGO 56V battery slides onto, as on a wall mount.
+
+**Print:** one per battery
+
+</td>
+<td width="50%" valign="top">
+
+</td>
+</tr>
 </table>
 
 ## Will it fit?
@@ -73,6 +89,7 @@ Full measurements: [Cart cutout dimensions](docs/cart.md).
 | [Tie-down block](docs/tie-down-block.md) | 1 per cutout | 19.2 × 72 × 103.5 | Print lying on a broad face, no supports |
 | [Pole tool holder](docs/pole-holder.md) | 2 per pole | 31.6 × 51.0 × 133.3 | Print standing |
 | [Machete sleeve](docs/machete-sleeve.md) | 1 | 19.2 × 51.0 × 193.5 | Print standing, with a brim |
+| [EGO battery holder](docs/ego-battery-holder.md) | 1 per battery | 19.2 × 92 × 186.5 | Print standing, with a brim |
 
 Each accessory's page has its printing and fitting instructions.
 

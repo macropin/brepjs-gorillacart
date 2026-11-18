@@ -35,6 +35,7 @@ Each accessory is a `src/<name>.brep.ts` module that default-exports a zero-arg 
 | Tie-down block | [src/tie-down-block.brep.ts](../src/tie-down-block.brep.ts) | [Tie-down block](tie-down-block.md) |
 | Pole tool holder | [src/pole-holder.brep.ts](../src/pole-holder.brep.ts) | [Pole tool holder](pole-holder.md) |
 | Machete sleeve | [src/machete-sleeve.brep.ts](../src/machete-sleeve.brep.ts) | [Machete sleeve](machete-sleeve.md) |
+| EGO battery holder | [src/ego-battery-holder.brep.ts](../src/ego-battery-holder.brep.ts) | [EGO battery holder](ego-battery-holder.md) |
 
 Shared code lives alongside: [src/cart.ts](../src/cart.ts) for the [cutout measurements](cart.md), [src/key.ts](../src/key.ts) for the bar, [src/corner-panel.ts](../src/corner-panel.ts) for the corner panel shape both corner parts share, and [src/solid.ts](../src/solid.ts) for boolean result handling.
 
