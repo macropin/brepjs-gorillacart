@@ -13,9 +13,14 @@ PARTS   := $(patsubst src/%.brep.ts,%,$(wildcard src/*.brep.ts))
 PART    ?=
 SELECT  := $(or $(PART),$(PARTS))
 SCENES  := $(filter-out cart,$(patsubst src/assemblies/%.brep.ts,%,$(wildcard src/assemblies/*.brep.ts)))
+SCENE   ?=
+SHOW    := $(or $(SCENE),$(SCENES))
 # Scenes whose accessories are too small to read on a whole-cart render. These
 # are framed on the accessories instead.
-CLOSEUPS := ego-battery-holder machete-sleeve pole-holder tie-down-block
+CLOSEUPS := ego-battery-holder machete-sleeve pole-holder tie-down-block side-extensions-stacked
+# Scenes drawn against a backdrop of their own, src/assemblies/backdrops/<scene>.brep.ts,
+# instead of the bare cart. Only what the scene adds to its backdrop is coloured.
+BACKDROPS := $(patsubst src/assemblies/backdrops/%.brep.ts,%,$(wildcard src/assemblies/backdrops/*.brep.ts))
 OUT     := out
 MEDIA   := media
 BREP    := npx brep
@@ -91,21 +96,27 @@ export: node_modules
 		$(BREP) export src/$$p.brep.ts --step --stl --out $(OUT)/$$p; \
 	done
 
-## assemblies: render each kit fitted to the cart, into media/<name>-assembled.png
+## assemblies: render each kit fitted to the cart, into media/<name>-assembled.png (one with SCENE=<name>)
 #
-# Each scene is exported to STEP alongside the bare cart, then
-# scripts/render-assembly.mjs renders the pair through the same camera and
-# colours whatever the scene adds to the cart. Scenes listed in CLOSEUPS are
+# Each scene is exported to STEP alongside the bare cart, or its own backdrop
+# if it has one, then scripts/render-assembly.mjs renders the pair through the
+# same camera and colours whatever the scene adds. Scenes listed in CLOSEUPS are
 # framed on the accessories rather than the whole cart. Needs ImageMagick.
 assemblies: node_modules
-	@set -e; mkdir -p $(MEDIA); for s in cart $(SCENES); do \
+	@set -e; mkdir -p $(MEDIA); for s in cart $(SHOW); do \
 		mkdir -p $(OUT)/assemblies/$$s; \
 		$(BREP) export src/assemblies/$$s.brep.ts --step --out $(OUT)/assemblies/$$s; \
 	done; \
-	for s in $(SCENES); do \
+	for s in $(filter $(BACKDROPS),$(SHOW)); do \
+		mkdir -p $(OUT)/assemblies/backdrops/$$s; \
+		$(BREP) export src/assemblies/backdrops/$$s.brep.ts --step --out $(OUT)/assemblies/backdrops/$$s; \
+	done; \
+	for s in $(SHOW); do \
+		base=$(OUT)/assemblies/cart/cart.step; \
+		if echo " $(BACKDROPS) " | grep -q " $$s "; then base=$(OUT)/assemblies/backdrops/$$s/$$s.step; fi; \
 		node scripts/render-assembly.mjs \
 			--scene $(OUT)/assemblies/$$s/$$s.step \
-			--base $(OUT)/assemblies/cart/cart.step \
+			--base $$base \
 			--out $(MEDIA)/$$s-assembled.png \
 			$$(echo " $(CLOSEUPS) " | grep -q " $$s " && echo "--closeup 1"); \
 	done

@@ -17,6 +17,9 @@
  * flat and flush: the block prints lying on one of them with the holes upright,
  * and needs no supports.
  *
+ * The key carries the stacking bolt holes (./bolt.ts), so the block can bolt to
+ * a side extension post instead, as a strap point above the raised walls.
+ *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
  */
@@ -33,6 +36,7 @@ import {
   type ValidSolid,
 } from 'brepjs';
 
+import { keyBoltHoles, keyBoltVolume } from './bolt.js';
 import { cart, plug } from './cart.js';
 import { key, keySectionArea } from './key.js';
 import { single } from './solid.js';
@@ -120,7 +124,7 @@ export default function tieDownBlock(): ValidSolid {
   let part = single(unwrap(cut(block, hole(-params.holeSpacing / 2))));
   part = single(unwrap(cut(part, hole(params.holeSpacing / 2))));
 
-  if (params.edgeChamfer <= 0) return part;
+  if (params.edgeChamfer <= 0) return keyBoltHoles(part);
 
   // Every edge on the two broad faces above the rim: the head's outline and the
   // hole mouths. The base of the head, where it meets the rim, is left square
@@ -129,7 +133,8 @@ export default function tieDownBlock(): ValidSolid {
     const [x, , z] = curvePointAt(edge, 0.5);
     return Math.abs(Math.abs(x) - thickness / 2) < 1e-6 && z > rim + 1e-6;
   };
-  return single(unwrap(chamfer(part, edgeFinder().when(onHeadFace), params.edgeChamfer)));
+  const chamfered = single(unwrap(chamfer(part, edgeFinder().when(onHeadFace), params.edgeChamfer)));
+  return keyBoltHoles(chamfered);
 }
 
 // ---------------------------------------------------------------------------
@@ -137,7 +142,7 @@ export default function tieDownBlock(): ValidSolid {
 // ---------------------------------------------------------------------------
 
 // Key below the rim plus the head's profile across its thickness, less the two
-// holes. Each rounded top corner trims r²·(tan(θ/2) − θ/2) from the trapezoid,
+// strap holes and the bolt holes in the key. Each rounded top corner trims r²·(tan(θ/2) − θ/2) from the trapezoid,
 // θ being the turn at that corner. The edge chamfer takes a further sliver,
 // within the tolerance.
 const turn = Math.PI / 2 - Math.atan(slope);
@@ -148,7 +153,8 @@ const profileArea =
 export const expected = {
   volume:
     keySectionArea * params.insertDepth +
-    (profileArea - 2 * Math.PI * holeR ** 2) * thickness,
+    (profileArea - 2 * Math.PI * holeR ** 2) * thickness -
+    keyBoltVolume,
   bounds: {
     xMin: -thickness / 2,
     xMax: thickness / 2,

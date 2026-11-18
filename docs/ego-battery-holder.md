@@ -14,7 +14,7 @@ If the battery is tight or loose on the rails, change `flangeWidth` and `flangeT
 
 ## Printing
 
-Print it standing, as it sits in the cart, on the bottom of the key. The flanges and the clearance behind them run straight up. The base flares at 45°, and the lead-ins at the top are 45°, so nothing needs support. Where the base's square bottom corners sit over the key's chamfered corners, they overhang by a 1 × 1 mm triangle, which prints as a small ledge. It is a tall part on a 19.2 mm base, so use a brim.
+Print it standing, as it sits in the cart, on the bottom of the key. The flanges and the clearance behind them run straight up. The base flares at 45°, the lead-ins at the top are 45°, and the bolt holes in the key are teardrops pointing up, so nothing needs support. Where the base's square bottom corners sit over the key's chamfered corners, they overhang by a 1 × 1 mm triangle, which prints as a small ledge. It is a tall part on a 19.2 mm base, so use a brim.
 
 Standing, the layers run across the part. The joint at the rim is the most heavily loaded section, and it is the key's full 19.2 × 51 mm, because the recess and the clearance behind the flanges stop at the top of the base.
 
@@ -30,6 +30,8 @@ Like the wall mounts it follows, the holder keeps the battery on by gravity alon
 
 The first time you fit it, check that the bottom of the battery clears the rim. See [Where the battery hangs](#where-the-battery-hangs).
 
+With the side extension kit fitted, bolt the key to the outside of a post instead, rails out, through the two holes in it. It goes outermost in a stack. See [Stacking accessories](side-extension-kit.md#stacking-accessories).
+
 ## Dimensions
 
 ![The EGO battery holder: a key with a flared base and a pair of upright T-section rails on top](../media/ego-battery-holder.png)
@@ -44,6 +46,7 @@ The first time you fit it, check that the bottom of the battery clears the rim. 
 | Battery face | The flanges' front faces, flush with the key's face |
 | Lead-in | 45° on each rail's top corner, taking the rails from 92 mm across down to 72 mm at the top face |
 | Edges | 1 mm chamfer up the section's outside corners: flange tips, recess edges and back corners |
+| Bolt holes | Two Ø5.5 mm through the key across the rim, on its centreline, 15 and 45 mm above its bottom. Teardrops, pointing up. A Ø9.5 × 5.5 mm counterbore on the rails' side for the cap heads |
 | Overall | 19.2 (X) × 92 (Y) × 186.5 (Z) mm; top 123 mm above the rim |
 
 ## Design notes

@@ -37,12 +37,14 @@ Each accessory is a `src/<name>.brep.ts` module that default-exports a zero-arg 
 | Machete sleeve | [src/machete-sleeve.brep.ts](../src/machete-sleeve.brep.ts) | [Machete sleeve](machete-sleeve.md) |
 | EGO battery holder | [src/ego-battery-holder.brep.ts](../src/ego-battery-holder.brep.ts) | [EGO battery holder](ego-battery-holder.md) |
 
-Shared code lives alongside: [src/cart.ts](../src/cart.ts) for the [cutout measurements](cart.md), [src/key.ts](../src/key.ts) for the bar, [src/corner-panel.ts](../src/corner-panel.ts) for the corner panel shape both corner parts share, and [src/solid.ts](../src/solid.ts) for boolean result handling.
+Shared code lives alongside: [src/cart.ts](../src/cart.ts) for the [cutout measurements](cart.md), [src/key.ts](../src/key.ts) for the bar, [src/bolt.ts](../src/bolt.ts) for the bolt holes that [stack accessories](side-extension-kit.md#stacking-accessories) on the posts, [src/corner-panel.ts](../src/corner-panel.ts) for the corner panel shape both corner parts share, and [src/solid.ts](../src/solid.ts) for boolean result handling.
 
 ## Assembly renders
 
-`make assemblies` renders each scene in `src/assemblies/`: accessories placed on a schematic cart ([src/assemblies/cart.brep.ts](../src/assemblies/cart.brep.ts)). Scenes aren't parts, so they're never checked against dimensions or exported for printing.
+`make assemblies` renders each scene in `src/assemblies/`, or one with `SCENE=<name>`: accessories placed on a schematic cart ([src/assemblies/cart.brep.ts](../src/assemblies/cart.brep.ts)). Scenes aren't parts, so they're never checked against dimensions or exported for printing.
 
 The viewer draws every body in the same grey, so [scripts/render-assembly.mjs](../scripts/render-assembly.mjs) renders the scene and the bare cart through the same camera, then colours whatever the scene adds. It needs ImageMagick.
+
+A scene with a module of the same name in `src/assemblies/backdrops/` is rendered against that backdrop instead of the bare cart, so only what it adds to the backdrop is coloured. The stacked accessories use this to show against the side extension kit in grey. The camera frames each model by its bounding box, so a scene and its backdrop need the same box. Where a scene reaches beyond the cart's box, give both the same specks just outside it, as [src/assemblies/side-extensions-stacked.brep.ts](../src/assemblies/side-extensions-stacked.brep.ts) does.
 
 Scenes listed in `CLOSEUPS` in the [Makefile](../Makefile) are framed on the accessories and the stretch of rim around them, rather than on the whole cart. Use it for accessories too small to read at full-cart scale.

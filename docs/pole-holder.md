@@ -20,6 +20,8 @@ Print it standing, as it sits in the cart, on the bottom of the key. The clip's 
 
 Fit two holders in neighbouring cutouts on the same side, 330.7 mm apart, with their clips in line along the rim. Press the pole down into both clips until it snaps in.
 
+Unlike the other accessories, it can't be [stacked on the side extension kit](side-extension-kit.md#stacking-accessories). The clip is wider than the key, so bolted flat to a post it would hit the post. It has no bolt holes.
+
 ## Dimensions
 
 ![The pole tool holder: a bar with a U-shaped snap clip on top](../media/pole-holder.png)

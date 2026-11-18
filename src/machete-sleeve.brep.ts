@@ -6,6 +6,9 @@
  * faces. The blade slides through edge down and is held by friction. What is
  * left is two plates joined by solid ends.
  *
+ * The key carries the stacking bolt holes (./bolt.ts), so the sleeve can bolt
+ * to a side extension post instead.
+ *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
  */
@@ -21,6 +24,7 @@ import {
   type ValidSolid,
 } from 'brepjs';
 
+import { keyBoltHoles, keyBoltVolume } from './bolt.js';
 import { cart, plug } from './cart.js';
 import { key, keySectionArea } from './key.js';
 import { single } from './solid.js';
@@ -90,7 +94,7 @@ export default function macheteSleeve(): ValidSolid {
     part = single(unwrap(cut(part, tool)));
   }
 
-  if (params.slotChamfer <= 0) return part;
+  if (params.slotChamfer <= 0) return keyBoltHoles(part);
 
   // The slot's outline on both narrow faces: everything on those faces within
   // the slot's width that isn't the top or bottom edge of the bar.
@@ -103,26 +107,27 @@ export default function macheteSleeve(): ValidSolid {
       z < height - 1e-6
     );
   };
-  return single(unwrap(chamfer(part, edgeFinder().when(onSlotMouth), params.slotChamfer)));
+  const chamfered = single(unwrap(chamfer(part, edgeFinder().when(onSlotMouth), params.slotChamfer)));
+  return keyBoltHoles(chamfered);
 }
 
 // ---------------------------------------------------------------------------
 // Declared intent — asserted by `brep verify --check`
 // ---------------------------------------------------------------------------
 
-// The chamfers and the slot remove material without moving the extents, so the
-// bounding box is the plug section by the full height. The volume is the
-// chamfered bar, less the stadium slot across the full 51mm, less the chamfer
-// round each mouth: a c²/2 triangle along each straight side, and the same
-// triangle swept round the two half-circle ends (Pappus, its centroid c/3
-// out from the arc).
+// The chamfers, the slot and the bolt holes remove material without moving the
+// extents, so the bounding box is the plug section by the full height. The
+// volume is the chamfered bar, less the stadium slot across the full 51mm, less
+// the chamfer round each mouth: a c²/2 triangle along each straight side, and
+// the same triangle swept round the two half-circle ends (Pappus, its centroid
+// c/3 out from the arc). Less the bolt holes in the key.
 const slotArea = slotWidth * params.slotSpan + Math.PI * slotR ** 2;
 const c = params.slotChamfer;
 const chamferPerMouth =
   (c ** 2 / 2) * (2 * params.slotSpan + 2 * Math.PI * (slotR + c / 3));
 
 export const expected = {
-  volume: keySectionArea * height - slotArea * plug.y - 2 * chamferPerMouth,
+  volume: keySectionArea * height - slotArea * plug.y - 2 * chamferPerMouth - keyBoltVolume,
   bounds: {
     xMin: -plug.x / 2,
     xMax: plug.x / 2,

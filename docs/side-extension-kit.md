@@ -17,12 +17,12 @@ The render shows the whole kit in place, in orange. The view looks in over the o
 | [Corner panel](#corner-panels), left | 1 | 142.3 × 164.6 × 149.2 | [src/corner-panel-left.brep.ts](../src/corner-panel-left.brep.ts) |
 | [Corner panel](#corner-panels), right | 1 | 142.3 × 164.6 × 149.2 | [src/corner-panel-right.brep.ts](../src/corner-panel-right.brep.ts) |
 
-The kit uses all eight cutouts, so it can't be fitted alongside the other accessories.
+The kit uses all eight cutouts. The machete sleeve, EGO battery holder and tie-down block can [bolt to its posts](#stacking-accessories) instead.
 
 ## Printing
 
 - **Bed size:** the side panel is 295.4 mm long, so it needs a print bed at least 296 mm in one direction. It won't fit a 256 mm bed.
-- **Posts:** print standing, as they sit in the cart, on the bottom of the insert. The 6° lean is the only overhang.
+- **Posts:** print standing, as they sit in the cart, on the bottom of the insert. The 6° lean is the only overhang, apart from the bolt holes, which are teardrops pointing up the post and print without support.
 - **Side panels:** print flat on the plain outside face, lips up.
 - **Material:** print the panel across the handle end, the one closest to the handle, in PETG or another impact-resistant plastic. The other side panels should be fine in PLA.
 - **Corner panels:** print as modelled, standing on the bottom edge. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
@@ -41,11 +41,42 @@ Left and right are as you stand at the handle end facing the tub.
 
 With the far end closed straight across between the two farthest long-side posts, the posts and panels hold about 80 litres above the rim. That's 80.4 L to the panels' inside faces, or 81.2 L to their mid-planes, and takes the cart to about 280 L. At the rim, the panel outline is 801.8 × 656 mm between centre lines. With the 6° lean it grows to about 833 × 687 mm at the top, 149.2 mm higher.
 
+## Stacking accessories
+
+![The machete sleeve bolted to the outside of a side extension post, and the EGO battery holder bolted on outside it, in orange, against the kit on the cart in grey](../media/side-extensions-stacked-assembled.png)
+
+With the kit fitted, every cutout holds a post, so the other accessories bolt to the posts instead. Each post has two M5 holes through it above the rim, with nut pockets on the inside face. The machete sleeve, EGO battery holder and tie-down block have the same two holes through their keys, counterbored for the bolt heads. An accessory bolts flat to the outside face of any post. A second can bolt on outside the first, through the same holes. The render shows the machete sleeve on the middle post of one long side, with the battery holder bolted on outside it.
+
+| | |
+|---|---|
+| Bolts | ISO 4762 M5 socket cap screws, two per post: M5 × 30 for one accessory, M5 × 50 for two |
+| Nuts | ISO 4032 M5 hex nuts, two per post |
+| Height | A bolted-on accessory sits 68.5 mm higher than in a cutout, measured up the post. Its key starts 5 mm above the rim, to clear the rim's outer edge |
+| Lean | It leans 6° out with the post, so it stays the same distance from the panels all the way up |
+
+The bolt lengths land with the nut pulled down onto the floor of its 8 mm pocket and the bolt's tip still below the post's inside face. Anything from 29.6 to 32.9 mm under the head works for one accessory, and 48.8 to 52.1 mm for two.
+
+### Fitting
+
+1. Drop a nut into each pocket on the inside face of the post.
+2. Hold the accessory's key flat against the outside face of the post, holes on holes, counterbores facing out. The bottom of the key stands just clear of the rim.
+3. For a second accessory, hold its key flat against the first one's in the same way.
+4. Push the bolts in from outside and tighten them into the nuts. Snug them up, but not so hard that the heads sink into the plastic. Plastic under a bolt creeps, so check them now and then.
+
+### What goes where
+
+- **EGO battery holder:** outermost, rails out. Nothing can go over the battery's face, so with the machete sleeve the order is post, sleeve, holder.
+- **Machete sleeve under the battery holder:** the blade passes 8 mm inside the holder's back, so the handle has to sit more than 46 mm along the rim from the middle of the stack, past the ends of the holder's rails.
+- **Tie-down block:** a strap point above the raised walls, for holding a load down over them.
+- **Pole tool holder:** doesn't stack. Its clip is wider than its key and would hit the post, so it has no bolt holes.
+
+Parts printed before the holes were added can be drilled through at 5.5 mm in the same places: 15 and 45 mm above the bottom of an accessory's key, and 19 and 49 mm up a post's outside face from where it meets the insert. The head and nut then sit on the faces, so each bolt needs to be the parts' total thickness, 19.2 mm each, plus at least 5 mm for the nut.
+
 ## Posts
 
 ![The side extension post: a straight insert with a post above it leaning slightly outward, grooved down both narrow faces](../media/side-extension.png)
 
-Eight identical posts, one per cutout. Each post stands 150 mm above the rim, leaning 6° outward. A groove down each face that points along the rim takes the edge of a side panel. The panel drops in from the top and spans to the next post.
+Eight identical posts, one per cutout. Each post stands 150 mm above the rim, leaning 6° outward. A groove down each face that points along the rim takes the edge of a side panel. The panel drops in from the top and spans to the next post. Two bolt holes through the post above the rim take [stacked accessories](#stacking-accessories).
 
 | | |
 |---|---|
@@ -55,6 +86,7 @@ Eight identical posts, one per cutout. Each post stands 150 mm above the rim, le
 | Grooves | 4 mm wide × 8 mm deep on both ±Y faces, open at the top, floor at rim height. Centred 2 mm toward the outside (+X) of the post's axis, so the groove and its lip recess together sit centred in the post |
 | Lip recesses | 4 × 4 mm at the bottom of each groove, opening sideways into the inside wall (−X), full height and open at the top. The groove is L-shaped in section |
 | Material left | 5.6 mm on both sides at the thinnest: outside the groove and inside the lip recess. 9.6 mm beside the groove on the inside, in front of the recess, as the shoulder that catches the lip. 35 mm core between the groove floors |
+| Bolt holes | Two Ø5.5 mm through the core, across the rim, 20 and 50 mm above the rim along the post's axis and square to its faces. Teardrops, pointing up the post. A hex nut pocket 8.3 mm across flats and 8 mm deep on the inside face of each |
 | Overall | 34.88 (X) × 51.0 (Y) × 213.7 (Z) mm; top 150.2 mm above the rim |
 
 ## Side panels
@@ -93,4 +125,4 @@ The corner's path is the inside edge of the rim moved 17 mm outward, onto the li
 
 ## About the render
 
-The cart is a schematic backdrop. Its rim, corners and cutouts are placed from the [cart measurements](cart.md), so the kit sits where it would on the real cart. The tub's slope, the wheels, the frame and the handle are drawn only to look right. [src/assemblies/side-extensions.brep.ts](../src/assemblies/side-extensions.brep.ts) places the kit on the cart from [src/assemblies/cart.brep.ts](../src/assemblies/cart.brep.ts).
+The cart is a schematic backdrop. Its rim, corners and cutouts are placed from the [cart measurements](cart.md), so the kit sits where it would on the real cart. The tub's slope, the wheels, the frame and the handle are drawn only to look right. [src/assemblies/side-extensions.brep.ts](../src/assemblies/side-extensions.brep.ts) places the kit on the cart from [src/assemblies/cart.brep.ts](../src/assemblies/cart.brep.ts). [src/assemblies/side-extensions-stacked.brep.ts](../src/assemblies/side-extensions-stacked.brep.ts) bolts the stacked accessories onto it.

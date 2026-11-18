@@ -20,6 +20,8 @@ The block is held in by friction fit alone. Pinning or bolting it would mean dri
 
 The head is flush with the key across the rim, so it doesn't overhang the rim's inner or outer edge.
 
+With the side extension kit fitted, bolt the key to the outside of a post instead, through the two holes in it, for a strap point above the raised walls. See [Stacking accessories](side-extension-kit.md#stacking-accessories).
+
 ## Dimensions
 
 ![The tie-down block: a key with a trapezoid head on top, pierced by two strap holes](../media/tie-down-block.png)
@@ -33,4 +35,5 @@ The head is flush with the key across the rim, so it doesn't overhang the rim's 
 | Holes | Two Ø20 mm through the head across the rim, 28 mm apart, centred 20 mm above the rim |
 | Material around the holes | 8 mm between them, 7.7 mm to each sloping end (measured square to the slope), 10 mm above and 10 mm below to the rim |
 | Edges | 1 mm chamfer on every edge of both broad faces above the rim, hole mouths included, so straps don't wear on a sharp edge |
+| Bolt holes | Two Ø5.5 mm through the key across the rim, on its centreline, 15 and 45 mm above its bottom. A Ø9.5 × 5.5 mm counterbore on one face for the cap heads. Teardrops, pointing up, though printed flat they stand upright |
 | Overall | 19.2 (X) × 72 (Y) × 103.5 (Z) mm; head top 40 mm above the rim |

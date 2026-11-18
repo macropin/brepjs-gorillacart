@@ -70,7 +70,8 @@ async function shoot(steps, outDir) {
       await page.waitForFunction('window.__ready === true', { timeout: READY_TIMEOUT_MS });
       await page.evaluate(() => globalThis.__setScene({ name: 'iso', view: 'iso' }));
       await new Promise((done) => setTimeout(done, SETTLE_MS));
-      const png = join(outDir, `${basename(file, '.step')}.png`);
+      // Numbered, since a scene and its backdrop can share a file name.
+      const png = join(outDir, `${shots.length}-${basename(file, '.step')}.png`);
       await page.screenshot({ path: png });
       await page.close();
       shots.push(png);

@@ -75,7 +75,7 @@ Upright rails that an EGO 56V battery slides onto, as on a wall mount.
 
 The accessories are designed for the 200L poly dump cart linked above. Its rim has eight cutouts, each 51.3 × 19.5 mm and 63.5 mm deep: three along each long side and two at the handle end. Every accessory stands on the same 51.0 × 19.2 mm key that drops into one.
 
-The side extension kit uses all eight cutouts. The other accessories take one cutout each, in any combination.
+The side extension kit uses all eight cutouts. The other accessories take one cutout each, in any combination. With the kit fitted, the machete sleeve, EGO battery holder and tie-down block bolt to its posts instead, two deep if you like, with M5 bolts: see [Stacking accessories](docs/side-extension-kit.md#stacking-accessories).
 
 Full measurements: [Cart cutout dimensions](docs/cart.md).
 
