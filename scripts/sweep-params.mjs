@@ -7,7 +7,9 @@
 //
 // For each parameter in a part's `schema`, the part is built with that
 // parameter at its minimum and at its maximum and everything else at its
-// defaults. Each build is a small wrapper module in out/sweep/ that the brep
+// defaults; a toggle's range is off and on. A choice is built with each of its
+// options, and under each option every parameter that applies to it is swept
+// as above. Each build is a small wrapper module in out/sweep/ that the brep
 // CLI verifies. A part whose `design` refuses a limit (a DesignError) fails the
 // sweep too: the range in its schema is too wide.
 
@@ -28,30 +30,48 @@ const parts = readdirSync('src')
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
+const { applies } = await import(pathToFileURL(resolve('src/params.ts')).href);
+
 const cases = [];
 for (const part of parts) {
   const mod = await import(pathToFileURL(resolve(`src/${part}.brep.ts`)).href);
-  for (const [name, spec] of Object.entries(mod.schema ?? {})) {
-    for (const [end, value] of [
-      ['min', spec.min],
-      ['max', spec.max],
-    ]) {
-      const file = `${OUT}/${part}--${name}-${end}.brep.ts`;
-      writeFileSync(
-        file,
-        [
-          `// ${part} with ${name} at its ${end}imum, ${value}. Written by scripts/sweep-params.mjs.`,
-          `import { defaults, design } from '../../src/${part}.brep.js';`,
-          ``,
-          `const built = design({ ...defaults, ${name}: ${value} });`,
-          `export default built.model;`,
-          `export const expected = built.expected;`,
-          ``,
-        ].join('\n'),
-      );
-      cases.push({ part, name, end, value, file });
+  const schema = Object.entries(mod.schema ?? {});
+
+  // Every combination of the choices' options: just {} for a part with none.
+  let contexts = [{}];
+  for (const [name, spec] of schema.filter(([, s]) => s.kind === 'choice')) {
+    contexts = contexts.flatMap((context) => spec.options.map((o) => ({ ...context, [name]: o.value })));
+  }
+
+  for (const context of contexts) {
+    if (Object.keys(context).length) add(part, context);
+    const values = { ...mod.defaults, ...context };
+    for (const [name, spec] of schema) {
+      if (spec.kind === 'choice' || !applies(spec, values)) continue;
+      add(part, { ...context, [name]: spec.min });
+      add(part, { ...context, [name]: spec.max });
     }
   }
+}
+
+/** Writes a wrapper building `part` with `overrides` over its defaults. */
+function add(part, overrides) {
+  const entries = Object.entries(overrides);
+  const label = `${part}: ${entries.map(([name, value]) => `${name} = ${value}`).join(', ')}`;
+  const file = `${OUT}/${part}--${entries.map(([name, value]) => `${name}-${value}`).join('--')}.brep.ts`;
+  writeFileSync(
+    file,
+    [
+      `// ${label}. Written by scripts/sweep-params.mjs.`,
+      `import { defaults, design } from '../../src/${part}.brep.js';`,
+      ``,
+      `const built = design({ ...defaults, ...${JSON.stringify(overrides)} });`,
+      `export default built.model;`,
+      `export const expected = built.expected;`,
+      ``,
+    ].join('\n'),
+  );
+  cases.push({ label, file });
 }
 
 console.log(`sweep: ${cases.length} builds across ${parts.length} parts`);
@@ -59,7 +79,7 @@ console.log(`sweep: ${cases.length} builds across ${parts.length} parts`);
 let failed = 0;
 for (const c of cases) {
   const report = `${c.file.slice(0, -'.brep.ts'.length)}.json`;
-  const label = `${c.part}: ${c.name} = ${c.value} (${c.end})`;
+  const { label } = c;
   try {
     execFileSync('npx', ['brep', 'verify', c.file, '--check', '--json', report], {
       stdio: ['ignore', 'ignore', 'ignore'],

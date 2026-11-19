@@ -3,8 +3,8 @@
  *
  * Gives a load something to strap to. The key bar drops into a rim cutout; on
  * top sits a head that rests on the rim either side of the cutout and carries
- * two holes for a strap, rope or hook to pass through. Fit as many as needed,
- * one per cutout.
+ * two holes for a rope or hook to pass through, or one or two horizontal slits
+ * for flat strap webbing. Fit as many as needed, one per cutout.
  *
  * It is held in by friction alone; pinning it would mean drilling the cart. In
  * use a strap through one hole, run down to the cart, pulls it into place.
@@ -14,8 +14,8 @@
  * geometry here is our own, built on the shared key.
  *
  * The head is no thicker than the key across the rim, so both broad faces are
- * flat and flush: the block prints lying on one of them with the holes upright,
- * and needs no supports.
+ * flat and flush: the block prints lying on one of them with the holes or slits
+ * upright, and needs no supports.
  *
  * The key carries the stacking bolt holes and registration pockets
  * (./stacking.ts), so the block can bolt to a side extension post instead, as a
@@ -40,12 +40,17 @@ import {
 import { keyStackingSchema, stacking, stackingDefaults, stackingFeatures } from './stacking.js';
 import { cart, plugFor } from './cart.js';
 import { key, keySectionArea } from './key.js';
-import { atLeast, fitToleranceSpec, type Numeric, type Schema } from './params.js';
+import { atLeast, DesignError, fitToleranceSpec, type Numeric, type Schema } from './params.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
 // Parameters
 // ---------------------------------------------------------------------------
+
+/** What the strap passes through, as the `openings` parameter numbers it. */
+export const OPENINGS = { holes: 0, oneSlit: 1, twoSlits: 2 } as const;
+
+const SLITS = [OPENINGS.oneSlit, OPENINGS.twoSlits];
 
 export const defaults = {
   /** Length of bar sunk into the cutout. */
@@ -63,12 +68,26 @@ export const defaults = {
   /** Rounds the head's two top corners in its profile. */
   headCornerRadius: 6,
 
-  /** Strap holes through the head, across the rim. */
+  /**
+   * What passes through the head, across the rim: two round holes, for rope or
+   * a hook, or one or two horizontal slits, for flat strap webbing. Two slits
+   * sit one above the other, so a strap can weave through them. See OPENINGS.
+   */
+  openings: OPENINGS.holes,
+
+  /** Centre of the holes, or of the slits, above the rim. */
+  openingHeight: 20,
+
+  /** Strap holes. */
   holeDiameter: 20,
   holeSpacing: 28, // centre to centre, along the rim
-  holeHeight: 20, // centre, above the rim
 
-  /** Breaks every edge of the head's broad faces, hole mouths included, so a strap has no sharp edge to wear on. */
+  /** Strap slits: stadiums, long along the rim. */
+  slitLength: 28, // end to end, along the rim
+  slitHeight: 6,
+  slitBar: 8, // solid between two slits
+
+  /** Breaks every edge of the head's broad faces, hole and slit mouths included, so a strap has no sharp edge to wear on. */
   edgeChamfer: 1,
 
   /** Printed-fit slop, taken off the cutout's width and length. */
@@ -82,19 +101,48 @@ export const defaults = {
 export type Params = Numeric<typeof defaults>;
 
 export const schema: Schema<Params> = {
+  openings: {
+    kind: 'choice',
+    label: 'Strap openings',
+    options: [
+      { value: OPENINGS.holes, label: 'Two holes' },
+      { value: OPENINGS.oneSlit, label: 'One slit' },
+      { value: OPENINGS.twoSlits, label: 'Two slits' },
+    ],
+    help: 'Round holes for rope or a hook. Slits for flat strap webbing: two let a strap weave through.',
+  },
   holeDiameter: {
     label: 'Strap hole diameter',
     unit: 'mm',
     min: 10,
     max: 24,
     step: 0.5,
-    help: 'Both holes. Big enough for the hook, rope or strap you tie down with.',
+    help: 'Both holes. Big enough for the hook or rope you tie down with.',
+    when: { openings: [OPENINGS.holes] },
+  },
+  slitLength: {
+    label: 'Slit length',
+    unit: 'mm',
+    min: 15,
+    max: 50,
+    step: 0.5,
+    help: 'Along the rim. A little more than the strap is wide: 28 mm takes a 25 mm strap.',
+    when: { openings: SLITS },
+  },
+  slitHeight: {
+    label: 'Slit height',
+    unit: 'mm',
+    min: 3,
+    max: 8,
+    step: 0.5,
+    help: 'Room to feed the webbing through.',
+    when: { openings: SLITS },
   },
   ...keyStackingSchema,
   fitTolerance: fitToleranceSpec,
 };
 
-/** Least material left round the strap holes. */
+/** Least material left round the strap holes or slits. */
 const MIN_WALL = 3;
 
 /** Overshoot so through-cuts clear the faces instead of leaving zero-thickness skins. */
@@ -110,28 +158,61 @@ export function design(params: Params = defaults) {
 
   const rim = params.insertDepth; // 63.5
   const top = rim + params.headHeight; // 103.5
-  const holeR = params.holeDiameter / 2;
-  const holeZ = rim + params.holeHeight;
   const thickness = plug.x; // 19.2, flush with the key
 
+  const holes = params.openings === OPENINGS.holes;
+  if (!holes && !SLITS.includes(params.openings as (typeof SLITS)[number])) {
+    throw new DesignError(`openings is ${params.openings}: 0 for holes, 1 or 2 for slits`);
+  }
+  if (!holes && params.slitLength <= params.slitHeight) {
+    throw new DesignError('A slit must be longer than it is high');
+  }
+
+  const holeR = params.holeDiameter / 2;
+  const holeZ = rim + params.openingHeight;
+
+  const slitR = params.slitHeight / 2;
+  const slitCount = params.openings === OPENINGS.twoSlits ? 2 : 1;
+
+  /** How far each slit's centre sits above or below `openingHeight`. */
+  const slitOffset = slitCount === 2 ? (params.slitHeight + params.slitBar) / 2 : 0;
+
+  /** The slits' centres above the rim, from the bottom. */
+  const slitHeights =
+    slitCount === 2
+      ? [params.openingHeight - slitOffset, params.openingHeight + slitOffset]
+      : [params.openingHeight];
+
   /**
-   * Material left around the holes: between them, out to the sloping ends
+   * Material left around the openings: between them, out to the sloping ends
    * (measured square to the slope, where it is thinnest), above, and below to
-   * the rim.
+   * the rim. `toEnd` measures from an end arc of radius `r` centred `y` along
+   * the rim and `z` above it.
    */
   const slope = (params.headBase - params.headTop) / 2 / params.headHeight;
-  const webBetweenHoles = params.holeSpacing - params.holeDiameter; // 8
-  const wallToEnd =
-    (params.headBase / 2 - params.holeSpacing / 2 - slope * params.holeHeight) /
-      Math.hypot(1, slope) -
-    holeR; // 7.7
-  const wallAbove = params.headHeight - params.holeHeight - holeR; // 10
-  const wallBelow = params.holeHeight - holeR; // 10
+  const toEnd = (y: number, z: number, r: number) =>
+    (params.headBase / 2 - y - slope * z) / Math.hypot(1, slope) - r;
 
-  atLeast('The web between the strap holes', webBetweenHoles, MIN_WALL);
-  atLeast('The wall outside each strap hole', wallToEnd, MIN_WALL);
-  atLeast('The wall above the strap holes', wallAbove, MIN_WALL);
-  atLeast('The wall below the strap holes', wallBelow, MIN_WALL);
+  const walls = holes
+    ? {
+        between: params.holeSpacing - params.holeDiameter, // 8
+        toEnd: toEnd(params.holeSpacing / 2, params.openingHeight, holeR), // 7.7
+        above: params.headHeight - params.openingHeight - holeR, // 10
+        below: params.openingHeight - holeR, // 10
+      }
+    : {
+        // The top slit is the one nearest the sloping ends.
+        between: slitCount === 2 ? params.slitBar : Infinity,
+        toEnd: toEnd(params.slitLength / 2 - slitR, params.openingHeight + slitOffset, slitR),
+        above: params.headHeight - params.openingHeight - slitOffset - slitR,
+        below: params.openingHeight - slitOffset - slitR,
+      };
+
+  const what = holes ? 'strap holes' : slitCount === 2 ? 'strap slits' : 'strap slit';
+  atLeast(`The web between the ${what}`, walls.between, MIN_WALL);
+  atLeast(`The wall beyond the ends of the ${what}`, walls.toEnd, MIN_WALL);
+  atLeast(`The wall above the ${what}`, walls.above, MIN_WALL);
+  atLeast(`The wall below the ${what}`, walls.below, MIN_WALL);
 
   function model(): ValidSolid {
     // The head's profile on the YZ plane (u = Y, v = Z), extruded across the rim
@@ -153,14 +234,33 @@ export function design(params: Params = defaults) {
         at: [-thickness / 2 - OVER, y, holeZ],
         axis: [1, 0, 0],
       });
-    let part = single(unwrap(cut(block, hole(-params.holeSpacing / 2))));
-    part = single(unwrap(cut(part, hole(params.holeSpacing / 2))));
+
+    // A slit is a stadium on the YZ plane, its end arcs centred `a` either side
+    // of the middle, cut right through across the rim.
+    const a = params.slitLength / 2 - slitR;
+    const slit = (z: number) =>
+      single(
+        new Sketcher('YZ', -thickness / 2 - OVER)
+          .movePointerTo([-a, z - slitR])
+          .lineTo([a, z - slitR])
+          .threePointsArcTo([a, z + slitR], [a + slitR, z])
+          .lineTo([-a, z + slitR])
+          .threePointsArcTo([-a, z - slitR], [-a - slitR, z])
+          .close()
+          .extrude(thickness + 2 * OVER),
+      );
+
+    const openings = holes
+      ? [hole(-params.holeSpacing / 2), hole(params.holeSpacing / 2)]
+      : slitHeights.map((h) => slit(rim + h));
+    let part = block;
+    for (const opening of openings) part = single(unwrap(cut(part, opening)));
 
     if (params.edgeChamfer <= 0) return keyStackingCuts(part);
 
     // Every edge on the two broad faces above the rim: the head's outline and the
-    // hole mouths. The base of the head, where it meets the rim, is left square
-    // so it sits flat.
+    // hole or slit mouths. The base of the head, where it meets the rim, is left
+    // square so it sits flat.
     const onHeadFace = (edge: Edge) => {
       const [x, , z] = curvePointAt(edge, 0.5);
       return Math.abs(Math.abs(x) - thickness / 2) < 1e-6 && z > rim + 1e-6;
@@ -175,19 +275,23 @@ export function design(params: Params = defaults) {
   // Declared intent — asserted by `brep verify --check`
   // -------------------------------------------------------------------------
 
-  // Key below the rim plus the head's profile across its thickness, less the two
-  // strap holes and the stacking features in the key. Each rounded top corner
-  // trims r²·(tan(θ/2) − θ/2) from the trapezoid, θ being the turn at that
-  // corner. The edge chamfer takes a further sliver, within the tolerance.
+  // Key below the rim plus the head's profile across its thickness, less the
+  // strap holes or slits and the stacking features in the key. Each rounded top
+  // corner trims r²·(tan(θ/2) − θ/2) from the trapezoid, θ being the turn at
+  // that corner. A slit is a rectangle between its end centres plus a circle.
+  // The edge chamfer takes a further sliver, within the tolerance.
   const turn = Math.PI / 2 - Math.atan(slope);
   const cornerLoss = params.headCornerRadius ** 2 * (Math.tan(turn / 2) - turn / 2);
   const profileArea =
     ((params.headBase + params.headTop) / 2) * params.headHeight - 2 * cornerLoss;
+  const openingArea = holes
+    ? 2 * Math.PI * holeR ** 2
+    : slitCount * ((params.slitLength - params.slitHeight) * params.slitHeight + Math.PI * slitR ** 2);
 
   const expected = {
     volume:
       keySectionArea(plug) * params.insertDepth +
-      (profileArea - 2 * Math.PI * holeR ** 2) * thickness +
+      (profileArea - openingArea) * thickness +
       keyStackingDelta,
     bounds: {
       xMin: -thickness / 2,
@@ -200,7 +304,7 @@ export function design(params: Params = defaults) {
     tolerancePct: 0.5,
   };
 
-  return { model, expected, webBetweenHoles, wallToEnd, wallAbove, wallBelow };
+  return { model, expected, walls };
 }
 
 const standard = design();
@@ -209,4 +313,4 @@ export default function tieDownBlock(): ValidSolid {
   return standard.model();
 }
 
-export const { expected, webBetweenHoles, wallToEnd, wallAbove, wallBelow } = standard;
+export const { expected, walls } = standard;

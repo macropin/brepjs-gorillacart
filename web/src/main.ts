@@ -4,7 +4,14 @@
 
 import './style.css';
 
-import { on, type DimensionSpec, type ParamSpec, type ToggleSpec } from '../../src/params.js';
+import {
+  applies,
+  on,
+  type ChoiceSpec,
+  type DimensionSpec,
+  type ParamSpec,
+  type ToggleSpec,
+} from '../../src/params.js';
 import { accessories, docUrl, type AccessoryInfo, type PartInfo } from './accessories.js';
 import type { BuildRequest, Params, PartData, WorkerMessage } from './protocol.js';
 import { Viewer, type Measured } from './viewer.js';
@@ -74,10 +81,17 @@ function data(): PartData | undefined {
 
 /** Only the changes this part takes: the stack locator takes none of the kit's. */
 function partChanges(): Params {
-  const schema = data()?.schema;
+  const d = data();
   const all = changed();
-  if (!schema) return all;
-  return Object.fromEntries(Object.entries(all).filter(([name]) => name in schema));
+  if (!d) return all;
+  // Nor those that don't apply to it as it stands: a hole size, once it has slits.
+  const values = { ...d.defaults, ...all };
+  return Object.fromEntries(
+    Object.entries(all).filter(([name]) => {
+      const spec = d.schema[name];
+      return spec !== undefined && applies(spec, values);
+    }),
+  );
 }
 
 function stateKey(): string {
@@ -127,8 +141,14 @@ function tidyChanges(): void {
       delete values[name];
       continue;
     }
-    let clamped = Math.min(entry.spec.max, Math.max(entry.spec.min, value));
-    if (entry.spec.kind === 'toggle') clamped = on(clamped) ? 1 : 0;
+    const { spec } = entry;
+    let clamped: number;
+    if (spec.kind === 'choice') {
+      clamped = spec.options.some((o) => same(o.value, value)) ? value : entry.fallback;
+    } else {
+      clamped = Math.min(spec.max, Math.max(spec.min, value));
+      if (spec.kind === 'toggle') clamped = on(clamped) ? 1 : 0;
+    }
     if (same(clamped, entry.fallback)) delete values[name];
     else values[name] = clamped;
   }
@@ -141,7 +161,7 @@ function schemaFor(info: AccessoryInfo): Record<string, { spec: ParamSpec; fallb
     const d = catalogue?.[p.id];
     if (!d) continue;
     for (const [name, spec] of Object.entries(d.schema)) {
-      merged[name] ??= { spec, fallback: d.defaults[name] ?? spec.min };
+      merged[name] ??= { spec, fallback: d.defaults[name] ?? 0 };
     }
   }
   return merged;
@@ -441,9 +461,12 @@ function renderForm(): void {
   }
   const disabled = kernel.state === 'unavailable';
 
-  // A section per group, in the order the schema first names each.
+  // A section per group, in the order the schema first names each, of the
+  // fields that apply to the part as it stands.
+  const values = { ...d.defaults, ...changed() };
   const groups = new Map<string, [string, ParamSpec][]>();
   for (const entry of Object.entries(d.schema)) {
+    if (!applies(entry[1], values)) continue;
     const group = entry[1].group ?? 'Dimensions';
     groups.set(group, [...(groups.get(group) ?? []), entry]);
   }
@@ -467,12 +490,47 @@ function fieldset(legend: string, entries: [string, ParamSpec][], d: PartData, d
   set.disabled = disabled;
   const title = document.createElement('legend');
   title.textContent = legend;
-  set.append(title, ...entries.map(([name, spec]) => field(name, spec, d.defaults[name] ?? spec.min)));
+  set.append(title, ...entries.map(([name, spec]) => field(name, spec, d.defaults[name] ?? 0)));
   return set;
 }
 
 function field(name: string, spec: ParamSpec, fallback: number): HTMLElement {
-  return spec.kind === 'toggle' ? toggleField(name, spec, fallback) : dimensionField(name, spec, fallback);
+  if (spec.kind === 'toggle') return toggleField(name, spec, fallback);
+  if (spec.kind === 'choice') return choiceField(name, spec, fallback);
+  return dimensionField(name, spec, fallback);
+}
+
+/** A row of options, for a choice between forms of a feature. */
+function choiceField(name: string, spec: ChoiceSpec, fallback: number): HTMLElement {
+  const value = changed()[name] ?? fallback;
+  const row = document.createElement('div');
+  row.className = 'field';
+  row.dataset.changed = String(!same(value, fallback));
+  row.innerHTML = `
+    <div class="field-head"><span class="field-name" id="label-${name}"></span></div>
+    <div class="segmented" role="radiogroup" aria-labelledby="label-${name}"></div>
+    <p class="help"></p>`;
+  row.querySelector('.field-name')!.textContent = spec.label;
+  row.querySelector('.help')!.textContent = spec.help ?? '';
+  row.querySelector('.segmented')!.append(
+    ...spec.options.map((option) => {
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="radio" name="param-${name}"><span></span>`;
+      const input = label.querySelector('input')!;
+      input.value = String(option.value);
+      input.checked = same(option.value, value);
+      label.querySelector('span')!.textContent = option.label;
+      input.addEventListener('change', () => {
+        if (!input.checked) return;
+        setValue(name, option.value, fallback);
+        // Other fields may now apply, or stop applying: draw them again.
+        renderForm();
+        ui.form.querySelector<HTMLInputElement>(`input[name="param-${name}"][value="${option.value}"]`)?.focus();
+      });
+      return label;
+    }),
+  );
+  return row;
 }
 
 /** Sets a value, dropping it once it's back to its default. */
@@ -506,7 +564,7 @@ function toggleField(name: string, spec: ToggleSpec, fallback: number): HTMLElem
     <label class="switch" for="${id}">
       <input type="checkbox" role="switch" id="${id}">
       <span class="switch-track" aria-hidden="true"></span>
-      <span class="switch-label"></span>
+      <span class="switch-label field-name"></span>
     </label>
     <p class="help"></p>`;
   const input = row.querySelector('input')!;
@@ -530,7 +588,7 @@ function dimensionField(name: string, spec: DimensionSpec, fallback: number): HT
   row.dataset.changed = String(!same(value, fallback));
   row.innerHTML = `
     <div class="field-head">
-      <label for="${id}"></label>
+      <label class="field-name" for="${id}"></label>
       <button type="button" class="field-reset" title="Back to the default">default <span></span></button>
     </div>
     <div class="field-inputs">

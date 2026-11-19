@@ -30,7 +30,7 @@ Targets act on every part, or on one with `PART=<name>`. `verify` exits non-zero
 
 Each accessory is a `src/<name>.brep.ts` module. At the top, a `defaults` block holds every dimension the part is built from, and a `schema` names the ones the [STL generator](#stl-generator) lets a user change, each with a range. Below them, `design(params)` builds the part from any set of parameters, returning its `model` and its declared intent, `expected`. The module default-exports a zero-arg function returning the part at its defaults, and exports its `expected`, which is what the brep CLI builds and checks. See [src/params.ts](../src/params.ts).
 
-Every part that fits into a cutout or a groove takes `fitTolerance`, the slop between a printed part and what it fits into. The parts that stack also take `boltHoles` and `registration`. These are toggles: 1 includes that [stacking feature](side-extension-kit.md#stacking-accessories), and 0 leaves it off. See [src/stacking.ts](../src/stacking.ts). The side panels and corner panels take the posts' parameters, from [src/side-extension.brep.ts](../src/side-extension.brep.ts), so the whole kit always fits together.
+Every part that fits into a cutout or a groove takes `fitTolerance`, the slop between a printed part and what it fits into. The parts that stack also take `boltHoles` and `registration`. These are toggles: 1 includes that [stacking feature](side-extension-kit.md#stacking-accessories), and 0 leaves it off. See [src/stacking.ts](../src/stacking.ts). A choice between forms of a feature numbers its options, like the tie-down block's `openings`: 0 for two holes, 1 or 2 for that many slits. A parameter with a `when` applies only under some options, so the generator shows it only then: the hole size only for holes, the slit size only for slits. The side panels and corner panels take the posts' parameters, from [src/side-extension.brep.ts](../src/side-extension.brep.ts), so the whole kit always fits together.
 
 | Part | Module | Page |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ make web-build  # web/dist, as GitHub Pages serves it
 
 ### Adding a dimension
 
-Add it to the part's `schema` with a range, then run `make sweep`. [scripts/sweep-params.mjs](../scripts/sweep-params.mjs) builds the part with each dimension at its minimum and at its maximum, and each toggle off and on, the rest at their defaults, and verifies each build as `make verify` does. If a limit fails, narrow the range. If it only fails in combination with another dimension, have `design` refuse that combination with a clear `DesignError` (see `atLeast` in [src/params.ts](../src/params.ts)), which the page shows in place of the part.
+Add it to the part's `schema` with a range, then run `make sweep`. [scripts/sweep-params.mjs](../scripts/sweep-params.mjs) builds the part with each dimension at its minimum and at its maximum, and each toggle off and on, the rest at their defaults, and verifies each build as `make verify` does. A choice is built with each of its options, and under each one, every parameter that applies to it is swept the same way. If a limit fails, narrow the range. If it only fails in combination with another dimension, have `design` refuse that combination with a clear `DesignError` (see `atLeast` in [src/params.ts](../src/params.ts)), which the page shows in place of the part.
 
 ### Publishing
 
