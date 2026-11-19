@@ -10,7 +10,7 @@ Carries a long-handled tool along the rim. The key has a U-shaped clip on its to
 
 Two holders per pole. Source: [src/pole-holder.brep.ts](../src/pole-holder.brep.ts).
 
-For a different pole, change `poleDiameter`. For a taller or shorter stand, change `standHeight`: the clip always sits on the bar's top face.
+For a different pole, change `poleDiameter`. For a taller or shorter stand, change `standHeight`: the clip always sits on the bar's top face. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#pole-holder) changes both in your browser.
 
 ## Printing
 

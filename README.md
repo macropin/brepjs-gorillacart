@@ -2,6 +2,8 @@
 
 3D-printable accessories that plug into the rim cutouts of the [Gorilla Cart 200L Poly Dump Cart](https://gorillacarts.com.au/collections/poly-carts/products/gcg7-au). Nothing is drilled or bolted to the cart: each part drops into a cutout and lifts out again.
 
+**[Open the STL generator](https://macropin.github.io/brepjs-gorillacart/)** to change an accessory's dimensions, preview it in 3D and download STL or STEP files, all in your browser.
+
 ## Accessories
 
 <table>
@@ -96,7 +98,9 @@ Each accessory's page has its printing and fitting instructions.
 
 ## Getting the files
 
-The models are code, so the STL and STEP files are built from source. This needs Node 24+ (`brew install node`).
+The quickest way is the [STL generator](https://macropin.github.io/brepjs-gorillacart/): pick an accessory, change any of its dimensions, and download the files. It builds each part in your browser from the same source as below.
+
+The models are code, so the STL and STEP files can also be built from source. This needs Node 24+ (`brew install node`).
 
 ```bash
 make install
@@ -106,7 +110,7 @@ make install
 make export
 ```
 
-The files land in `out/<part>/`. To change a dimension, edit the `params` block at the top of the part's `src/<part>.brep.ts` and export again.
+The files land in `out/<part>/`. To change a dimension, edit the `defaults` block at the top of the part's `src/<part>.brep.ts` and export again.
 
 See [Development](docs/development.md) for the toolchain, the other make targets and how the renders are produced.
 

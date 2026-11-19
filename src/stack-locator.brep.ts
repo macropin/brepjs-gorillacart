@@ -16,28 +16,45 @@
  */
 import { rotate, translate, type ValidSolid } from 'brepjs';
 
+import { type Schema } from './params.js';
 import { registration, stackLocator, stackLocatorVolume } from './stacking.js';
 
-export default function stackLocatorPart(): ValidSolid {
-  // Built about the plane where two keys meet, X through the stack. Turn that
-  // to Z and lift it onto the bed.
-  const flat = rotate(stackLocator(), 90, { axis: [0, 1, 0] });
-  return translate(flat, [0, 0, registration.height]);
+/** Nothing to change: the locator is the boss itself, and the keys' pockets take the fit. */
+export const defaults = {};
+export const schema: Schema<typeof defaults> = {};
+
+export function design() {
+  function model(): ValidSolid {
+    // Built about the plane where two keys meet, X through the stack. Turn that
+    // to Z and lift it onto the bed.
+    const flat = rotate(stackLocator(), 90, { axis: [0, 1, 0] });
+    return translate(flat, [0, 0, registration.height]);
+  }
+
+  // -------------------------------------------------------------------------
+  // Declared intent — asserted by `brep verify --check`
+  // -------------------------------------------------------------------------
+
+  const expected = {
+    volume: stackLocatorVolume,
+    bounds: {
+      xMin: -registration.length / 2,
+      xMax: registration.length / 2,
+      yMin: -registration.width / 2,
+      yMax: registration.width / 2,
+      zMin: 0,
+      zMax: 2 * registration.height,
+    },
+    tolerancePct: 0.1,
+  };
+
+  return { model, expected };
 }
 
-// ---------------------------------------------------------------------------
-// Declared intent — asserted by `brep verify --check`
-// ---------------------------------------------------------------------------
+const standard = design();
 
-export const expected = {
-  volume: stackLocatorVolume,
-  bounds: {
-    xMin: -registration.length / 2,
-    xMax: registration.length / 2,
-    yMin: -registration.width / 2,
-    yMax: registration.width / 2,
-    zMin: 0,
-    zMax: 2 * registration.height,
-  },
-  tolerancePct: 0.1,
-};
+export default function stackLocatorPart(): ValidSolid {
+  return standard.model();
+}
+
+export const { expected } = standard;

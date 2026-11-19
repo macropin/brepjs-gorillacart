@@ -121,16 +121,29 @@ assemblies: node_modules
 			$$(echo " $(CLOSEUPS) " | grep -q " $$s " && echo "--closeup 1"); \
 	done
 
+## sweep: build each part at the limits of the dimensions the web generator lets you change
+sweep: node_modules
+	node scripts/sweep-params.mjs $(PART)
+
+## web: run the web generator locally at http://localhost:5173/brepjs-gorillacart/
+web: node_modules
+	npx vite web
+
+## web-build: type-check and build the web generator into web/dist, as GitHub Pages serves it
+web-build: node_modules
+	npx tsc -p web
+	npx vite build web
+
 ## all: verify, render, export, and render the assemblies
 all: verify render export assemblies
 
 ## clean: remove generated artifacts (keeps the README previews)
 clean:
-	rm -rf $(OUT)
+	rm -rf $(OUT) web/dist
 
 ## distclean: clean, and drop node_modules and the README previews
 distclean: clean
 	rm -rf node_modules $(addprefix $(MEDIA)/,$(addsuffix .png,$(PARTS))) \
 		$(addprefix $(MEDIA)/,$(addsuffix -assembled.png,$(SCENES)))
 
-.PHONY: help install verify render preview export assemblies all clean distclean
+.PHONY: help install verify render preview export assemblies sweep web web-build all clean distclean

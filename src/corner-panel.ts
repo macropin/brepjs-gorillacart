@@ -35,9 +35,10 @@
  */
 import { box, cut, Sketcher, unwrap, type Sketch, type ValidSolid } from 'brepjs';
 
-import { cart, corner, plug } from './cart.js';
-import { grooveOffset, params as post } from './side-extension.brep.js';
-import { dropDepth, lipLength, lipStandoff, thickness } from './side-panel.brep.js';
+import { cart, corner } from './cart.js';
+import { DesignError } from './params.js';
+import { defaults, design as postDesign, type KitParams } from './side-extension.brep.js';
+import { design as panelDesign } from './side-panel.brep.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
@@ -48,12 +49,11 @@ import { single } from './solid.js';
  * The bend, on the lines through the cutouts at the bottom. Traced from the
  * inside edge of the rim in Gorilla's top-down product photo, then moved 17mm
  * out to those lines. The panel's centreline runs a further
- * 2mm out, with the posts' grooves, and its rounds grow to match.
+ * 2mm out, with the posts' grooves, and its rounds grow to match. The rest of
+ * the panel takes the kit's parameters (./side-extension.brep.ts): its height
+ * is the posts' extension.
  */
-export const params = {
-  /** Height up the panel, matching the posts and side panels. */
-  height: post.extension,
-
+export const bend = {
   /**
    * Where the flat meets each leg's line, measured from the origin: along leg A
    * (the long side) and along leg B (the handle end). The flat runs about 64.5°
@@ -70,61 +70,10 @@ export const params = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Derived
+// The bend
 // ---------------------------------------------------------------------------
 
 type Vec = [number, number];
-
-const rad = (post.lean * Math.PI) / 180;
-
-/** Vertical height, and how far each leg has leaned out by the top. */
-const rise = params.height * Math.cos(rad); // 149.18
-const lean = params.height * Math.sin(rad); // 15.68
-
-/**
- * Half the panel's thickness measured horizontally. The legs lean, so this is
- * a touch wider than half of `thickness`, which is measured square to the leg.
- */
-const halfWidth = thickness / Math.cos(rad) / 2;
-
-/**
- * The posts' grooves sit outside their axes, so at the rim each leg's centre
- * plane is this far out from its cutout line, measured horizontally.
- */
-const grooveOut = grooveOffset / Math.cos(rad); // 2.01
-
-/** The side panel's lip, its stand-off likewise measured horizontally. */
-const lipWidth = lipStandoff / Math.cos(rad);
-
-/** Post centre to its groove floor, along the rim. */
-const toGrooveFloor = plug.y / 2 - post.grooveDepth; // 17.5
-
-/**
- * Leg ends, from the corner: each stops short of its groove floor by half the
- * fit tolerance, as the side panel does at each end.
- */
-const endA = corner.along - toGrooveFloor - cart.fitTolerance / 2; // 122.75
-const endB = corner.across - toGrooveFloor - cart.fitTolerance / 2; // 145.0
-
-/**
- * How far from the corner each leg's bottom edge stays dropped: up to the
- * landing beside its post's cutout, less half the fit tolerance, so it is 0.15
- * clear of the landing as on the side panel. Each post's cutout runs along its
- * leg. The side panel's drop depth is taken vertically here.
- */
-const dropA =
-  corner.along - cart.cutoutLength / 2 - cart.landingLength - cart.fitTolerance / 2; // 94.6
-const dropB =
-  corner.across - cart.cutoutLength / 2 - cart.landingLength - cart.fitTolerance / 2; // 116.85
-
-/** How far the bottom edge has leaned in at the dropped depth, below the rim. */
-const dropIn = dropDepth * Math.tan(rad); // 0.16
-
-/** Overshoot so trims clear the faces instead of leaving zero-thickness skins. */
-const OVER = 1;
-
-/** Half-width of each trim across its leg: clear of the leg and its lip. */
-const TRIM_REACH = plug.y / 2;
 
 const dot = (a: Vec, b: Vec) => a[0] * b[0] + a[1] * b[1];
 const unit = (a: Vec): Vec => {
@@ -139,9 +88,9 @@ const along = (p: Vec, n: Vec, d: number): Vec => [p[0] + n[0] * d, p[1] + n[1] 
 // by `o` about the same centre.
 const nA: Vec = [0, 1]; // leg A, y = 0
 const nB: Vec = [-1, 0]; // leg B, x = 0
-const flatDir = unit([params.flatOnSide, params.flatOnEnd]); // leg B toward leg A
+const flatDir = unit([bend.flatOnSide, bend.flatOnEnd]); // leg B toward leg A
 const nF: Vec = [-flatDir[1], flatDir[0]];
-const flatC = dot(nF, [params.flatOnSide, 0]);
+const flatC = dot(nF, [bend.flatOnSide, 0]);
 
 /** Centre of the round of radius `r` tangent to two lines, inside both. */
 function roundCentre(n1: Vec, c1: number, n2: Vec, c2: number, r: number): Vec {
@@ -151,56 +100,14 @@ function roundCentre(n1: Vec, c1: number, n2: Vec, c2: number, r: number): Vec {
   return [(a * n2[1] - n1[1] * b) / det, (n1[0] * b - a * n2[0]) / det];
 }
 
-const sideCentre = roundCentre(nA, 0, nF, flatC, params.sideRadius);
-const endCentre = roundCentre(nB, 0, nF, flatC, params.endRadius);
+const sideCentre = roundCentre(nA, 0, nF, flatC, bend.sideRadius);
+const endCentre = roundCentre(nB, 0, nF, flatC, bend.endRadius);
 
-/** Straight runs left between the rounds and the leg ends, and along the flat. */
-const runA = endA - sideCentre[0];
-const runB = endB + endCentre[1];
+/** The straight run along the flat, between the rounds. */
 const runFlat = dot(sideCentre, flatDir) - dot(endCentre, flatDir);
 
-// The rounds must keep clear of each other along the flat, and finish before
-// either leg reaches a post's face.
+// The rounds must keep clear of each other along the flat.
 if (runFlat < 0) throw new Error('the two rounds overlap along the flat');
-if (sideCentre[0] + halfWidth > corner.along - plug.y / 2) {
-  throw new Error(`sideRadius ${params.sideRadius} runs the bend into the long-side post`);
-}
-if (-endCentre[1] + halfWidth > corner.across - plug.y / 2) {
-  throw new Error(`endRadius ${params.endRadius} runs the bend into the handle-end post`);
-}
-
-// The step up to each landing must land on a straight run, so the trims square
-// to the legs only ever meet a leg.
-if (dropA < sideCentre[0]) throw new Error('the long-side landing reaches into the bend');
-if (dropB < -endCentre[1]) throw new Error('the handle-end landing reaches into the bend');
-
-// ---------------------------------------------------------------------------
-// Model
-// ---------------------------------------------------------------------------
-
-export function cornerPanel(): ValidSolid {
-  // Bottom and top sections share their topology edge for edge, so a ruled loft
-  // joins straight to straight (planes) and arc to arc (cones). It starts at the
-  // dropped bottom edge, carrying the lean on down below the rim.
-  const bottom = section(-dropDepth, grooveOut - dropIn);
-  const top = section(rise, grooveOut + lean);
-  let panel = single(bottom.loftWith(top, { ruled: true }));
-
-  // Trim each leg's end back up to the groove floor along its landing.
-  const below = dropDepth + OVER;
-  const landingA = box(endA + OVER - dropA, 2 * TRIM_REACH, below, {
-    centered: true,
-    at: [(dropA + endA + OVER) / 2, 0, -below / 2],
-  });
-  const landingB = box(2 * TRIM_REACH, endB + OVER - dropB, below, {
-    centered: true,
-    at: [0, -(dropB + endB + OVER) / 2, -below / 2],
-  });
-  for (const trim of [landingA, landingB]) {
-    panel = single(unwrap(cut(panel, trim)));
-  }
-  return panel;
-}
 
 /**
  * Points on the bend, `o` outside the lines through the cutouts (negative for
@@ -210,77 +117,181 @@ export function cornerPanel(): ValidSolid {
  */
 export function bendPoints(o: number) {
   return {
-    a: along(sideCentre, nA, params.sideRadius + o),
-    sideMid: along(sideCentre, unit([nA[0] + nF[0], nA[1] + nF[1]]), params.sideRadius + o),
-    flatSide: along(sideCentre, nF, params.sideRadius + o),
-    flatEnd: along(endCentre, nF, params.endRadius + o),
-    endMid: along(endCentre, unit([nF[0] + nB[0], nF[1] + nB[1]]), params.endRadius + o),
-    b: along(endCentre, nB, params.endRadius + o),
+    a: along(sideCentre, nA, bend.sideRadius + o),
+    sideMid: along(sideCentre, unit([nA[0] + nF[0], nA[1] + nF[1]]), bend.sideRadius + o),
+    flatSide: along(sideCentre, nF, bend.sideRadius + o),
+    flatEnd: along(endCentre, nF, bend.endRadius + o),
+    endMid: along(endCentre, unit([nF[0] + nB[0], nF[1] + nB[1]]), bend.endRadius + o),
+    b: along(endCentre, nB, bend.endRadius + o),
   };
 }
 
-/**
- * The panel's horizontal section at height `z`, where every part of the
- * centreline has leaned out by `out`.
- */
-function section(z: number, out: number): Sketch {
-  const outer = out + halfWidth;
-  const inner = out - halfWidth;
-  const o = bendPoints(outer);
-  const i = bendPoints(inner);
+/** Overshoot so trims clear the faces instead of leaving zero-thickness skins. */
+const OVER = 1;
 
-  return new Sketcher('XY', z)
-    .movePointerTo([endA, outer])
-    .lineTo(o.a)
-    .threePointsArcTo(o.flatSide, o.sideMid)
-    .lineTo(o.flatEnd)
-    .threePointsArcTo(o.b, o.endMid)
-    .lineTo([-outer, -endB])
-    .lineTo([-inner + lipWidth, -endB])
-    .lineTo([-inner + lipWidth, -endB + lipLength])
-    .lineTo([-inner, -endB + lipLength])
-    .lineTo(i.b)
-    .threePointsArcTo(i.flatEnd, i.endMid)
-    .lineTo(i.flatSide)
-    .threePointsArcTo(i.a, i.sideMid)
-    .lineTo([endA - lipLength, inner])
-    .lineTo([endA - lipLength, inner - lipWidth])
-    .lineTo([endA, inner - lipWidth])
-    .close();
+// ---------------------------------------------------------------------------
+// Model
+// ---------------------------------------------------------------------------
+
+/** The left corner panel for the kit's parameters, its volume and its bounds. */
+export function cornerPanelDesign(params: KitParams = defaults) {
+  const { plug, grooveOffset } = postDesign(params);
+  const { thickness, lipLength, lipStandoff, dropDepth } = panelDesign(params);
+
+  const rad = (params.lean * Math.PI) / 180;
+
+  /** Vertical height, and how far each leg has leaned out by the top. */
+  const rise = params.extension * Math.cos(rad); // 149.18
+  const lean = params.extension * Math.sin(rad); // 15.68
+
+  /**
+   * Half the panel's thickness measured horizontally. The legs lean, so this is
+   * a touch wider than half of `thickness`, which is measured square to the leg.
+   */
+  const halfWidth = thickness / Math.cos(rad) / 2;
+
+  /**
+   * The posts' grooves sit outside their axes, so at the rim each leg's centre
+   * plane is this far out from its cutout line, measured horizontally.
+   */
+  const grooveOut = grooveOffset / Math.cos(rad); // 2.01
+
+  /** The side panel's lip, its stand-off likewise measured horizontally. */
+  const lipWidth = lipStandoff / Math.cos(rad);
+
+  /** Post centre to its groove floor, along the rim. */
+  const toGrooveFloor = plug.y / 2 - params.grooveDepth; // 17.5
+
+  /**
+   * Leg ends, from the corner: each stops short of its groove floor by half the
+   * fit tolerance, as the side panel does at each end.
+   */
+  const endA = corner.along - toGrooveFloor - params.fitTolerance / 2; // 122.75
+  const endB = corner.across - toGrooveFloor - params.fitTolerance / 2; // 145.0
+
+  /**
+   * How far from the corner each leg's bottom edge stays dropped: up to the
+   * landing beside its post's cutout, less half the fit tolerance, so it is 0.15
+   * clear of the landing as on the side panel. Each post's cutout runs along its
+   * leg. The side panel's drop depth is taken vertically here.
+   */
+  const dropA =
+    corner.along - cart.cutoutLength / 2 - cart.landingLength - params.fitTolerance / 2; // 94.6
+  const dropB =
+    corner.across - cart.cutoutLength / 2 - cart.landingLength - params.fitTolerance / 2; // 116.85
+
+  /** How far the bottom edge has leaned in at the dropped depth, below the rim. */
+  const dropIn = dropDepth * Math.tan(rad); // 0.16
+
+  /** Half-width of each trim across its leg: clear of the leg and its lip. */
+  const TRIM_REACH = plug.y / 2;
+
+  /** Straight runs left between the rounds and the leg ends. */
+  const runA = endA - sideCentre[0];
+  const runB = endB + endCentre[1];
+
+  // The rounds must finish before either leg reaches a post's face.
+  if (sideCentre[0] + halfWidth > corner.along - plug.y / 2) {
+    throw new DesignError(`sideRadius ${bend.sideRadius} runs the bend into the long-side post`);
+  }
+  if (-endCentre[1] + halfWidth > corner.across - plug.y / 2) {
+    throw new DesignError(`endRadius ${bend.endRadius} runs the bend into the handle-end post`);
+  }
+
+  // The step up to each landing must land on a straight run, so the trims square
+  // to the legs only ever meet a leg.
+  if (dropA < sideCentre[0]) throw new DesignError('the long-side landing reaches into the bend');
+  if (dropB < -endCentre[1]) throw new DesignError('the handle-end landing reaches into the bend');
+
+  /**
+   * The panel's horizontal section at height `z`, where every part of the
+   * centreline has leaned out by `out`.
+   */
+  function section(z: number, out: number): Sketch {
+    const outer = out + halfWidth;
+    const inner = out - halfWidth;
+    const o = bendPoints(outer);
+    const i = bendPoints(inner);
+
+    return new Sketcher('XY', z)
+      .movePointerTo([endA, outer])
+      .lineTo(o.a)
+      .threePointsArcTo(o.flatSide, o.sideMid)
+      .lineTo(o.flatEnd)
+      .threePointsArcTo(o.b, o.endMid)
+      .lineTo([-outer, -endB])
+      .lineTo([-inner + lipWidth, -endB])
+      .lineTo([-inner + lipWidth, -endB + lipLength])
+      .lineTo([-inner, -endB + lipLength])
+      .lineTo(i.b)
+      .threePointsArcTo(i.flatEnd, i.endMid)
+      .lineTo(i.flatSide)
+      .threePointsArcTo(i.a, i.sideMid)
+      .lineTo([endA - lipLength, inner])
+      .lineTo([endA - lipLength, inner - lipWidth])
+      .lineTo([endA, inner - lipWidth])
+      .close();
+  }
+
+  function model(): ValidSolid {
+    // Bottom and top sections share their topology edge for edge, so a ruled loft
+    // joins straight to straight (planes) and arc to arc (cones). It starts at the
+    // dropped bottom edge, carrying the lean on down below the rim.
+    const bottom = section(-dropDepth, grooveOut - dropIn);
+    const top = section(rise, grooveOut + lean);
+    let panel = single(bottom.loftWith(top, { ruled: true }));
+
+    // Trim each leg's end back up to the groove floor along its landing.
+    const below = dropDepth + OVER;
+    const landingA = box(endA + OVER - dropA, 2 * TRIM_REACH, below, {
+      centered: true,
+      at: [(dropA + endA + OVER) / 2, 0, -below / 2],
+    });
+    const landingB = box(2 * TRIM_REACH, endB + OVER - dropB, below, {
+      centered: true,
+      at: [0, -(dropB + endB + OVER) / 2, -below / 2],
+    });
+    for (const trim of [landingA, landingB]) {
+      panel = single(unwrap(cut(panel, trim)));
+    }
+    return panel;
+  }
+
+  // -------------------------------------------------------------------------
+  // Declared intent
+  // -------------------------------------------------------------------------
+
+  // Each horizontal section of the loft is a strip of constant width along the
+  // centreline: three straight runs that keep their length, plus two rounds whose
+  // radii grow linearly with height. Its volume is the width times the centreline
+  // length at mid-height. The two lips add a constant rectangle each. The trims
+  // then take the dropped depth off each leg's end: a straight strip from its
+  // landing to its end, plus its lip.
+  const sideTurn = Math.acos(dot(nA, nF));
+  const endTurn = Math.acos(dot(nF, nB));
+  const midOut = grooveOut + (lean - dropIn) / 2;
+  const centreline =
+    runA +
+    runB +
+    runFlat +
+    sideTurn * (bend.sideRadius + midOut) +
+    endTurn * (bend.endRadius + midOut);
+
+  const lofted = (2 * halfWidth * centreline + 2 * lipLength * lipWidth) * (rise + dropDepth);
+  const trimmed =
+    (2 * halfWidth * (endA - dropA + endB - dropB) + 2 * lipLength * lipWidth) * dropDepth;
+
+  const volume = lofted - trimmed;
+
+  /** Bounds of the left part; the right part is the same mirrored in Y. */
+  const extent = {
+    xMin: -grooveOut - lean - halfWidth,
+    xMax: endA,
+    yMin: -endB,
+    yMax: grooveOut + lean + halfWidth,
+    zMin: -dropDepth,
+    zMax: rise,
+  };
+
+  return { model, volume, extent };
 }
-
-// ---------------------------------------------------------------------------
-// Declared intent
-// ---------------------------------------------------------------------------
-
-// Each horizontal section of the loft is a strip of constant width along the
-// centreline: three straight runs that keep their length, plus two rounds whose
-// radii grow linearly with height. Its volume is the width times the centreline
-// length at mid-height. The two lips add a constant rectangle each. The trims
-// then take the dropped depth off each leg's end: a straight strip from its
-// landing to its end, plus its lip.
-const sideTurn = Math.acos(dot(nA, nF));
-const endTurn = Math.acos(dot(nF, nB));
-const midOut = grooveOut + (lean - dropIn) / 2;
-const centreline =
-  runA +
-  runB +
-  runFlat +
-  sideTurn * (params.sideRadius + midOut) +
-  endTurn * (params.endRadius + midOut);
-
-const lofted = (2 * halfWidth * centreline + 2 * lipLength * lipWidth) * (rise + dropDepth);
-const trimmed =
-  (2 * halfWidth * (endA - dropA + endB - dropB) + 2 * lipLength * lipWidth) * dropDepth;
-
-export const volume = lofted - trimmed;
-
-/** Bounds of the left part; the right part is the same mirrored in Y. */
-export const extent = {
-  xMin: -grooveOut - lean - halfWidth,
-  xMax: endA,
-  yMin: -endB,
-  yMax: grooveOut + lean + halfWidth,
-  zMin: -dropDepth,
-  zMax: rise,
-};

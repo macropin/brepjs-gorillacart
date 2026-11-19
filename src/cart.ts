@@ -67,8 +67,19 @@ export const corner = {
   along: cart.cornerGap + cart.cutoutWidth / 2 + cart.cutoutLength / 2, // 140.4
 } as const;
 
-/** Section of a plug that drops into a cutout, fit tolerance applied. */
-export const plug = {
-  x: cart.cutoutWidth - cart.fitTolerance, // 19.2
-  y: cart.cutoutLength - cart.fitTolerance, // 51.0
-} as const;
+/** Section of a plug that drops into a cutout: X across the rim, Y along it. */
+export interface Plug {
+  readonly x: number;
+  readonly y: number;
+}
+
+/** The plug section with `fitTolerance` taken off each cutout dimension. */
+export function plugFor(fitTolerance: number): Plug {
+  return {
+    x: cart.cutoutWidth - fitTolerance,
+    y: cart.cutoutLength - fitTolerance,
+  };
+}
+
+/** The plug section at the default fit tolerance: 19.2 × 51.0. */
+export const plug = plugFor(cart.fitTolerance);

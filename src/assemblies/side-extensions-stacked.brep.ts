@@ -23,7 +23,7 @@ import {
 import { cart, plug } from '../cart.js';
 import egoBatteryHolder from '../ego-battery-holder.brep.js';
 import macheteSleeve from '../machete-sleeve.brep.js';
-import { params as post } from '../side-extension.brep.js';
+import { defaults as post } from '../side-extension.brep.js';
 import { bolt, registration, stackLocator } from '../stacking.js';
 import { cartBodies, half, onRim, RIGHT, sideX, stage } from './cart.brep.js';
 import { kitBodies } from './side-extensions.brep.js';

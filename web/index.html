@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gorilla Cart accessory generator</title>
+    <meta
+      name="description"
+      content="Change the dimensions of 3D-printable accessories for the Gorilla Carts 200L poly dump cart, preview them in 3D, and download STL or STEP files to print."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='11' y='3' width='10' height='26' rx='2' fill='%23ff8a3d'/%3E%3Crect x='4' y='11' width='24' height='6' rx='2' fill='%23ff8a3d'/%3E%3C/svg%3E"
+    />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">STL generator</p>
+        <h1>Gorilla Cart accessories</h1>
+        <p class="lede">
+          Pick an accessory, change its dimensions, and download the file to print. Each part is
+          built here in your browser, so nothing is uploaded.
+        </p>
+      </div>
+      <a class="repo" href="https://github.com/macropin/brepjs-gorillacart">Source and docs on GitHub</a>
+    </header>
+
+    <nav class="picker" aria-label="Accessories">
+      <div id="accessory-list" class="accessory-list" role="radiogroup" aria-label="Accessory"></div>
+    </nav>
+
+    <main class="workspace">
+      <section class="panel" aria-labelledby="part-title">
+        <div class="part-head">
+          <h2 id="part-title"></h2>
+          <p id="part-summary" class="summary"></p>
+          <a id="part-doc" class="doc-link">Fitting and printing notes</a>
+        </div>
+        <div id="part-tabs" class="tabs" role="tablist" aria-label="Parts"></div>
+        <p id="part-count" class="count"></p>
+        <form id="params" class="params" novalidate></form>
+        <div class="actions">
+          <a id="download-stl" class="button primary" aria-disabled="true">Download STL</a>
+          <button id="download-step" class="button" type="button" disabled>STEP</button>
+          <span class="spacer"></span>
+          <button id="reset" class="button quiet" type="button" disabled>Reset</button>
+          <button id="copy-link" class="button quiet" type="button">Copy link</button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="preview" aria-label="Preview">
+        <div id="viewer" class="viewer"></div>
+        <div id="preview-overlay" class="overlay" hidden></div>
+        <div class="preview-bar">
+          <span id="readout" class="readout"></span>
+          <button id="reset-view" type="button" class="button quiet small">Reset view</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span id="kernel-status" class="kernel" data-state="loading">Geometry kernel: starting</span>
+      <span>
+        Built with <a href="https://github.com/andymai/brepjs">brepjs</a> on OpenCascade
+        (<a href="https://github.com/andymai/occt-wasm">occt-wasm</a>, LGPL-2.1). Drag the preview to
+        turn it; scroll or pinch to zoom.
+      </span>
+    </footer>
+
+    <noscript>
+      <p class="noscript">
+        The generator needs JavaScript. To build the files from source instead, see
+        <a href="https://github.com/macropin/brepjs-gorillacart">GitHub</a>.
+      </p>
+    </noscript>
+  </body>
+</html>

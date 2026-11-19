@@ -12,7 +12,7 @@ It is made specifically for the [Tramontina 15" Bolo Machete (Wood Handle, model
 
 One sleeve. Source: [src/machete-sleeve.brep.ts](../src/machete-sleeve.brep.ts).
 
-For a different blade, change `bladeThickness`: the slot adds the fit tolerance. For a wider blade, change `slotSpan`, and `standHeight` with it to keep the walls above and below the slot.
+For a different blade, change `bladeThickness`: the slot adds the fit tolerance. For a wider blade, change `slotSpan`: the bar grows with it, keeping `endWall` of solid above and below the slot. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#machete-sleeve) changes both in your browser.
 
 ## Printing
 

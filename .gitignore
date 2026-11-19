@@ -2,5 +2,6 @@
 context/
 node_modules/
 out/
+web/dist/
 
 # media/ is tracked — it holds the README previews

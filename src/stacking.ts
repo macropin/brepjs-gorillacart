@@ -50,7 +50,8 @@
  */
 import { cut, fuse, Sketcher, unwrap, type ValidSolid } from 'brepjs';
 
-import { cart, plug } from './cart.js';
+import { cart, plugFor } from './cart.js';
+import { DesignError } from './params.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
@@ -70,9 +71,10 @@ export const bolt = {
 
   /**
    * Pocket for an ISO 4032 M5 hex nut, 8 mm across flats and 4.7 mm thick.
-   * Deeper than the nut, so the bolt's tip stays below the face.
+   * The pocket adds the fit tolerance across the flats, and is deeper than the
+   * nut, so the bolt's tip stays below the face.
    */
-  nutAcrossFlats: 8 + cart.fitTolerance,
+  nutFlats: 8,
   nutThickness: 4.7,
   nutDepth: 8,
 
@@ -107,46 +109,17 @@ export const registration = {
 /** Hole centres above the rim on the post, measured along its axis: 20 and 50. */
 export const postHoleHeights = bolt.heights.map((h) => bolt.standOff + h);
 
-/**
- * The range of under-head lengths for the M5 bolt that clamps `layers`
- * accessories to a post. The shortest reaches through the nut, pulled down onto
- * the floor of its pocket; the longest ends flush with the post's inside face.
- * 1 -> [29.6, 32.9], taking an M5 × 30; 2 -> [48.8, 52.1], taking an M5 × 50.
- */
-export function boltLength(layers: number): [number, number] {
-  const longest = (layers + 1) * plug.x - bolt.headDepth;
-  return [longest - bolt.nutDepth + bolt.nutThickness, longest];
-}
-
 // ---------------------------------------------------------------------------
 // Derived
 // ---------------------------------------------------------------------------
 
 const holeR = bolt.holeDiameter / 2;
 const headR = bolt.headDiameter / 2;
-const half = plug.x / 2;
 
 const { width: W, length: L, height: H, centre: C } = registration;
 
-/** The pocket in a key's face: the boss grown by the fit tolerance across and in depth. */
-const pocketW = W + cart.fitTolerance;
-const pocketL = L + cart.fitTolerance;
-const pocketDepth = H + cart.fitTolerance;
-
 /** Overshoot so through-cuts clear the faces instead of leaving zero-thickness skins. */
 const OVER = 1;
-
-/**
- * The pocket narrows 1 mm per mm of depth. It still holds the head counterbore
- * whole at its floor, and the bolt holes, so the volumes below hold.
- */
-const holeExtents = bolt.heights.map((z) => z - C);
-const fits = (r: number, up: number) =>
-  pocketW / 2 - pocketDepth >= r &&
-  holeExtents.every((dz) => pocketL / 2 - pocketDepth >= Math.max(r - dz, dz + up));
-if (!fits(headR, headR * Math.SQRT2) || bolt.headDepth < pocketDepth) {
-  throw new Error('registration pocket must contain the head counterbore');
-}
 
 /**
  * Section area of a teardrop of radius `r`: the circle, plus the square kite
@@ -229,55 +202,134 @@ function cutAll(part: ValidSolid, tools: ValidSolid[]): ValidSolid {
 }
 
 /**
- * Cuts the stacking features into an accessory's key, in the key's frame
- * (bottom of the key at z = 0): the bolt holes, a cap-head counterbore on the
- * +X face, and a registration pocket in each broad face.
+ * The stacking features for keys and posts printed at `fitTolerance`: it
+ * sizes the key, the registration pockets, and the nut pockets.
  */
-export function keyStackingCuts(part: ValidSolid): ValidSolid {
-  // Each pocket starts OVER outside its face, grown to keep its 45° flanks.
-  const pocket = (side: 1 | -1) =>
-    frustum(
-      pocketW + 2 * OVER,
-      pocketL + 2 * OVER,
-      pocketDepth + OVER,
-      side * (half + OVER),
-      C,
-      side === 1 ? -1 : 1,
+export function stacking(fitTolerance: number = cart.fitTolerance) {
+  const plug = plugFor(fitTolerance);
+  const half = plug.x / 2;
+  const nutAcrossFlats = bolt.nutFlats + fitTolerance;
+
+  /** The pocket in a key's face: the boss grown by the fit tolerance across and in depth. */
+  const pocketW = W + fitTolerance;
+  const pocketL = L + fitTolerance;
+  const pocketDepth = H + fitTolerance;
+
+  /**
+   * The pocket narrows 1 mm per mm of depth. It still holds the head counterbore
+   * whole at its floor, and the bolt holes, so the volumes below hold.
+   */
+  const holeExtents = bolt.heights.map((z) => z - C);
+  const fits = (r: number, up: number) =>
+    pocketW / 2 - pocketDepth >= r &&
+    holeExtents.every((dz) => pocketL / 2 - pocketDepth >= Math.max(r - dz, dz + up));
+  if (!fits(headR, headR * Math.SQRT2) || bolt.headDepth < pocketDepth) {
+    throw new DesignError('registration pocket must contain the head counterbore');
+  }
+
+  /**
+   * The range of under-head lengths for the M5 bolt that clamps `layers`
+   * accessories to a post. The shortest reaches through the nut, pulled down onto
+   * the floor of its pocket; the longest ends flush with the post's inside face.
+   * 1 -> [29.6, 32.9], taking an M5 × 30; 2 -> [48.8, 52.1], taking an M5 × 50.
+   */
+  function boltLength(layers: number): [number, number] {
+    const longest = (layers + 1) * plug.x - bolt.headDepth;
+    return [longest - bolt.nutDepth + bolt.nutThickness, longest];
+  }
+
+  /**
+   * Cuts the stacking features into an accessory's key, in the key's frame
+   * (bottom of the key at z = 0): the bolt holes, a cap-head counterbore on the
+   * +X face, and a registration pocket in each broad face.
+   */
+  function keyStackingCuts(part: ValidSolid): ValidSolid {
+    // Each pocket starts OVER outside its face, grown to keep its 45° flanks.
+    const pocket = (side: 1 | -1) =>
+      frustum(
+        pocketW + 2 * OVER,
+        pocketL + 2 * OVER,
+        pocketDepth + OVER,
+        side * (half + OVER),
+        C,
+        side === 1 ? -1 : 1,
+      );
+    return cutAll(part, [
+      ...bolt.heights.flatMap((z) => [
+        teardrop(holeR, z, -half - OVER, half + OVER),
+        teardrop(headR, z, half - bolt.headDepth, half + OVER),
+      ]),
+      pocket(1),
+      pocket(-1),
+    ]);
+  }
+
+  /**
+   * Adds the stacking features to a post built upright, its rim at `rimZ`: the
+   * registration boss on the outside (+X) face, the bolt holes through post and
+   * boss, and a nut pocket on the inside face. Done before the post is leaned,
+   * so they come out square to its faces.
+   */
+  function postStackingFeatures(part: ValidSolid, rimZ: number): ValidSolid {
+    // The boss starts OVER inside the face, so it fuses into the post cleanly.
+    const z = rimZ + bolt.standOff + C;
+    const boss = frustum(W + 2 * OVER, L + 2 * OVER, H + OVER, half - OVER, z, 1);
+    const bossed = single(unwrap(fuse(part, boss)));
+    return cutAll(
+      bossed,
+      postHoleHeights.flatMap((h) => [
+        teardrop(holeR, rimZ + h, -half - OVER, half + H + OVER),
+        hexagon(nutAcrossFlats, rimZ + h, -half - OVER, -half + bolt.nutDepth),
+      ]),
     );
-  return cutAll(part, [
-    ...bolt.heights.flatMap((z) => [
-      teardrop(holeR, z, -half - OVER, half + OVER),
-      teardrop(headR, z, half - bolt.headDepth, half + OVER),
-    ]),
-    pocket(1),
-    pocket(-1),
-  ]);
+  }
+
+  // Each hole's teardrop lies inside its counterbore's and its nut pocket's
+  // section, and both lie inside the registration pocket's down to its floor.
+  // So going through a key from the +X face, the cuts take the pocket, then the
+  // counterbore below the pocket's floor, then the hole, then the -X face's
+  // pocket. Through the post, they take the nut pocket, then the hole, through
+  // the post and the boss.
+
+  /** The net change in volume from cutting the stacking features into a key (negative). */
+  const keyStackingDelta = -(
+    2 * frustumVolume(pocketW, pocketL, pocketDepth) +
+    bolt.heights.length *
+      (teardropArea(headR) * (bolt.headDepth - pocketDepth) +
+        teardropArea(holeR) * (plug.x - bolt.headDepth - pocketDepth))
+  );
+
+  /** The net change in volume from adding the stacking features to a post. */
+  const postStackingDelta =
+    frustumVolume(W, L, H) -
+    postHoleHeights.length *
+      (hexArea(nutAcrossFlats) * bolt.nutDepth + teardropArea(holeR) * (plug.x - bolt.nutDepth + H));
+
+  return {
+    nutAcrossFlats,
+    boltLength,
+    keyStackingCuts,
+    postStackingFeatures,
+    keyStackingDelta,
+    postStackingDelta,
+  };
 }
 
-/**
- * Adds the stacking features to a post built upright, its rim at `rimZ`: the
- * registration boss on the outside (+X) face, the bolt holes through post and
- * boss, and a nut pocket on the inside face. Done before the post is leaned,
- * so they come out square to its faces.
- */
-export function postStackingFeatures(part: ValidSolid, rimZ: number): ValidSolid {
-  // The boss starts OVER inside the face, so it fuses into the post cleanly.
-  const z = rimZ + bolt.standOff + C;
-  const boss = frustum(W + 2 * OVER, L + 2 * OVER, H + OVER, half - OVER, z, 1);
-  const bossed = single(unwrap(fuse(part, boss)));
-  return cutAll(
-    bossed,
-    postHoleHeights.flatMap((h) => [
-      teardrop(holeR, rimZ + h, -half - OVER, half + H + OVER),
-      hexagon(bolt.nutAcrossFlats, rimZ + h, -half - OVER, -half + bolt.nutDepth),
-    ]),
-  );
-}
+/** The stacking features at the default fit tolerance. */
+export const {
+  nutAcrossFlats,
+  boltLength,
+  keyStackingCuts,
+  postStackingFeatures,
+  keyStackingDelta,
+  postStackingDelta,
+} = stacking();
 
 /**
  * The stack locator, which registers one key on another: two bosses back to
  * back, about the plane x = 0 where the keys meet, centred at z = 0, with the
- * bolt holes through it.
+ * bolt holes through it. Nothing on it depends on the fit tolerance: the
+ * pockets it sits in take that.
  */
 export function stackLocator(): ValidSolid {
   const both = single(
@@ -291,32 +343,6 @@ export function stackLocator(): ValidSolid {
     bolt.heights.map((z) => teardrop(holeR, z - C, -H - OVER, H + OVER)),
   );
 }
-
-// ---------------------------------------------------------------------------
-// Volumes, for the parts' declared intent
-// ---------------------------------------------------------------------------
-
-// Each hole's teardrop lies inside its counterbore's and its nut pocket's
-// section, and both lie inside the registration pocket's down to its floor.
-// So going through a key from the +X face, the cuts take the pocket, then the
-// counterbore below the pocket's floor, then the hole, then the -X face's
-// pocket. Through the post, they take the nut pocket, then the hole, through
-// the post and the boss.
-
-/** The net change in volume from cutting the stacking features into a key (negative). */
-export const keyStackingDelta = -(
-  2 * frustumVolume(pocketW, pocketL, pocketDepth) +
-  bolt.heights.length *
-    (teardropArea(headR) * (bolt.headDepth - pocketDepth) +
-      teardropArea(holeR) * (plug.x - bolt.headDepth - pocketDepth))
-);
-
-/** The net change in volume from adding the stacking features to a post. */
-export const postStackingDelta =
-  frustumVolume(W, L, H) -
-  postHoleHeights.length *
-    (hexArea(bolt.nutAcrossFlats) * bolt.nutDepth +
-      teardropArea(holeR) * (plug.x - bolt.nutDepth + H));
 
 /** The stack locator's volume: two bosses, less the bolt holes. */
 export const stackLocatorVolume =

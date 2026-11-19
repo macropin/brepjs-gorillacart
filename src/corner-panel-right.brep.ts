@@ -5,18 +5,34 @@
  */
 import { mirror, type ValidSolid } from 'brepjs';
 
-import { cornerPanel, extent, volume } from './corner-panel.js';
+import { cornerPanelDesign } from './corner-panel.js';
+import { defaults, schema, type KitParams } from './side-extension.brep.js';
 
-export default function cornerPanelRight(): ValidSolid {
-  return mirror(cornerPanel(), { normal: [0, 1, 0] });
+/** The kit's: the panel is sized from the posts it slots into. */
+export { defaults, schema };
+
+export function design(params: KitParams = defaults) {
+  const left = cornerPanelDesign(params);
+  const model = (): ValidSolid => mirror(left.model(), { normal: [0, 1, 0] });
+
+  // -------------------------------------------------------------------------
+  // Declared intent — asserted by `brep verify --check`
+  // -------------------------------------------------------------------------
+
+  const { extent } = left;
+  const expected = {
+    volume: left.volume,
+    bounds: { ...extent, yMin: -extent.yMax, yMax: -extent.yMin },
+    tolerancePct: 0.1,
+  };
+
+  return { model, expected };
 }
 
-// ---------------------------------------------------------------------------
-// Declared intent — asserted by `brep verify --check`
-// ---------------------------------------------------------------------------
+const standard = design();
 
-export const expected = {
-  volume,
-  bounds: { ...extent, yMin: -extent.yMax, yMax: -extent.yMin },
-  tolerancePct: 0.1,
-};
+export default function cornerPanelRight(): ValidSolid {
+  return standard.model();
+}
+
+export const { expected } = standard;

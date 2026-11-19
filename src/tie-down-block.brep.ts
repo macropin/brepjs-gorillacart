@@ -37,16 +37,17 @@ import {
   type ValidSolid,
 } from 'brepjs';
 
-import { keyStackingCuts, keyStackingDelta } from './stacking.js';
-import { cart, plug } from './cart.js';
+import { stacking } from './stacking.js';
+import { cart, plugFor } from './cart.js';
 import { key, keySectionArea } from './key.js';
+import { atLeast, fitToleranceSpec, type Numeric, type Schema } from './params.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
 // Parameters
 // ---------------------------------------------------------------------------
 
-export const params = {
+export const defaults = {
   /** Length of bar sunk into the cutout. */
   insertDepth: cart.cutoutDepth,
 
@@ -69,100 +70,138 @@ export const params = {
 
   /** Breaks every edge of the head's broad faces, hole mouths included, so a strap has no sharp edge to wear on. */
   edgeChamfer: 1,
+
+  /** Printed-fit slop, taken off the cutout's width and length. */
+  fitTolerance: cart.fitTolerance,
 } as const;
 
-// ---------------------------------------------------------------------------
-// Derived
-// ---------------------------------------------------------------------------
+export type Params = Numeric<typeof defaults>;
 
-const rim = params.insertDepth; // 63.5
-const top = rim + params.headHeight; // 103.5
-const holeR = params.holeDiameter / 2;
-const holeZ = rim + params.holeHeight;
-const thickness = plug.x; // 19.2, flush with the key
+export const schema: Schema<Params> = {
+  holeDiameter: {
+    label: 'Strap hole diameter',
+    unit: 'mm',
+    min: 10,
+    max: 24,
+    step: 0.5,
+    help: 'Both holes. Big enough for the hook, rope or strap you tie down with.',
+  },
+  fitTolerance: fitToleranceSpec,
+};
+
+/** Least material left round the strap holes. */
+const MIN_WALL = 3;
 
 /** Overshoot so through-cuts clear the faces instead of leaving zero-thickness skins. */
 const OVER = 1;
-
-/**
- * Material left around the holes: between them, out to the sloping ends
- * (measured square to the slope, where it is thinnest), above, and below to
- * the rim.
- */
-const slope = (params.headBase - params.headTop) / 2 / params.headHeight;
-export const webBetweenHoles = params.holeSpacing - params.holeDiameter; // 8
-export const wallToEnd =
-  (params.headBase / 2 - params.holeSpacing / 2 - slope * params.holeHeight) /
-    Math.hypot(1, slope) -
-  holeR; // 7.7
-export const wallAbove = params.headHeight - params.holeHeight - holeR; // 10
-export const wallBelow = params.holeHeight - holeR; // 10
 
 // ---------------------------------------------------------------------------
 // Model
 // ---------------------------------------------------------------------------
 
-export default function tieDownBlock(): ValidSolid {
-  // The head's profile on the YZ plane (u = Y, v = Z), extruded across the rim
-  // from one broad face of the key to the other.
-  const head = new Sketcher('YZ', -thickness / 2)
-    .movePointerTo([-params.headBase / 2, rim])
-    .lineTo([params.headBase / 2, rim])
-    .lineTo([params.headTop / 2, top])
-    .customCorner(params.headCornerRadius)
-    .lineTo([-params.headTop / 2, top])
-    .customCorner(params.headCornerRadius)
-    .close()
-    .extrude(thickness);
+export function design(params: Params = defaults) {
+  const plug = plugFor(params.fitTolerance);
+  const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance);
 
-  const block = single(unwrap(fuse(key(params.insertDepth), single(head))));
+  const rim = params.insertDepth; // 63.5
+  const top = rim + params.headHeight; // 103.5
+  const holeR = params.holeDiameter / 2;
+  const holeZ = rim + params.holeHeight;
+  const thickness = plug.x; // 19.2, flush with the key
 
-  const hole = (y: number) =>
-    cylinder(holeR, thickness + 2 * OVER, {
-      at: [-thickness / 2 - OVER, y, holeZ],
-      axis: [1, 0, 0],
-    });
-  let part = single(unwrap(cut(block, hole(-params.holeSpacing / 2))));
-  part = single(unwrap(cut(part, hole(params.holeSpacing / 2))));
+  /**
+   * Material left around the holes: between them, out to the sloping ends
+   * (measured square to the slope, where it is thinnest), above, and below to
+   * the rim.
+   */
+  const slope = (params.headBase - params.headTop) / 2 / params.headHeight;
+  const webBetweenHoles = params.holeSpacing - params.holeDiameter; // 8
+  const wallToEnd =
+    (params.headBase / 2 - params.holeSpacing / 2 - slope * params.holeHeight) /
+      Math.hypot(1, slope) -
+    holeR; // 7.7
+  const wallAbove = params.headHeight - params.holeHeight - holeR; // 10
+  const wallBelow = params.holeHeight - holeR; // 10
 
-  if (params.edgeChamfer <= 0) return keyStackingCuts(part);
+  atLeast('The web between the strap holes', webBetweenHoles, MIN_WALL);
+  atLeast('The wall outside each strap hole', wallToEnd, MIN_WALL);
+  atLeast('The wall above the strap holes', wallAbove, MIN_WALL);
+  atLeast('The wall below the strap holes', wallBelow, MIN_WALL);
 
-  // Every edge on the two broad faces above the rim: the head's outline and the
-  // hole mouths. The base of the head, where it meets the rim, is left square
-  // so it sits flat.
-  const onHeadFace = (edge: Edge) => {
-    const [x, , z] = curvePointAt(edge, 0.5);
-    return Math.abs(Math.abs(x) - thickness / 2) < 1e-6 && z > rim + 1e-6;
+  function model(): ValidSolid {
+    // The head's profile on the YZ plane (u = Y, v = Z), extruded across the rim
+    // from one broad face of the key to the other.
+    const head = new Sketcher('YZ', -thickness / 2)
+      .movePointerTo([-params.headBase / 2, rim])
+      .lineTo([params.headBase / 2, rim])
+      .lineTo([params.headTop / 2, top])
+      .customCorner(params.headCornerRadius)
+      .lineTo([-params.headTop / 2, top])
+      .customCorner(params.headCornerRadius)
+      .close()
+      .extrude(thickness);
+
+    const block = single(unwrap(fuse(key(params.insertDepth, plug), single(head))));
+
+    const hole = (y: number) =>
+      cylinder(holeR, thickness + 2 * OVER, {
+        at: [-thickness / 2 - OVER, y, holeZ],
+        axis: [1, 0, 0],
+      });
+    let part = single(unwrap(cut(block, hole(-params.holeSpacing / 2))));
+    part = single(unwrap(cut(part, hole(params.holeSpacing / 2))));
+
+    if (params.edgeChamfer <= 0) return keyStackingCuts(part);
+
+    // Every edge on the two broad faces above the rim: the head's outline and the
+    // hole mouths. The base of the head, where it meets the rim, is left square
+    // so it sits flat.
+    const onHeadFace = (edge: Edge) => {
+      const [x, , z] = curvePointAt(edge, 0.5);
+      return Math.abs(Math.abs(x) - thickness / 2) < 1e-6 && z > rim + 1e-6;
+    };
+    const chamfered = single(
+      unwrap(chamfer(part, edgeFinder().when(onHeadFace), params.edgeChamfer)),
+    );
+    return keyStackingCuts(chamfered);
+  }
+
+  // -------------------------------------------------------------------------
+  // Declared intent — asserted by `brep verify --check`
+  // -------------------------------------------------------------------------
+
+  // Key below the rim plus the head's profile across its thickness, less the two
+  // strap holes and the stacking features in the key. Each rounded top corner
+  // trims r²·(tan(θ/2) − θ/2) from the trapezoid, θ being the turn at that
+  // corner. The edge chamfer takes a further sliver, within the tolerance.
+  const turn = Math.PI / 2 - Math.atan(slope);
+  const cornerLoss = params.headCornerRadius ** 2 * (Math.tan(turn / 2) - turn / 2);
+  const profileArea =
+    ((params.headBase + params.headTop) / 2) * params.headHeight - 2 * cornerLoss;
+
+  const expected = {
+    volume:
+      keySectionArea(plug) * params.insertDepth +
+      (profileArea - 2 * Math.PI * holeR ** 2) * thickness +
+      keyStackingDelta,
+    bounds: {
+      xMin: -thickness / 2,
+      xMax: thickness / 2,
+      yMin: -params.headBase / 2,
+      yMax: params.headBase / 2,
+      zMin: 0,
+      zMax: top,
+    },
+    tolerancePct: 0.5,
   };
-  const chamfered = single(unwrap(chamfer(part, edgeFinder().when(onHeadFace), params.edgeChamfer)));
-  return keyStackingCuts(chamfered);
+
+  return { model, expected, webBetweenHoles, wallToEnd, wallAbove, wallBelow };
 }
 
-// ---------------------------------------------------------------------------
-// Declared intent — asserted by `brep verify --check`
-// ---------------------------------------------------------------------------
+const standard = design();
 
-// Key below the rim plus the head's profile across its thickness, less the two
-// strap holes and the stacking features in the key. Each rounded top corner trims r²·(tan(θ/2) − θ/2) from the trapezoid,
-// θ being the turn at that corner. The edge chamfer takes a further sliver,
-// within the tolerance.
-const turn = Math.PI / 2 - Math.atan(slope);
-const cornerLoss = params.headCornerRadius ** 2 * (Math.tan(turn / 2) - turn / 2);
-const profileArea =
-  ((params.headBase + params.headTop) / 2) * params.headHeight - 2 * cornerLoss;
+export default function tieDownBlock(): ValidSolid {
+  return standard.model();
+}
 
-export const expected = {
-  volume:
-    keySectionArea * params.insertDepth +
-    (profileArea - 2 * Math.PI * holeR ** 2) * thickness +
-    keyStackingDelta,
-  bounds: {
-    xMin: -thickness / 2,
-    xMax: thickness / 2,
-    yMin: -params.headBase / 2,
-    yMax: params.headBase / 2,
-    zMin: 0,
-    zMax: top,
-  },
-  tolerancePct: 0.5,
-};
+export const { expected, webBetweenHoles, wallToEnd, wallAbove, wallBelow } = standard;

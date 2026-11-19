@@ -18,14 +18,19 @@ make export     # STEP + STL into out/<name>/
 make assemblies # assembled renders into media/<name>-assembled.png
 make all        # verify, render, export, assemblies
 make preview PART=machete-sleeve   # live viewer, re-evaluates on save
-make clean      # drop out/
+make sweep      # build each part at the limits of its adjustable dimensions, and verify each
+make web        # run the STL generator locally
+make web-build  # type-check and build the STL generator into web/dist
+make clean      # drop out/ and the generator's build output
 ```
 
 Targets act on every part, or on one with `PART=<name>`. `verify` exits non-zero unless each part is a valid solid and matches its `expected` block, and `export` runs the same validity gate first.
 
 ## Parts
 
-Each accessory is a `src/<name>.brep.ts` module that default-exports a zero-arg function returning the shape, with its dimensions in a `params` block at the top and its declared intent in an `expected` block at the bottom.
+Each accessory is a `src/<name>.brep.ts` module. At the top, a `defaults` block holds every dimension the part is built from, and a `schema` names the ones the [STL generator](#stl-generator) lets a user change, each with a range. Below them, `design(params)` builds the part from any set of parameters, returning its `model` and its declared intent, `expected`. The module default-exports a zero-arg function returning the part at its defaults, and exports its `expected`, which is what the brep CLI builds and checks. See [src/params.ts](../src/params.ts).
+
+Every part that fits into a cutout or a groove takes `fitTolerance`, the slop between a printed part and what it fits into. The side panels and corner panels take the posts' parameters, from [src/side-extension.brep.ts](../src/side-extension.brep.ts), so the whole kit always fits together.
 
 | Part | Module | Page |
 | --- | --- | --- |
@@ -49,3 +54,24 @@ The viewer draws every body in the same grey, so [scripts/render-assembly.mjs](.
 A scene with a module of the same name in `src/assemblies/backdrops/` is rendered against that backdrop instead of the bare cart, so only what it adds to the backdrop is coloured. The stacked accessories use this to show against the side extension kit in grey. The camera frames each model by its bounding box, so a scene and its backdrop need the same box. Where a scene reaches beyond the cart's box, give both the same specks just outside it, as [src/assemblies/side-extensions-stacked.brep.ts](../src/assemblies/side-extensions-stacked.brep.ts) does.
 
 Scenes listed in `CLOSEUPS` in the [Makefile](../Makefile) are framed on the accessories and the stretch of rim around them, rather than on the whole cart. Use it for accessories too small to read at full-cart scale.
+
+## STL generator
+
+[web/](../web) is the STL generator: a static site where you pick an accessory, change its dimensions, preview it in 3D and download an STL or STEP file. It is published at <https://macropin.github.io/brepjs-gorillacart/>.
+
+It builds the parts in the browser from the same `src/` modules as the CLI, on the same kernel, so there's no server. [web/src/worker.ts](../web/src/worker.ts) loads OpenCascade (`occt-wasm`, 21 MB, about 7 MB compressed) in a Web Worker and keeps it in the browser's Cache Storage for later visits. For each build it checks the part against its `expected` block and returns a binary STL, which [web/src/viewer.ts](../web/src/viewer.ts) draws with three.js. The preview is the downloaded file itself. [web/src/main.ts](../web/src/main.ts) runs the page, and keeps the accessory, part and changed dimensions in the URL, so a link brings back the same part.
+
+```bash
+make web        # http://localhost:5173/brepjs-gorillacart/, rebuilding on save
+make web-build  # web/dist, as GitHub Pages serves it
+```
+
+### Adding a dimension
+
+Add it to the part's `schema` with a range, then run `make sweep`. [scripts/sweep-params.mjs](../scripts/sweep-params.mjs) builds the part with each dimension at its minimum and at its maximum, the rest at their defaults, and verifies each build as `make verify` does. If a limit fails, narrow the range. If it only fails in combination with another dimension, have `design` refuse that combination with a clear `DesignError` (see `atLeast` in [src/params.ts](../src/params.ts)), which the page shows in place of the part.
+
+### Publishing
+
+[.github/workflows/pages.yml](../.github/workflows/pages.yml) runs `make verify`, `make sweep` and `make web-build` on every push to `main`, then deploys `web/dist` to GitHub Pages. It needs setting up once, in the repository's Settings → Pages → Build and deployment: set Source to **GitHub Actions**.
+
+The site is built for `/brepjs-gorillacart/`. The workflow passes the path Pages reports in `BASE_PATH`, so a custom domain or a fork under another name works too.

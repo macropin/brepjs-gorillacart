@@ -8,7 +8,7 @@
  */
 import { box, chamfer, edgeFinder, unwrap, type ValidSolid } from 'brepjs';
 
-import { plug } from './cart.js';
+import { plug, type Plug } from './cart.js';
 
 /**
  * 45° chamfer on the four upright edges. Top and bottom faces stay flat. A
@@ -19,10 +19,12 @@ import { plug } from './cart.js';
 export const keyChamfer = 1;
 
 /** Cross-section area of the bar, chamfers included. */
-export const keySectionArea = plug.x * plug.y - 2 * keyChamfer ** 2;
+export function keySectionArea(section: Plug = plug): number {
+  return section.x * section.y - 2 * keyChamfer ** 2;
+}
 
-export function key(height: number): ValidSolid {
-  const blank = box(plug.x, plug.y, height, { centered: true, at: [0, 0, height / 2] });
+export function key(height: number, section: Plug = plug): ValidSolid {
+  const blank = box(section.x, section.y, height, { centered: true, at: [0, 0, height / 2] });
 
   // On a plain box `inDirection('Z')` matches exactly the four upright edges, so
   // break them before anything else is cut or joined on.

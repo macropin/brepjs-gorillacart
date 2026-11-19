@@ -12,8 +12,8 @@ import { rotate, translate, type AnyShape, type Compound } from 'brepjs';
 import { cart, handleEndPitch } from '../cart.js';
 import cornerPanelLeft from '../corner-panel-left.brep.js';
 import cornerPanelRight from '../corner-panel-right.brep.js';
-import sideExtension, { grooveOffset, params as post } from '../side-extension.brep.js';
-import sidePanel, { params as panel, thickness } from '../side-panel.brep.js';
+import sideExtension, { defaults as post, grooveOffset } from '../side-extension.brep.js';
+import sidePanel, { height as panelHeight, thickness } from '../side-panel.brep.js';
 import { cartBodies, half, HANDLE_END, LEFT, onRim, RIGHT, sideX, stage, tub } from './cart.brep.js';
 
 /**
@@ -27,7 +27,7 @@ function standingPanel() {
   const inGroove = translate(upright, [
     grooveOffset + thickness / 2,
     0,
-    cart.cutoutDepth + panel.height / 2,
+    cart.cutoutDepth + panelHeight / 2,
   ]);
   return rotate(inGroove, post.lean, { at: [0, 0, cart.cutoutDepth], axis: [0, 1, 0] });
 }
