@@ -57,21 +57,10 @@ Scenes listed in `CLOSEUPS` in the [Makefile](../Makefile) are framed on the acc
 
 ## STL generator
 
-[web/](../web) is the STL generator: a static site where you pick an accessory, change its dimensions, preview it in 3D and download an STL or STEP file. It is published at <https://macropin.github.io/brepjs-gorillacart/>.
-
-It builds the parts in the browser from the same `src/` modules as the CLI, on the same kernel, so there's no server. [web/src/worker.ts](../web/src/worker.ts) loads OpenCascade (`occt-wasm`, 21 MB, about 7 MB compressed) in a Web Worker and keeps it in the browser's Cache Storage for later visits. For each build it checks the part against its `expected` block and returns a binary STL, which [web/src/viewer.ts](../web/src/viewer.ts) draws with three.js. The preview is the downloaded file itself. [web/src/main.ts](../web/src/main.ts) runs the page, and keeps the accessory, part and changed dimensions in the URL, so a link brings back the same part.
+[web/](../web) is the STL generator, published at <https://macropin.github.io/brepjs-gorillacart/>. It builds the parts in the browser from the `src/` modules above. [STL generator](stl-generator.md) describes what each accessory lets you change, how it works, adding a setting, and publishing.
 
 ```bash
 make web        # http://localhost:5173/brepjs-gorillacart/, rebuilding on save
-make web-build  # web/dist, as GitHub Pages serves it
+make web-build  # type-check, then build web/dist as GitHub Pages serves it
+make sweep      # build every part at the limits of what the generator lets you change
 ```
-
-### Adding a dimension
-
-Add it to the part's `schema` with a range, then run `make sweep`. [scripts/sweep-params.mjs](../scripts/sweep-params.mjs) builds the part with each dimension at its minimum and at its maximum, and each toggle off and on, the rest at their defaults, and verifies each build as `make verify` does. A choice is built with each of its options, and under each one, every parameter that applies to it is swept the same way. If a limit fails, narrow the range. If it only fails in combination with another dimension, have `design` refuse that combination with a clear `DesignError` (see `atLeast` in [src/params.ts](../src/params.ts)), which the page shows in place of the part.
-
-### Publishing
-
-[.github/workflows/pages.yml](../.github/workflows/pages.yml) runs `make verify`, `make sweep` and `make web-build` on every push to `main`, then deploys `web/dist` to GitHub Pages. It needs setting up once, in the repository's Settings → Pages → Build and deployment: set Source to **GitHub Actions**.
-
-The site is built for `/brepjs-gorillacart/`. The workflow passes the path Pages reports in `BASE_PATH`, so a custom domain or a fork under another name works too.
