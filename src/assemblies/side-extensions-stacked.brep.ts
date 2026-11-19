@@ -2,7 +2,8 @@
  * Accessories stacked on the side extension kit: the machete sleeve bolted to
  * the outside of the middle post on the right long side, and the EGO battery
  * holder bolted on outside the sleeve, rails out, through the same two bolts.
- * For rendering only.
+ * The post's registration boss locates the sleeve, and a stack locator between
+ * the two keys locates the holder on the sleeve. For rendering only.
  *
  * Drawn against its own backdrop, the kit on the cart
  * (./backdrops/side-extensions-stacked.brep.ts), so only the stack is coloured.
@@ -19,11 +20,11 @@ import {
   type Compound,
 } from 'brepjs';
 
-import { bolt } from '../bolt.js';
 import { cart, plug } from '../cart.js';
 import egoBatteryHolder from '../ego-battery-holder.brep.js';
 import macheteSleeve from '../machete-sleeve.brep.js';
 import { params as post } from '../side-extension.brep.js';
+import { bolt, registration, stackLocator } from '../stacking.js';
 import { cartBodies, half, onRim, RIGHT, sideX, stage } from './cart.brep.js';
 import { kitBodies } from './side-extensions.brep.js';
 
@@ -37,10 +38,13 @@ export function boltedToPost<T extends AnyShape>(shape: T, layer: number): T {
   return rotate(beside, post.lean, { at: [0, 0, cart.cutoutDepth], axis: [0, 1, 0] });
 }
 
-/** The stacked accessories, in the cart's frame. */
+/** The stacked accessories, and the stack locator between them, in the cart's frame. */
 export function stackBodies(): AnyShape[] {
+  // The locator sits on the sleeve's outside face, at its registration pocket.
+  const locator = translate(stackLocator(), [plug.x / 2, 0, registration.centre]);
   return [
     onRim(boltedToPost(macheteSleeve(), 1), RIGHT, sideX(1), -half),
+    onRim(boltedToPost(locator, 1), RIGHT, sideX(1), -half),
     onRim(boltedToPost(egoBatteryHolder(), 2), RIGHT, sideX(1), -half),
   ];
 }

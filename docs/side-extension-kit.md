@@ -16,13 +16,14 @@ The render shows the whole kit in place, in orange. The view looks in over the o
 | [Side panel](#side-panels) | 5: two per long side, one across the handle end | 295.4 × 151.5 × 7.7 | [src/side-panel.brep.ts](../src/side-panel.brep.ts) |
 | [Corner panel](#corner-panels), left | 1 | 142.3 × 164.6 × 150.7 | [src/corner-panel-left.brep.ts](../src/corner-panel-left.brep.ts) |
 | [Corner panel](#corner-panels), right | 1 | 142.3 × 164.6 × 150.7 | [src/corner-panel-right.brep.ts](../src/corner-panel-right.brep.ts) |
+| [Stack locator](#stack-locator) | Only for stacking: one between each pair of stacked accessories | 52 × 18 × 6 | [src/stack-locator.brep.ts](../src/stack-locator.brep.ts) |
 
 The kit uses all eight cutouts. The machete sleeve, EGO battery holder and tie-down block can [bolt to its posts](#stacking-accessories) instead.
 
 ## Printing
 
 - **Bed size:** the side panel is 295.4 mm long, so it needs a print bed at least 296 mm in one direction. It won't fit a 256 mm bed.
-- **Posts:** print standing, as they sit in the cart, on the bottom of the insert. The 6° lean is the only overhang, apart from the bolt holes, which are teardrops pointing up the post and print without support.
+- **Posts:** print standing, as they sit in the cart, on the bottom of the insert. The 6° lean is the only overhang, apart from the bolt holes, which are teardrops pointing up the post, and the underside of the registration boss, 45° plus the lean but only 3 mm tall. Neither needs support.
 - **Side panels:** print flat on the plain outside face, lips up.
 - **Material:** print the panel across the handle end, the one closest to the handle, in PETG or another impact-resistant plastic. The other side panels should be fine in PLA.
 - **Corner panels:** print upside down, standing on the top edge, which is flat. The bottom edge steps down 1.5 mm between the leg ends, so stood on it the leg ends would start in mid-air. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
@@ -47,10 +48,13 @@ With the far end closed straight across between the two farthest long-side posts
 
 With the kit fitted, every cutout holds a post, so the other accessories bolt to the posts instead. Each post has two M5 holes through it above the rim, with nut pockets on the inside face. The machete sleeve, EGO battery holder and tie-down block have the same two holes through their keys, counterbored for the bolt heads. An accessory bolts flat to the outside face of any post. A second can bolt on outside the first, through the same holes. The render shows the machete sleeve on the middle post of one long side, with the battery holder bolted on outside it.
 
+The bolts only clamp. What lines the parts up is a shallow rectangular boss with 45° sides around the bolt holes, standing 3 mm proud of the post's outside face. Each accessory's key has a matching pocket in both broad faces, and the inside one drops over the boss. The 45° sides centre the key as it goes on and hold it in line, up and down, along the rim and in rotation, whatever the slack in the bolt holes. A key has to fit the cart's cutout, so it can't carry a boss of its own for a second accessory to locate on. Between two keys, a separate printed [stack locator](#stack-locator), two bosses back to back, sits in the pockets of both.
+
 | | |
 |---|---|
 | Bolts | ISO 4762 M5 socket cap screws, two per post: M5 × 30 for one accessory, M5 × 50 for two |
 | Nuts | ISO 4032 M5 hex nuts, two per post |
+| Stack locator | One between each pair of stacked keys, so none for one accessory and one for two |
 | Height | A bolted-on accessory sits 68.5 mm higher than in a cutout, measured up the post. Its key starts 5 mm above the rim, to clear the rim's outer edge |
 | Lean | It leans 6° out with the post, so it stays the same distance from the panels all the way up |
 
@@ -59,8 +63,8 @@ The bolt lengths land with the nut pulled down onto the floor of its 8 mm pocket
 ### Fitting
 
 1. Drop a nut into each pocket on the inside face of the post.
-2. Hold the accessory's key flat against the outside face of the post, holes on holes, counterbores facing out. The bottom of the key stands just clear of the rim.
-3. For a second accessory, hold its key flat against the first one's in the same way.
+2. Press the accessory's key onto the outside face of the post, its pocket over the boss and its counterbores facing out, until the faces meet. The bottom of the key stands just clear of the rim.
+3. For a second accessory, push the bolts through it from outside first, then thread the stack locator onto them and seat it in the key's pocket. Offer the pair to the first accessory, so the locator drops into its outside pocket.
 4. Push the bolts in from outside and tighten them into the nuts. Snug them up, but not so hard that the heads sink into the plastic. Plastic under a bolt creeps, so check them now and then.
 
 ### What goes where
@@ -70,13 +74,25 @@ The bolt lengths land with the nut pulled down onto the floor of its 8 mm pocket
 - **Tie-down block:** a strap point above the raised walls, for holding a load down over them.
 - **Pole tool holder:** doesn't stack. Its clip is wider than its key and would hit the post, so it has no bolt holes.
 
-Parts printed before the holes were added can be drilled through at 5.5 mm in the same places: 15 and 45 mm above the bottom of an accessory's key, and 19 and 49 mm up a post's outside face from where it meets the insert. The head and nut then sit on the faces, so each bolt needs to be the parts' total thickness, 19.2 mm each, plus at least 5 mm for the nut.
+Parts printed before the holes were added can be drilled through at 5.5 mm in the same places: 15 and 45 mm above the bottom of an accessory's key, and 19 and 49 mm up a post's outside face from where it meets the insert. The head and nut then sit on the faces, so each bolt needs to be the parts' total thickness, 19.2 mm each, plus at least 5 mm for the nut. A drilled part has no registration, so the bolts alone line it up. A drilled accessory won't sit flat against a post with the boss, so it needs a drilled post too.
+
+### Stack locator
+
+![The stack locator: a flat rectangular piece with 45° sides on both faces and two bolt holes through it](../media/stack-locator.png)
+
+Source: [src/stack-locator.brep.ts](../src/stack-locator.brep.ts), with the shared shape in [src/stacking.ts](../src/stacking.ts). Print it flat, on either face. The sides are 45°, so neither half needs support.
+
+| | |
+|---|---|
+| Shape | Two of the post's registration bosses back to back: 18 × 52 mm where the keys meet, 3 mm high each side with 45° sides, 12 × 46 mm across each face |
+| Bolt holes | Two Ø5.5 mm teardrops through it, 30 mm apart, in line with the keys' |
+| Overall | 52 × 18 × 6 mm |
 
 ## Posts
 
 ![The side extension post: a straight insert with a post above it leaning slightly outward, grooved down both narrow faces](../media/side-extension.png)
 
-Eight identical posts, one per cutout. Each post stands 150 mm above the rim, leaning 6° outward. A groove down each face that points along the rim takes the edge of a side panel. The panel drops in from the top and spans to the next post. Two bolt holes through the post above the rim take [stacked accessories](#stacking-accessories).
+Eight identical posts, one per cutout. Each post stands 150 mm above the rim, leaning 6° outward. A groove down each face that points along the rim takes the edge of a side panel. The panel drops in from the top and spans to the next post. Two bolt holes through the post above the rim, and a registration boss around them, take [stacked accessories](#stacking-accessories).
 
 | | |
 |---|---|
@@ -86,7 +102,8 @@ Eight identical posts, one per cutout. Each post stands 150 mm above the rim, le
 | Grooves | 4 mm wide × 8 mm deep on both ±Y faces, open at the top, floor at rim height. Centred 2 mm toward the outside (+X) of the post's axis, so the groove and its lip recess together sit centred in the post |
 | Lip recesses | 4 × 4 mm at the bottom of each groove, opening sideways into the inside wall (−X), full height and open at the top. The groove is L-shaped in section |
 | Material left | 5.6 mm on both sides at the thinnest: outside the groove and inside the lip recess. 9.6 mm beside the groove on the inside, in front of the recess, as the shoulder that catches the lip. 35 mm core between the groove floors |
-| Bolt holes | Two Ø5.5 mm through the core, across the rim, 20 and 50 mm above the rim along the post's axis and square to its faces. Teardrops, pointing up the post. A hex nut pocket 8.3 mm across flats and 8 mm deep on the inside face of each |
+| Bolt holes | Two Ø5.5 mm through the core and the boss, across the rim, 20 and 50 mm above the rim along the post's axis and square to its faces. Teardrops, pointing up the post. A hex nut pocket 8.3 mm across flats and 8 mm deep on the inside face of each |
+| Registration boss | On the outside face, around the bolt holes: 18 × 52 mm at the face, standing 3 mm proud with 45° sides, centred 35 mm above the rim along the post's axis |
 | Overall | 34.88 (X) × 51.0 (Y) × 213.7 (Z) mm; top 150.2 mm above the rim |
 
 ## Side panels

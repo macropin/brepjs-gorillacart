@@ -17,16 +17,16 @@
  * The rails face +X. The key is symmetric, so the holder drops into a cutout
  * either way round: rails out to hang the battery outside the cart, or in.
  *
- * The key carries the stacking bolt holes (./bolt.ts), counterbored on the
- * rails' side, so the holder can bolt to a side extension post instead, rails
- * out.
+ * The key carries the stacking bolt holes, counterbored on the rails' side, and
+ * registration pockets (./stacking.ts), so the holder can bolt to a side
+ * extension post instead, rails out.
  *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
  */
 import { cut, fuse, Sketcher, unwrap, type ValidSolid } from 'brepjs';
 
-import { keyBoltHoles, keyBoltVolume } from './bolt.js';
+import { keyStackingCuts, keyStackingDelta } from './stacking.js';
 import { cart, plug } from './cart.js';
 import { key, keySectionArea } from './key.js';
 import { single } from './solid.js';
@@ -147,7 +147,7 @@ export default function egoBatteryHolder(): ValidSolid {
   }
 
   const bar = single(unwrap(fuse(key(rim), single(base))));
-  return keyBoltHoles(single(unwrap(fuse(bar, rails))));
+  return keyStackingCuts(single(unwrap(fuse(bar, rails))));
 }
 
 // ---------------------------------------------------------------------------
@@ -197,8 +197,8 @@ export const expected = {
     keySectionArea * rim +
     baseVolume +
     sectionArea * params.railLength -
-    2 * leadInVolume -
-    keyBoltVolume,
+    2 * leadInVolume +
+    keyStackingDelta,
   bounds: {
     xMin: back,
     xMax: face,

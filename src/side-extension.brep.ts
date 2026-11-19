@@ -12,7 +12,8 @@
  * has slid down into place it can't pull out of the groove along its length.
  *
  * Two bolt holes through the post above the rim, nut pockets on the inside
- * face, take an accessory bolted flat to its outside face (./bolt.ts).
+ * face, take an accessory bolted flat to its outside face, located on it by a
+ * shallow registration boss around the holes (./stacking.ts).
  *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The post leans toward +X, so fit it
@@ -20,7 +21,7 @@
  */
 import { box, cut, fuse, rotate, translate, unwrap, type ValidSolid } from 'brepjs';
 
-import { postBoltHoles, postBoltVolume } from './bolt.js';
+import { postStackingDelta, postStackingFeatures } from './stacking.js';
 import { cart, plug } from './cart.js';
 import { key, keySectionArea } from './key.js';
 import { single } from './solid.js';
@@ -121,9 +122,10 @@ export default function sideExtension(): ValidSolid {
     grooved = single(unwrap(cut(grooved, tool)));
   }
 
-  // The stacking bolt holes, nut pockets on the inside face. Cut while the post
-  // is upright, so they come out square to its faces once it leans.
-  grooved = postBoltHoles(grooved, params.insertDepth);
+  // The stacking features: the registration boss on the outside face, the bolt
+  // holes, and nut pockets on the inside face. Added while the post is upright,
+  // so they come out square to its faces once it leans.
+  grooved = postStackingFeatures(grooved, params.insertDepth);
 
   // Positive rotation about +Y swings the top toward +X.
   const leaning = rotate(grooved, params.lean, { at: pivot, axis: [0, 1, 0] });
@@ -149,7 +151,7 @@ export default function sideExtension(): ValidSolid {
 // moment about the axis. The bar is symmetric in X and contributes nothing; the
 // section's moment is the opposite of what the grooves (centred at
 // x = grooveOffset) and lip recesses (centred at grooveOffset - 4) take out.
-// The bolt holes sit well above the trim and come off whole.
+// The stacking features sit well above the trim and come off, or go on, whole.
 const grooveArea = params.grooveWidth * params.grooveDepth;
 const recessArea = lipSize * lipSize;
 const recessX = grooveOffset - (params.grooveWidth + lipSize) / 2;
@@ -162,8 +164,8 @@ export const expected = {
   volume:
     keySectionArea * params.insertDepth +
     postSectionArea * params.extension -
-    Math.tan(rad) * postSectionMoment -
-    postBoltVolume,
+    Math.tan(rad) * postSectionMoment +
+    postStackingDelta,
   bounds: {
     // Inner face where the trim meets it, just outside the insert.
     xMin: -half / Math.cos(rad),

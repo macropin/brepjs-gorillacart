@@ -90,6 +90,7 @@ Full measurements: [Cart cutout dimensions](docs/cart.md).
 | [Pole tool holder](docs/pole-holder.md) | 2 per pole | 31.6 × 51.0 × 133.3 | Print standing |
 | [Machete sleeve](docs/machete-sleeve.md) | 1 | 19.2 × 51.0 × 193.5 | Print standing, with a brim |
 | [EGO battery holder](docs/ego-battery-holder.md) | 1 per battery | 19.2 × 92 × 186.5 | Print standing, with a brim |
+| [Stack locator](docs/side-extension-kit.md#stack-locator) | 1 per accessory stacked on another | 52 × 18 × 6 | Print flat, no supports |
 
 Each accessory's page has its printing and fitting instructions.
 

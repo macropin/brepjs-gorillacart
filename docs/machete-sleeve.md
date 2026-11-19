@@ -16,7 +16,7 @@ For a different blade, change `bladeThickness`: the slot adds the fit tolerance.
 
 ## Printing
 
-Print it standing, as it sits in the cart, on the bottom of the key. The top of the slot is the only overhang, a 3.3 mm arch, apart from the bolt holes in the key, which are teardrops pointing up and print without support. It is a tall part on a 19.2 mm base, so use a brim.
+Print it standing, as it sits in the cart, on the bottom of the key. The top of the slot is the only overhang, a 3.3 mm arch, apart from the bolt holes in the key, which are teardrops pointing up, and the tops of its registration pockets, at 45°. Neither needs support. It is a tall part on a 19.2 mm base, so use a brim.
 
 ## Fitting
 
@@ -37,4 +37,5 @@ With the side extension kit fitted, bolt the key to the outside of a post instea
 | Walls | 7.95 mm either side of the slot, 8.35 mm of solid above and below it |
 | Edges | 1 mm chamfer round both slot mouths |
 | Bolt holes | Two Ø5.5 mm through the key across the rim, on its centreline, 15 and 45 mm above its bottom. Teardrops, pointing up. A Ø9.5 × 5.5 mm counterbore on one face for the cap heads |
+| Registration pockets | One in each broad face of the key, around the bolt holes: 18.3 × 52.3 mm at the face, 3.3 mm deep with 45° sides, centred 30 mm above the bottom of the key. The inside one drops over a post's boss, or either takes a [stack locator](side-extension-kit.md#stack-locator) |
 | Overall | 19.2 (X) × 51.0 (Y) × 193.5 (Z) mm; top 130 mm above the rim |
