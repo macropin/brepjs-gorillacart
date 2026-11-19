@@ -26,7 +26,7 @@
  */
 import { cut, fuse, Sketcher, unwrap, type ValidSolid } from 'brepjs';
 
-import { stacking } from './stacking.js';
+import { keyStackingSchema, stacking, stackingDefaults, stackingFeatures } from './stacking.js';
 import { cart, plugFor } from './cart.js';
 import { key, keySectionArea } from './key.js';
 import { fitToleranceSpec, type Numeric, type Schema } from './params.js';
@@ -64,12 +64,17 @@ export const defaults = {
 
   /** Printed-fit slop, taken off the cutout's width and length. */
   fitTolerance: cart.fitTolerance,
+
+  /** The stacking features (./stacking.ts): 1 to include each, 0 to leave it off. */
+  boltHoles: stackingDefaults.boltHoles,
+  registration: stackingDefaults.registration,
 } as const;
 
 export type Params = Numeric<typeof defaults>;
 
-/** The rails are EGO's interface, so only the fit in the cutout is open to change. */
+/** The rails are EGO's interface, so only the stacking features and the fit in the cutout are open to change. */
 export const schema: Schema<Params> = {
+  ...keyStackingSchema,
   fitTolerance: fitToleranceSpec,
 };
 
@@ -82,7 +87,7 @@ const OVER = 1;
 
 export function design(params: Params = defaults) {
   const plug = plugFor(params.fitTolerance);
-  const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance);
+  const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance, stackingFeatures(params));
 
   const rim = params.insertDepth; // 63.5
 

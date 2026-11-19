@@ -74,6 +74,8 @@ The bolt lengths land with the nut pulled down onto the floor of its 8 mm pocket
 - **Tie-down block:** a strap point above the raised walls, for holding a load down over them.
 - **Pole tool holder:** doesn't stack. Its clip is wider than its key and would hit the post, so it has no bolt holes.
 
+The holes and the registration are optional. In the [STL generator](https://macropin.github.io/brepjs-gorillacart/) you can leave the bolt holes off, with their counterbores and nut pockets, for a part that will only ever sit in a cutout. You can also leave the registration off: the pockets in a key, or the boss on a post. Then the bolts alone line the parts up. A key without pockets won't sit flat against a post with the boss, so leave the boss off that post too.
+
 Parts printed before the holes were added can be drilled through at 5.5 mm in the same places: 15 and 45 mm above the bottom of an accessory's key, and 19 and 49 mm up a post's outside face from where it meets the insert. The head and nut then sit on the faces, so each bolt needs to be the parts' total thickness, 19.2 mm each, plus at least 5 mm for the nut. A drilled part has no registration, so the bolts alone line it up. A drilled accessory won't sit flat against a post with the boss, so it needs a drilled post too.
 
 ### Stack locator

@@ -12,9 +12,15 @@
  *   `model` and its declared intent, `expected`.
  *
  * Its default export is the part at its defaults, as the brep CLI expects.
+ *
+ * Every parameter is a number, so a set of them goes in a URL as it is. A
+ * feature that is either there or not is a toggle: 1 to include it, 0 to
+ * leave it off.
  */
 
-export interface ParamSpec {
+/** A dimension, set on a slider within its range. */
+export interface DimensionSpec {
+  readonly kind?: 'dimension';
   /** Field label, in sentence case. */
   readonly label: string;
   readonly unit: 'mm' | '°';
@@ -23,7 +29,22 @@ export interface ParamSpec {
   readonly step: number;
   /** One line under the field. */
   readonly help?: string;
+  /** The form section it goes in: Dimensions unless set. */
+  readonly group?: string;
 }
+
+/** A feature that is either included (1) or left off (0). */
+export interface ToggleSpec {
+  readonly kind: 'toggle';
+  readonly label: string;
+  /** Its range, so `make sweep` builds the part with it off and on. */
+  readonly min: 0;
+  readonly max: 1;
+  readonly help?: string;
+  readonly group?: string;
+}
+
+export type ParamSpec = DimensionSpec | ToggleSpec;
 
 /** A part's parameters: the shape of its defaults, every value a number. */
 export type Numeric<T> = { readonly [K in keyof T]: number };
@@ -31,14 +52,18 @@ export type Numeric<T> = { readonly [K in keyof T]: number };
 /** The parameters of `P` that a user may change, each with its range. */
 export type Schema<P> = { readonly [K in keyof P]?: ParamSpec };
 
+/** Whether a toggle is on. */
+export const on = (value: number): boolean => value !== 0;
+
 /** The printed-fit slop. Every part that plugs into a cutout or a groove takes it. */
-export const fitToleranceSpec: ParamSpec = {
+export const fitToleranceSpec: DimensionSpec = {
   label: 'Fit tolerance',
   unit: 'mm',
   min: 0,
   max: 1,
   step: 0.05,
   help: 'Clearance taken off each fit in total. Raise it if parts print tight.',
+  group: 'Fit',
 };
 
 /** A parameter combination that would build an unprintable or broken part. */

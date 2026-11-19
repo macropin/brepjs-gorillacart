@@ -5,10 +5,11 @@
 import { type ValidSolid } from 'brepjs';
 
 import { cornerPanelDesign } from './corner-panel.js';
-import { defaults, schema, type KitParams } from './side-extension.brep.js';
+import { defaults, kitSchema, type KitParams } from './side-extension.brep.js';
 
 /** The kit's: the panel is sized from the posts it slots into. */
-export { defaults, schema };
+export { defaults };
+export const schema = kitSchema;
 
 export function design(params: KitParams = defaults) {
   const { model, volume, extent } = cornerPanelDesign(params);

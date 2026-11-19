@@ -22,7 +22,7 @@
 import { box, fuse, unwrap, type ValidSolid } from 'brepjs';
 
 import { cart, cutoutPitch } from './cart.js';
-import { defaults, design as postDesign, schema as kitSchema, type KitParams } from './side-extension.brep.js';
+import { defaults, design as postDesign, kitSchema, type KitParams } from './side-extension.brep.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------

@@ -51,7 +51,7 @@
 import { cut, fuse, Sketcher, unwrap, type ValidSolid } from 'brepjs';
 
 import { cart, plugFor } from './cart.js';
-import { DesignError } from './params.js';
+import { DesignError, on, type ToggleSpec } from './params.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
@@ -105,6 +105,68 @@ export const registration = {
   /** Its centre above the bottom of an accessory's key: midway between the bolts. */
   centre: 30,
 } as const;
+
+/**
+ * Which stacking features a part carries. A part that will only ever sit in a
+ * cutout can leave either off: the bolt holes, with their counterbores and nut
+ * pockets, and the registration, pockets in a key or the boss on a post.
+ */
+export interface StackingFeatures {
+  readonly holes: boolean;
+  readonly registration: boolean;
+}
+
+const ALL: StackingFeatures = { holes: true, registration: true };
+
+/** The features as parameters: toggles, both on. */
+export const stackingDefaults = { boltHoles: 1, registration: 1 } as const;
+
+/** The features a part's parameters ask for. */
+export function stackingFeatures(params: { boltHoles: number; registration: number }): StackingFeatures {
+  return { holes: on(params.boltHoles), registration: on(params.registration) };
+}
+
+type StackingSchema = Readonly<Record<keyof typeof stackingDefaults, ToggleSpec>>;
+
+/** The toggles for an accessory's key. */
+export const keyStackingSchema: StackingSchema = {
+  boltHoles: {
+    kind: 'toggle',
+    label: 'Bolt holes',
+    min: 0,
+    max: 1,
+    group: 'Stacking',
+    help: 'Two M5 holes through the key, counterbored on one face, to bolt it to a side extension post.',
+  },
+  registration: {
+    kind: 'toggle',
+    label: 'Registration pockets',
+    min: 0,
+    max: 1,
+    group: 'Stacking',
+    help: 'A shallow pocket in each face of the key, which locates it on a post or on another accessory.',
+  },
+};
+
+/** The toggles for a side extension post. */
+export const postStackingSchema: StackingSchema = {
+  boltHoles: {
+    kind: 'toggle',
+    label: 'Bolt holes',
+    min: 0,
+    max: 1,
+    group: 'Stacking',
+    help: 'Two M5 holes through the post above the rim, with nut pockets on the inside face, to bolt accessories on.',
+  },
+  registration: {
+    kind: 'toggle',
+    label: 'Registration boss',
+    min: 0,
+    max: 1,
+    group: 'Stacking',
+    help: 'A raised boss on the outside face, which locates a bolted-on accessory.',
+  },
+};
 
 /** Hole centres above the rim on the post, measured along its axis: 20 and 50. */
 export const postHoleHeights = bolt.heights.map((h) => bolt.standOff + h);
@@ -203,9 +265,10 @@ function cutAll(part: ValidSolid, tools: ValidSolid[]): ValidSolid {
 
 /**
  * The stacking features for keys and posts printed at `fitTolerance`: it
- * sizes the key, the registration pockets, and the nut pockets.
+ * sizes the key, the registration pockets, and the nut pockets. `features`
+ * leaves out the holes or the registration.
  */
-export function stacking(fitTolerance: number = cart.fitTolerance) {
+export function stacking(fitTolerance: number = cart.fitTolerance, features: StackingFeatures = ALL) {
   const plug = plugFor(fitTolerance);
   const half = plug.x / 2;
   const nutAcrossFlats = bolt.nutFlats + fitTolerance;
@@ -255,12 +318,13 @@ export function stacking(fitTolerance: number = cart.fitTolerance) {
         side === 1 ? -1 : 1,
       );
     return cutAll(part, [
-      ...bolt.heights.flatMap((z) => [
-        teardrop(holeR, z, -half - OVER, half + OVER),
-        teardrop(headR, z, half - bolt.headDepth, half + OVER),
-      ]),
-      pocket(1),
-      pocket(-1),
+      ...(features.holes
+        ? bolt.heights.flatMap((z) => [
+            teardrop(holeR, z, -half - OVER, half + OVER),
+            teardrop(headR, z, half - bolt.headDepth, half + OVER),
+          ])
+        : []),
+      ...(features.registration ? [pocket(1), pocket(-1)] : []),
     ]);
   }
 
@@ -274,7 +338,8 @@ export function stacking(fitTolerance: number = cart.fitTolerance) {
     // The boss starts OVER inside the face, so it fuses into the post cleanly.
     const z = rimZ + bolt.standOff + C;
     const boss = frustum(W + 2 * OVER, L + 2 * OVER, H + OVER, half - OVER, z, 1);
-    const bossed = single(unwrap(fuse(part, boss)));
+    const bossed = features.registration ? single(unwrap(fuse(part, boss))) : part;
+    if (!features.holes) return bossed;
     return cutAll(
       bossed,
       postHoleHeights.flatMap((h) => [
@@ -289,21 +354,29 @@ export function stacking(fitTolerance: number = cart.fitTolerance) {
   // So going through a key from the +X face, the cuts take the pocket, then the
   // counterbore below the pocket's floor, then the hole, then the -X face's
   // pocket. Through the post, they take the nut pocket, then the hole, through
-  // the post and the boss.
+  // the post and the boss. Without the registration, the counterbore and the
+  // hole start at the faces, and the hole ends at the post's outside face.
+  const sunk = features.registration ? pocketDepth : 0;
+  const proud = features.registration ? H : 0;
 
   /** The net change in volume from cutting the stacking features into a key (negative). */
   const keyStackingDelta = -(
-    2 * frustumVolume(pocketW, pocketL, pocketDepth) +
-    bolt.heights.length *
-      (teardropArea(headR) * (bolt.headDepth - pocketDepth) +
-        teardropArea(holeR) * (plug.x - bolt.headDepth - pocketDepth))
+    (features.registration ? 2 * frustumVolume(pocketW, pocketL, pocketDepth) : 0) +
+    (features.holes
+      ? bolt.heights.length *
+        (teardropArea(headR) * (bolt.headDepth - sunk) +
+          teardropArea(holeR) * (plug.x - bolt.headDepth - sunk))
+      : 0)
   );
 
   /** The net change in volume from adding the stacking features to a post. */
   const postStackingDelta =
-    frustumVolume(W, L, H) -
-    postHoleHeights.length *
-      (hexArea(nutAcrossFlats) * bolt.nutDepth + teardropArea(holeR) * (plug.x - bolt.nutDepth + H));
+    (features.registration ? frustumVolume(W, L, H) : 0) -
+    (features.holes
+      ? postHoleHeights.length *
+        (hexArea(nutAcrossFlats) * bolt.nutDepth +
+          teardropArea(holeR) * (plug.x - bolt.nutDepth + proud))
+      : 0);
 
   return {
     nutAcrossFlats,

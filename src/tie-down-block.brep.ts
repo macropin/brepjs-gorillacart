@@ -37,7 +37,7 @@ import {
   type ValidSolid,
 } from 'brepjs';
 
-import { stacking } from './stacking.js';
+import { keyStackingSchema, stacking, stackingDefaults, stackingFeatures } from './stacking.js';
 import { cart, plugFor } from './cart.js';
 import { key, keySectionArea } from './key.js';
 import { atLeast, fitToleranceSpec, type Numeric, type Schema } from './params.js';
@@ -73,6 +73,10 @@ export const defaults = {
 
   /** Printed-fit slop, taken off the cutout's width and length. */
   fitTolerance: cart.fitTolerance,
+
+  /** The stacking features (./stacking.ts): 1 to include each, 0 to leave it off. */
+  boltHoles: stackingDefaults.boltHoles,
+  registration: stackingDefaults.registration,
 } as const;
 
 export type Params = Numeric<typeof defaults>;
@@ -86,6 +90,7 @@ export const schema: Schema<Params> = {
     step: 0.5,
     help: 'Both holes. Big enough for the hook, rope or strap you tie down with.',
   },
+  ...keyStackingSchema,
   fitTolerance: fitToleranceSpec,
 };
 
@@ -101,7 +106,7 @@ const OVER = 1;
 
 export function design(params: Params = defaults) {
   const plug = plugFor(params.fitTolerance);
-  const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance);
+  const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance, stackingFeatures(params));
 
   const rim = params.insertDepth; // 63.5
   const top = rim + params.headHeight; // 103.5

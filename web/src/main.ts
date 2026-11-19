@@ -4,7 +4,7 @@
 
 import './style.css';
 
-import type { ParamSpec } from '../../src/params.js';
+import { on, type DimensionSpec, type ParamSpec, type ToggleSpec } from '../../src/params.js';
 import { accessories, docUrl, type AccessoryInfo, type PartInfo } from './accessories.js';
 import type { BuildRequest, Params, PartData, WorkerMessage } from './protocol.js';
 import { Viewer, type Measured } from './viewer.js';
@@ -127,7 +127,8 @@ function tidyChanges(): void {
       delete values[name];
       continue;
     }
-    const clamped = Math.min(entry.spec.max, Math.max(entry.spec.min, value));
+    let clamped = Math.min(entry.spec.max, Math.max(entry.spec.min, value));
+    if (entry.spec.kind === 'toggle') clamped = on(clamped) ? 1 : 0;
     if (same(clamped, entry.fallback)) delete values[name];
     else values[name] = clamped;
   }
@@ -439,16 +440,19 @@ function renderForm(): void {
     return;
   }
   const disabled = kernel.state === 'unavailable';
-  const entries = Object.entries(d.schema);
-  const dimensions = entries.filter(([name]) => name !== 'fitTolerance');
-  const fit = entries.filter(([name]) => name === 'fitTolerance');
 
-  const groups: HTMLElement[] = [];
-  if (dimensions.length) groups.push(fieldset('Dimensions', dimensions, d, disabled));
-  else if (part.id === 'stack-locator') groups.push(note('Nothing to change: the locator is the registration boss itself, and the pockets in the keys take the fit tolerance.'));
-  else if (part.id === 'ego-battery-holder') groups.push(note('The rails match EGO’s own wall mounts, so only the fit in the cutout can change.'));
-  if (fit.length) groups.push(fieldset('Fit', fit, d, disabled));
-  ui.form.replaceChildren(...groups);
+  // A section per group, in the order the schema first names each.
+  const groups = new Map<string, [string, ParamSpec][]>();
+  for (const entry of Object.entries(d.schema)) {
+    const group = entry[1].group ?? 'Dimensions';
+    groups.set(group, [...(groups.get(group) ?? []), entry]);
+  }
+
+  const sections: HTMLElement[] = [];
+  if (part.id === 'stack-locator') sections.push(note('Nothing to change: the locator is the registration boss itself, and the pockets in the keys take the fit tolerance.'));
+  else if (part.id === 'ego-battery-holder') sections.push(note('The rails match EGO’s own wall mounts, so their dimensions are fixed.'));
+  for (const [legend, entries] of groups) sections.push(fieldset(legend, entries, d, disabled));
+  ui.form.replaceChildren(...sections);
 }
 
 function note(text: string): HTMLElement {
@@ -468,6 +472,57 @@ function fieldset(legend: string, entries: [string, ParamSpec][], d: PartData, d
 }
 
 function field(name: string, spec: ParamSpec, fallback: number): HTMLElement {
+  return spec.kind === 'toggle' ? toggleField(name, spec, fallback) : dimensionField(name, spec, fallback);
+}
+
+/** Sets a value, dropping it once it's back to its default. */
+function setValue(name: string, next: number, fallback: number): void {
+  const values = { ...changed() };
+  if (same(next, fallback)) delete values[name];
+  else values[name] = next;
+  // The fit tolerance goes on every accessory, so a printer's setting sticks.
+  if (name === 'fitTolerance') {
+    for (const info of accessories) {
+      if (info === accessory || !('fitTolerance' in schemaFor(info))) continue;
+      const other = { ...(changes.get(info.id) ?? {}) };
+      if (same(next, fallback)) delete other.fitTolerance;
+      else other.fitTolerance = next;
+      changes.set(info.id, other);
+    }
+  }
+  changes.set(accessory.id, values);
+  ui.reset.disabled = Object.keys(values).length === 0;
+  refresh(true);
+}
+
+/** A switch, for a feature the part can leave off. */
+function toggleField(name: string, spec: ToggleSpec, fallback: number): HTMLElement {
+  const id = `param-${name}`;
+  const value = changed()[name] ?? fallback;
+  const row = document.createElement('div');
+  row.className = 'field';
+  row.dataset.changed = String(!same(value, fallback));
+  row.innerHTML = `
+    <label class="switch" for="${id}">
+      <input type="checkbox" role="switch" id="${id}">
+      <span class="switch-track" aria-hidden="true"></span>
+      <span class="switch-label"></span>
+    </label>
+    <p class="help"></p>`;
+  const input = row.querySelector('input')!;
+  input.checked = on(value);
+  row.querySelector('.switch-label')!.textContent = spec.label;
+  row.querySelector('.help')!.textContent = spec.help ?? '';
+  input.addEventListener('change', () => {
+    const next = input.checked ? 1 : 0;
+    row.dataset.changed = String(!same(next, fallback));
+    setValue(name, next, fallback);
+  });
+  return row;
+}
+
+/** A slider and a number box, for a dimension within its range. */
+function dimensionField(name: string, spec: DimensionSpec, fallback: number): HTMLElement {
   const id = `param-${name}`;
   const value = changed()[name] ?? fallback;
   const row = document.createElement('div');
@@ -499,23 +554,8 @@ function field(name: string, spec: ParamSpec, fallback: number): HTMLElement {
   }
 
   const set = (next: number) => {
-    const values = { ...changed() };
-    if (same(next, fallback)) delete values[name];
-    else values[name] = next;
-    // The fit tolerance goes on every accessory, so a printer's setting sticks.
-    if (name === 'fitTolerance') {
-      for (const info of accessories) {
-        if (info === accessory || !('fitTolerance' in schemaFor(info))) continue;
-        const other = { ...(changes.get(info.id) ?? {}) };
-        if (same(next, fallback)) delete other.fitTolerance;
-        else other.fitTolerance = next;
-        changes.set(info.id, other);
-      }
-    }
-    changes.set(accessory.id, values);
     row.dataset.changed = String(!same(next, fallback));
-    ui.reset.disabled = Object.keys(values).length === 0;
-    refresh(true);
+    setValue(name, next, fallback);
   };
 
   range.addEventListener('input', () => {

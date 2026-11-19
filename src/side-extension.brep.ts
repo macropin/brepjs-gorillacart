@@ -21,10 +21,17 @@
  */
 import { box, cut, fuse, rotate, translate, unwrap, type ValidSolid } from 'brepjs';
 
-import { bolt, registration, stacking } from './stacking.js';
+import {
+  bolt,
+  postStackingSchema,
+  registration,
+  stacking,
+  stackingDefaults,
+  stackingFeatures,
+} from './stacking.js';
 import { cart, plugFor } from './cart.js';
 import { key, keySectionArea } from './key.js';
-import { atLeast, fitToleranceSpec, type Numeric, type Schema } from './params.js';
+import { atLeast, fitToleranceSpec, on, type Numeric, type Schema } from './params.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
@@ -51,11 +58,16 @@ export const defaults = {
 
   /** Printed-fit slop, taken off the cutout's width and length, and the panels' fit in the grooves. */
   fitTolerance: cart.fitTolerance,
+
+  /** The stacking features on the post (./stacking.ts): 1 to include each, 0 to leave it off. */
+  boltHoles: stackingDefaults.boltHoles,
+  registration: stackingDefaults.registration,
 } as const;
 
 export type KitParams = Numeric<typeof defaults>;
 
-export const schema: Schema<KitParams> = {
+/** The whole kit's dimensions: the panels take these from the posts. */
+export const kitSchema: Schema<KitParams> = {
   extension: {
     label: 'Extension height',
     unit: 'mm',
@@ -83,6 +95,15 @@ export const schema: Schema<KitParams> = {
   fitTolerance: fitToleranceSpec,
 };
 
+/** The post's: the kit's dimensions, and its own stacking features. */
+export const schema: Schema<KitParams> = {
+  extension: kitSchema.extension,
+  lean: kitSchema.lean,
+  grooveWidth: kitSchema.grooveWidth,
+  ...postStackingSchema,
+  fitTolerance: kitSchema.fitTolerance,
+};
+
 /** Least material either side of the groove and lip recess. */
 const MIN_WALL = 3;
 
@@ -105,7 +126,7 @@ const OVER = 1;
 
 export function design(params: KitParams = defaults) {
   const plug = plugFor(params.fitTolerance);
-  const { postStackingDelta, postStackingFeatures } = stacking(params.fitTolerance);
+  const { postStackingDelta, postStackingFeatures } = stacking(params.fitTolerance, stackingFeatures(params));
 
   /**
    * The lip recess at the bottom of each groove, square in section: this far
@@ -224,7 +245,9 @@ export function design(params: KitParams = defaults) {
       // registration boss's face, standing proud of the outside face.
       xMax: Math.max(
         params.extension * Math.sin(rad) + half * Math.cos(rad),
-        bossTop * Math.sin(rad) + (half + registration.height) * Math.cos(rad),
+        on(params.registration)
+          ? bossTop * Math.sin(rad) + (half + registration.height) * Math.cos(rad)
+          : -Infinity,
       ),
       yMin: -plug.y / 2,
       yMax: plug.y / 2,
