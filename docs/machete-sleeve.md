@@ -6,7 +6,7 @@
 
 Carries a machete on the rim. A bar drops into a cutout and stands up above the rim. A slot runs right through the upper part along the rim, open on both narrow faces, for the machete blade to pass through.
 
-It is made specifically for the [Tramontina 15" Bolo Machete (Wood Handle, model 26625/015)](https://www.google.com/search?q=Tramontina+15%22+Bolo+Machete), but other machetes with a similar blade may fit too.
+It is made specifically for the [Tramontina 15" Bolo Machete (Wood Handle, model 26625/015)](https://www.google.com/search?q=Tramontina++Bolo+Machete), but other machetes with a similar blade may fit too.
 
 ## What to print
 

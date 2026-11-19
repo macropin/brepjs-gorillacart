@@ -13,9 +13,9 @@ The render shows the whole kit in place, in orange. The view looks in over the o
 | Part | Quantity | Overall size (mm) | Source |
 | --- | --- | --- | --- |
 | [Post](#posts) | 8, one per cutout | 34.88 × 51.0 × 213.7 | [src/side-extension.brep.ts](../src/side-extension.brep.ts) |
-| [Side panel](#side-panels) | 5: two per long side, one across the handle end | 295.4 × 150 × 7.7 | [src/side-panel.brep.ts](../src/side-panel.brep.ts) |
-| [Corner panel](#corner-panels), left | 1 | 142.3 × 164.6 × 149.2 | [src/corner-panel-left.brep.ts](../src/corner-panel-left.brep.ts) |
-| [Corner panel](#corner-panels), right | 1 | 142.3 × 164.6 × 149.2 | [src/corner-panel-right.brep.ts](../src/corner-panel-right.brep.ts) |
+| [Side panel](#side-panels) | 5: two per long side, one across the handle end | 295.4 × 151.5 × 7.7 | [src/side-panel.brep.ts](../src/side-panel.brep.ts) |
+| [Corner panel](#corner-panels), left | 1 | 142.3 × 164.6 × 150.7 | [src/corner-panel-left.brep.ts](../src/corner-panel-left.brep.ts) |
+| [Corner panel](#corner-panels), right | 1 | 142.3 × 164.6 × 150.7 | [src/corner-panel-right.brep.ts](../src/corner-panel-right.brep.ts) |
 
 The kit uses all eight cutouts. The machete sleeve, EGO battery holder and tie-down block can [bolt to its posts](#stacking-accessories) instead.
 
@@ -25,7 +25,7 @@ The kit uses all eight cutouts. The machete sleeve, EGO battery holder and tie-d
 - **Posts:** print standing, as they sit in the cart, on the bottom of the insert. The 6° lean is the only overhang, apart from the bolt holes, which are teardrops pointing up the post and print without support.
 - **Side panels:** print flat on the plain outside face, lips up.
 - **Material:** print the panel across the handle end, the one closest to the handle, in PETG or another impact-resistant plastic. The other side panels should be fine in PLA.
-- **Corner panels:** print as modelled, standing on the bottom edge. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
+- **Corner panels:** print upside down, standing on the top edge, which is flat. The bottom edge steps down 1.5 mm between the leg ends, so stood on it the leg ends would start in mid-air. The 6° lean is the only overhang. Use a brim, since it's a tall thin wall.
 
 ## Fitting
 
@@ -97,11 +97,12 @@ Flat plates that slide down into the grooves of two neighbouring posts on the sa
 
 | | |
 |---|---|
-| Size | 295.4 (length) × 150 (height) × 3.7 (thickness) mm, 7.7 mm at the lips |
+| Size | 295.4 (length) × 150 (height) × 3.7 (thickness) mm, 7.7 mm at the lips and 151.5 mm across the dropped middle |
 | Thickness | 4 mm groove less the 0.3 mm fit tolerance |
 | Length | 295.7 mm groove floor to groove floor (330.7 pitch − 2 × 17.5), less 0.3 mm, so 0.15 mm clear at each end |
 | Height | Matches the posts, 150 mm above the rim |
 | Lips | One at each end on the inside face, full height: 3.7 mm along the panel and standing 4 mm off it. Each drops into its post's lip recess with 0.15 mm clearance all round, so the panel can't pull out of the groove along its length |
+| Bottom edge | Follows the [rim's profile](cart.md), which is level with the groove floors for about 20 mm past each cutout and 1.5 mm lower beyond. The middle 239.1 mm drops the full 1.5 mm to sit on the lower rim, 0.15 mm clear of each step. Each end stays undropped for 28.15 mm: 8 mm over the cutout and 20.15 mm beyond it |
 
 ## Corner panels
 
@@ -119,7 +120,8 @@ Closes each handle-end corner, from the long-side post nearest the handle to the
 | Section | 3.7 mm thick, 150 mm up the slope |
 | Ends | Square to their legs and the same length top to bottom; 0.15 mm clear of each groove floor |
 | Lips | The side panel's 3.7 × 4 mm lip on the inside face at each leg end |
-| Overall | 142.3 × 164.6 × 149.2 mm, printed standing on its bottom edge |
+| Bottom edge | Follows the [rim's profile](cart.md) like the side panel's: level with the groove floors over each leg's last 28.15 mm, 8 mm over the cutout and 20.15 mm beyond it, and dropped 1.5 mm everywhere between, round the bend. So the long-side leg is dropped for 94.6 mm from the corner and the handle-end leg for 116.85 mm |
+| Overall | 142.3 × 164.6 × 150.7 mm, printed upside down on its top edge |
 
 The corner's path is the inside edge of the rim moved 17 mm outward, onto the line through the cutouts. The panel stands 2 mm further out again, in line with the posts' grooves, so its bottom edge sits on the rim all the way round the corner.
 

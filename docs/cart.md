@@ -22,6 +22,7 @@ The long axis of each cutout runs along the rim.
 | Gap between the handle-end cutouts | 11 in (279.4 mm) edge to edge, the same as along the sides |
 | Handle-end cutouts along the cart | 105 mm clear gap, edge to edge, to the nearest long-side cutouts: 140.4 mm centre to centre |
 | Rim corners at the handle end | A round, a flat about 64.5° from the long side, and a second round |
+| Rim profile | Level with the cutout's mouth for about 20 mm past each end of every cutout, and about 1.5 mm lower along the rest of the rim |
 
 These facts live in code in [src/cart.ts](../src/cart.ts), which every accessory imports.
 

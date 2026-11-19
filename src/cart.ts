@@ -35,6 +35,14 @@ export const cart = {
    * here, so its narrow side faces the long-side cutout's end.
    */
   cornerGap: 105,
+
+  /**
+   * The rim's top edge isn't flat. For `landingLength` past each end of every
+   * cutout it is level with the cutout's mouth; between those landings, along
+   * the rest of the rim, it sits `rimDrop` lower. Approximate.
+   */
+  landingLength: 20,
+  rimDrop: 1.5,
 } as const;
 
 /** Centre to centre between neighbouring cutouts along a side: 330.7. */
