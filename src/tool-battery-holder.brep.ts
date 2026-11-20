@@ -1,18 +1,22 @@
 /**
- * EGO battery holder.
+ * Tool battery holder.
  *
- * Carries an EGO POWER+ 56V battery on the rim. The key bar drops into a rim
+ * Carries a power tool battery on the rim. The key bar drops into a rim
  * cutout. Above the rim, a base flares out at 45° to carry a pair of upright
- * rails, the same T-section that EGO wall mounts use. The battery slides down
- * onto the rails from above and hangs from their top end, as it would on a
- * garage wall.
+ * rails, the same T-section as the battery maker's own wall mounts. The
+ * battery slides down onto the rails from above and hangs from their top end,
+ * as it would on a garage wall.
  *
- * EGO publishes the pack's outside size but not its rail interface, so the
- * rail section follows three published wall mounts, measured from their STLs:
- * Ego_Battery_Holder.stl (Printables model 81326), "ego battery support with
- * angle.stl", and 56v_Battery_Holder_v2.stl. The first two agree to the
- * millimetre, and this holder takes their numbers. See
- * docs/ego-battery-holder.md for the comparison.
+ * The rails are the battery's interface, so their section comes from the
+ * battery type, chosen with `batteryType` from RAILS. Only EGO's so far; a new
+ * type is a new entry there, and an option in the schema follows from it.
+ *
+ * EGO POWER+ 56V. EGO publishes the pack's outside size but not its rail
+ * interface, so the rail section follows three published wall mounts, measured
+ * from their STLs: Ego_Battery_Holder.stl (Printables model 81326), "ego
+ * battery support with angle.stl", and 56v_Battery_Holder_v2.stl. The first
+ * two agree to the millimetre, and this holder takes their numbers. See
+ * docs/tool-battery-holder.md for the comparison.
  *
  * The rails face +X. The key is symmetric, so the holder drops into a cutout
  * either way round: rails out to hang the battery outside the cart, or in.
@@ -29,35 +33,71 @@ import { cut, fuse, Sketcher, unwrap, type ValidSolid } from 'brepjs';
 import { keyStackingSchema, stacking, stackingDefaults, stackingFeatures } from './stacking.js';
 import { cart, plugFor } from './cart.js';
 import { key, keySectionArea } from './key.js';
-import { fitToleranceSpec, type Numeric, type Schema } from './params.js';
+import { DesignError, fitToleranceSpec, type Numeric, type Schema } from './params.js';
 import { single } from './solid.js';
 
 // ---------------------------------------------------------------------------
 // Parameters
 // ---------------------------------------------------------------------------
 
-export const defaults = {
-  /** Length of bar sunk into the cutout. */
-  insertDepth: cart.cutoutDepth,
+/** The battery systems, as the `batteryType` parameter numbers them. */
+export const BATTERY_TYPES = { ego: 0 } as const;
+
+/** One battery system's rails: the section and length of its maker's wall mount. */
+export interface Rails {
+  /** As the generator shows it. */
+  readonly label: string;
 
   /**
    * Rail section, across both rails (Y) and out from the back (X). The battery
    * face rests on the flanges' front faces. Its channel's lips wrap round the
    * flange tips and hook in behind them, against the neck.
    */
-  flangeWidth: 92, // tip to tip
-  flangeThickness: 8,
-  neckWidth: 83, // between the lip clearances behind the flanges
+  readonly flangeWidth: number; // tip to tip
+  readonly flangeThickness: number;
+  readonly neckWidth: number; // between the lip clearances behind the flanges
 
   /** Channel down the middle of the rails' front, clear of the battery's centre ridge. */
-  recessWidth: 56,
-  recessDepth: 10, // below the battery face
+  readonly recessWidth: number;
+  readonly recessDepth: number; // below the battery face
 
   /** Rails, from the top of the base to their top end, lead-in included. */
-  railLength: 102.5,
+  readonly railLength: number;
 
   /** 45° lead-in that takes each rail's top corner in, to guide the channel on. */
-  leadIn: 10,
+  readonly leadIn: number;
+}
+
+/** Each battery system's rails, by its `batteryType` number. */
+export const RAILS: Readonly<Record<number, Rails>> = {
+  [BATTERY_TYPES.ego]: {
+    label: 'EGO 56V',
+    flangeWidth: 92,
+    flangeThickness: 8,
+    neckWidth: 83,
+    recessWidth: 56,
+    recessDepth: 10,
+    railLength: 102.5,
+    leadIn: 10,
+  },
+};
+
+/** The rails for a `batteryType`, or a DesignError naming the types there are. */
+export function railsFor(batteryType: number): Rails {
+  const rails = RAILS[batteryType];
+  if (!rails) {
+    const known = Object.entries(RAILS).map(([value, r]) => `${value} for ${r.label}`);
+    throw new DesignError(`batteryType is ${batteryType}: ${known.join(', ')}`);
+  }
+  return rails;
+}
+
+export const defaults = {
+  /** Length of bar sunk into the cutout. */
+  insertDepth: cart.cutoutDepth,
+
+  /** Which battery it carries: its rails come from RAILS. See BATTERY_TYPES. */
+  batteryType: BATTERY_TYPES.ego,
 
   /** Breaks the section's outside corners, running the length of the rails. */
   edgeChamfer: 1,
@@ -72,8 +112,17 @@ export const defaults = {
 
 export type Params = Numeric<typeof defaults>;
 
-/** The rails are EGO's interface, so only the stacking features and the fit in the cutout are open to change. */
+/**
+ * The rails are the battery maker's interface, so beyond the battery type only
+ * the stacking features and the fit in the cutout are open to change.
+ */
 export const schema: Schema<Params> = {
+  batteryType: {
+    kind: 'choice',
+    label: 'Battery',
+    options: Object.entries(RAILS).map(([value, rails]) => ({ value: Number(value), label: rails.label })),
+    help: 'The battery system it carries. The rails match that maker’s own wall mounts.',
+  },
   ...keyStackingSchema,
   fitTolerance: fitToleranceSpec,
 };
@@ -86,6 +135,8 @@ const OVER = 1;
 // ---------------------------------------------------------------------------
 
 export function design(params: Params = defaults) {
+  /** The battery's rails. */
+  const spec = railsFor(params.batteryType);
   const plug = plugFor(params.fitTolerance);
   const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance, stackingFeatures(params));
 
@@ -94,12 +145,12 @@ export function design(params: Params = defaults) {
   /** The rail section is as deep (X) as the key, flush with it front and back. */
   const back = -plug.x / 2; // -9.6
   const face = plug.x / 2; // 9.6, where the battery face rests
-  const underFlange = face - params.flangeThickness; // 1.6
-  const recessFloor = face - params.recessDepth; // -0.4
+  const underFlange = face - spec.flangeThickness; // 1.6
+  const recessFloor = face - spec.recessDepth; // -0.4
 
-  const flangeHalf = params.flangeWidth / 2; // 46
-  const neckHalf = params.neckWidth / 2; // 41.5
-  const recessHalf = params.recessWidth / 2; // 28
+  const flangeHalf = spec.flangeWidth / 2; // 46
+  const neckHalf = spec.neckWidth / 2; // 41.5
+  const recessHalf = spec.recessWidth / 2; // 28
 
   /** Clear depth behind each flange for the battery's lips, open at the back. */
   const lipClearance = underFlange - back; // 11.2
@@ -109,10 +160,10 @@ export function design(params: Params = defaults) {
   const railBottom = rim + baseHeight; // 84
 
   /** Overall height: 84 + 102.5 = 186.5. */
-  const top = railBottom + params.railLength;
+  const top = railBottom + spec.railLength;
 
   /** Where the lead-in meets the top face. */
-  const leadInStart = flangeHalf - params.leadIn; // 36
+  const leadInStart = flangeHalf - spec.leadIn; // 36
 
   /** The rail section in XY, chamfered round its outside corners. */
   function section(): [number, number][] {
@@ -149,14 +200,14 @@ export function design(params: Params = defaults) {
     const [first, ...rest] = section();
     let sketch = new Sketcher('XY', railBottom).movePointerTo(first!);
     for (const p of rest) sketch = sketch.lineTo(p);
-    let rails = single(sketch.close().extrude(params.railLength));
+    let rails = single(sketch.close().extrude(spec.railLength));
 
     // The lead-in: a 45° cut across each top corner, through the full depth.
     for (const side of [1, -1]) {
       const wedge = new Sketcher('YZ', back - OVER)
         .movePointerTo([side * (leadInStart - OVER), top + OVER])
         .lineTo([side * (flangeHalf + OVER), top + OVER])
-        .lineTo([side * (flangeHalf + OVER), top - params.leadIn - OVER])
+        .lineTo([side * (flangeHalf + OVER), top - spec.leadIn - OVER])
         .close()
         .extrude(plug.x + 2 * OVER);
       rails = single(unwrap(cut(rails, single(wedge))));
@@ -175,7 +226,7 @@ export function design(params: Params = defaults) {
   // parameters rather than the drawn outline.
   const c = params.edgeChamfer;
   const full = face - back; // 19.2
-  const t = params.flangeThickness;
+  const t = spec.flangeThickness;
   const pieces: [number, number, number, number][] = [
     [0, recessHalf, recessFloor - back, recessFloor - back], // behind the recess
     [recessHalf, recessHalf + c, full - c, full], // recess-edge chamfer
@@ -206,13 +257,13 @@ export function design(params: Params = defaults) {
   // first moment of the section beyond 36, about 36.
   const leadInVolume = moment(leadInStart, 1);
 
-  const baseVolume = ((plug.y + params.flangeWidth) / 2) * baseHeight * plug.x;
+  const baseVolume = ((plug.y + spec.flangeWidth) / 2) * baseHeight * plug.x;
 
   const expected = {
     volume:
       keySectionArea(plug) * rim +
       baseVolume +
-      sectionArea * params.railLength -
+      sectionArea * spec.railLength -
       2 * leadInVolume +
       keyStackingDelta,
     bounds: {
@@ -231,7 +282,7 @@ export function design(params: Params = defaults) {
 
 const standard = design();
 
-export default function egoBatteryHolder(): ValidSolid {
+export default function toolBatteryHolder(): ValidSolid {
   return standard.model();
 }
 

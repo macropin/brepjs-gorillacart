@@ -3,10 +3,9 @@
 
 import type { ValidSolid } from 'brepjs';
 
+import * as bladedToolHolder from '../../src/bladed-tool-holder.brep.js';
 import * as cornerPanelLeft from '../../src/corner-panel-left.brep.js';
 import * as cornerPanelRight from '../../src/corner-panel-right.brep.js';
-import * as egoBatteryHolder from '../../src/ego-battery-holder.brep.js';
-import * as macheteSleeve from '../../src/machete-sleeve.brep.js';
 import * as mountingPlate from '../../src/mounting-plate.brep.js';
 import type { ParamSpec } from '../../src/params.js';
 import * as poleHolder from '../../src/pole-holder.brep.js';
@@ -14,6 +13,7 @@ import * as sideExtension from '../../src/side-extension.brep.js';
 import * as sidePanel from '../../src/side-panel.brep.js';
 import * as stackLocator from '../../src/stack-locator.brep.js';
 import * as tieDownBlock from '../../src/tie-down-block.brep.js';
+import * as toolBatteryHolder from '../../src/tool-battery-holder.brep.js';
 import type { Params } from './protocol.js';
 
 /** A part's declared intent, as `brep verify --check` asserts it. */
@@ -55,7 +55,7 @@ export const parts: Record<string, PartModule> = {
   'stack-locator': widen(stackLocator),
   'tie-down-block': widen(tieDownBlock),
   'pole-holder': widen(poleHolder),
-  'machete-sleeve': widen(macheteSleeve),
-  'ego-battery-holder': widen(egoBatteryHolder),
+  'bladed-tool-holder': widen(bladedToolHolder),
+  'tool-battery-holder': widen(toolBatteryHolder),
   'mounting-plate': widen(mountingPlate),
 };

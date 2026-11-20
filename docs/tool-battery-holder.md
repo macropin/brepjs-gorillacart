@@ -1,16 +1,18 @@
-# EGO battery holder
+# Tool battery holder
 
 [← All accessories](../README.md)
 
-![The EGO battery holder, in orange, standing in a cutout on one side of the cart's rim, its rails facing out of the cart](../media/ego-battery-holder-assembled.png)
+![The tool battery holder, in orange, standing in a cutout on one side of the cart's rim, its rails facing out of the cart](../media/tool-battery-holder-assembled.png)
 
-Carries an EGO POWER+ 56V battery on the rim. The key drops into a cutout. Above the rim, a base flares out to carry a pair of upright rails with the same T-section as an EGO wall mount. The battery slides down onto the rails from above and hangs there, as it would on a garage wall.
+Carries a power tool battery on the rim. The key drops into a cutout. Above the rim, a base flares out to carry a pair of upright rails with the same T-section as the battery maker's own wall mount. The battery slides down onto the rails from above and hangs there, as it would on a garage wall.
+
+The rails are the battery's interface, so they depend on which battery it carries, set with `batteryType`. So far there's one type, the EGO POWER+ 56V, and the holder is ready for more: see [Battery types](#battery-types).
 
 ## What to print
 
-One holder per battery. Source: [src/ego-battery-holder.brep.ts](../src/ego-battery-holder.brep.ts).
+One holder per battery. Source: [src/tool-battery-holder.brep.ts](../src/tool-battery-holder.brep.ts). Pick the battery with `batteryType`, or **Battery** in the [STL generator](https://macropin.github.io/brepjs-gorillacart/#tool-battery-holder).
 
-If the battery is tight or loose on the rails, change `flangeWidth` and `flangeThickness`, which set how far the rails reach into the battery's channel. To stand the rails taller or shorter, change `railLength`.
+If the battery is tight or loose on the rails, change `flangeWidth` and `flangeThickness` in its entry in `RAILS`, which set how far the rails reach into the battery's channel. To stand the rails taller or shorter, change `railLength` there.
 
 ## Printing
 
@@ -34,10 +36,13 @@ With the side extension kit fitted, bolt the key to the outside of a post instea
 
 ## Dimensions
 
-![The EGO battery holder: a key with a flared base and a pair of upright T-section rails on top](../media/ego-battery-holder.png)
+![The tool battery holder: a key with a flared base and a pair of upright T-section rails on top](../media/tool-battery-holder.png)
+
+For the EGO 56V, the only battery type so far:
 
 | | |
 |---|---|
+| Battery | EGO POWER+ 56V, `batteryType` 0 |
 | Insert | 19.2 × 51.0 mm key, bottom 63.5 mm into the cutout |
 | Base | Flares at 45° along the rim, from the key's 51 mm at the rim to 92 mm, 20.5 mm higher. 19.2 mm across the rim, flush with the key. Solid |
 | Rails | T-section, 102.5 mm tall above the base. 92 mm across the flange tips, flanges 8 mm thick, 83 mm across the neck behind them |
@@ -50,9 +55,25 @@ With the side extension kit fitted, bolt the key to the outside of a post instea
 | Registration pockets | One in each broad face of the key, around the bolt holes: 18.3 × 52.3 mm at the face, 3.3 mm deep with 45° sides, centred 30 mm above the bottom of the key. The inside one drops over a post's boss, or either takes a [stack locator](side-extension-kit.md#stack-locator) |
 | Overall | 19.2 (X) × 92 (Y) × 186.5 (Z) mm; top 123 mm above the rim |
 
+## Battery types
+
+| `batteryType` | Battery | Rails |
+| --- | --- | --- |
+| 0 | EGO POWER+ 56V | 92 mm across the flange tips, 8 mm flanges, 83 mm neck, 56 × 10 mm recess, 102.5 mm long: see [EGO 56V rail section](#ego-56v-rail-section) |
+
+Each type's rail section and length is an entry in `RAILS` in [src/tool-battery-holder.brep.ts](../src/tool-battery-holder.brep.ts), keyed by its number in `BATTERY_TYPES`. The key, base and stacking features are the same for every type; the base flares out to whatever the rails are across.
+
+To add a battery type:
+
+1. Give it the next number in `BATTERY_TYPES`.
+2. Add its rails to `RAILS`, with the label the generator shows: the flange width and thickness, the neck width behind the flanges, the recess down the middle of the face, the rail length and the lead-in at the top. Measure them from the maker's own wall mount, or from a published one, as the EGO numbers were.
+3. Run `make sweep PART=tool-battery-holder`, which builds every type. The generator offers it as soon as it's in `RAILS`.
+
+The section assumes the same T-rail shape as EGO's, flanges with lip clearance behind them and a recess down the middle. A battery that mounts another way would need its own section drawn in `design`.
+
 ## Design notes
 
-### Rail section
+### EGO 56V rail section
 
 EGO's spec sheets give the pack's outside size but not its rail interface. The packs are 195 mm long and 148 to 159 mm wide, and 82 to 105 mm deep depending on capacity. The rail section is measured instead from the STLs of three published wall mounts. The first two agree to the millimetre, and this holder takes their numbers.
 
@@ -72,4 +93,4 @@ All three hold the battery the same way. The pack slides down onto upright rails
 
 How low the battery hangs depends on how far its channel runs, which none of the references show. The rails are 102.5 mm long, as on the 81326 holder. If the channel is about that long, the bottom of the battery ends up about level with the bottom of the rails, 20.5 mm above the rim. If it's longer, the lips land on the top of the base, at the same height.
 
-The battery face is flush with the key's face, inside the rim's outer edge. So the battery has to stay above the rim; it can't hang down past it. If yours doesn't clear the rim, lengthen the rails with `railLength`.
+The battery face is flush with the key's face, inside the rim's outer edge. So the battery has to stay above the rim; it can't hang down past it. If yours doesn't clear the rim, lengthen the rails with `railLength` in the EGO entry in `RAILS`.

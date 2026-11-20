@@ -1,13 +1,14 @@
 /**
- * Machete sleeve.
+ * Bladed tool holder.
  *
- * Carries a machete on the rim. The key bar drops into a rim cutout; above the
- * rim a stadium slot runs right through it along the rim, open on both narrow
- * faces. The blade slides through edge down and is held by friction. What is
- * left is two plates joined by solid ends.
+ * Carries a machete, or another long flat blade, on the rim. Sized as printed
+ * for a Tramontina 15" bolo machete. The key bar drops into a rim cutout;
+ * above the rim a stadium slot runs right through it along the rim, open on
+ * both narrow faces. The blade slides through edge down and is held by
+ * friction. What is left is two plates joined by solid ends.
  *
  * The key carries the stacking bolt holes and registration pockets
- * (./stacking.ts), so the sleeve can bolt to a side extension post instead.
+ * (./stacking.ts), so the holder can bolt to a side extension post instead.
  *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
@@ -189,7 +190,7 @@ export function design(params: Params = defaults) {
 
 const standard = design();
 
-export default function macheteSleeve(): ValidSolid {
+export default function bladedToolHolder(): ValidSolid {
   return standard.model();
 }
 

@@ -106,9 +106,15 @@ function sorted(params: Params): Params {
 // The URL: #accessory/part?name=value&...
 // ---------------------------------------------------------------------------
 
+/** Accessories and parts that have been renamed, so links to their old names still work. */
+const RENAMED: Readonly<Record<string, string>> = {
+  'machete-sleeve': 'bladed-tool-holder',
+  'ego-battery-holder': 'tool-battery-holder',
+};
+
 function readHash(): void {
   const [path = '', query = ''] = decodeURIComponent(location.hash.slice(1)).split('?');
-  const [accessoryId, partId] = path.split('/');
+  const [accessoryId, partId] = path.split('/').map((id) => RENAMED[id] ?? id);
   accessory = accessories.find((a) => a.id === accessoryId) ?? first;
   part = accessory.parts.find((p) => p.id === partId) ?? accessory.parts[0]!;
   const values: Params = {};
@@ -472,7 +478,7 @@ function renderForm(): void {
 
   const sections: HTMLElement[] = [];
   if (part.id === 'stack-locator') sections.push(note('Nothing to change: the locator is the registration boss itself, and the pockets in the keys take the fit tolerance.'));
-  else if (part.id === 'ego-battery-holder') sections.push(note('The rails match EGO’s own wall mounts, so their dimensions are fixed.'));
+  else if (part.id === 'tool-battery-holder') sections.push(note('The rails match the battery maker’s own wall mounts, so their dimensions follow the battery.'));
   for (const [legend, entries] of groups) sections.push(fieldset(legend, entries, d, disabled));
   ui.form.replaceChildren(...sections);
   showApplicable();

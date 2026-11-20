@@ -17,7 +17,7 @@ make render     # multi-view PNGs into out/<name>/shots, refresh media/<name>.pn
 make export     # STEP + STL into out/<name>/
 make assemblies # assembled renders into media/<name>-assembled.png
 make all        # verify, render, export, assemblies
-make preview PART=machete-sleeve   # live viewer, re-evaluates on save
+make preview PART=bladed-tool-holder   # live viewer, re-evaluates on save
 make sweep      # build each part at the limits of its adjustable dimensions, and verify each
 make web        # run the STL generator locally
 make web-build  # type-check and build the STL generator into web/dist
@@ -40,8 +40,8 @@ Every part that fits into a cutout or a groove takes `fitTolerance`, the slop be
 | Tie-down block | [src/tie-down-block.brep.ts](../src/tie-down-block.brep.ts) | [Tie-down block](tie-down-block.md) |
 | Pole tool holder | [src/pole-holder.brep.ts](../src/pole-holder.brep.ts) | [Pole tool holder](pole-holder.md) |
 | Pole tool holder, rigid clip | [src/pole-holder-rigid.brep.ts](../src/pole-holder-rigid.brep.ts) | [Pole tool holder](pole-holder.md#rigid-clip) |
-| Machete sleeve | [src/machete-sleeve.brep.ts](../src/machete-sleeve.brep.ts) | [Machete sleeve](machete-sleeve.md) |
-| EGO battery holder | [src/ego-battery-holder.brep.ts](../src/ego-battery-holder.brep.ts) | [EGO battery holder](ego-battery-holder.md) |
+| Bladed tool holder | [src/bladed-tool-holder.brep.ts](../src/bladed-tool-holder.brep.ts) | [Bladed tool holder](bladed-tool-holder.md) |
+| Tool battery holder | [src/tool-battery-holder.brep.ts](../src/tool-battery-holder.brep.ts) | [Tool battery holder](tool-battery-holder.md) |
 | Mounting plate | [src/mounting-plate.brep.ts](../src/mounting-plate.brep.ts) | [Mounting plate](mounting-plate.md) |
 | Stack locator | [src/stack-locator.brep.ts](../src/stack-locator.brep.ts) | [Side extension kit](side-extension-kit.md#stack-locator) |
 

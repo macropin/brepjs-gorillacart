@@ -2,12 +2,12 @@
 // Every part of an accessory shares its parameters: the kit's panels are sized
 // from its posts. Plain data, so the page loads none of the geometry code.
 
-import egoImage from '../../media/ego-battery-holder-assembled.png';
-import macheteImage from '../../media/machete-sleeve-assembled.png';
+import bladedImage from '../../media/bladed-tool-holder-assembled.png';
 import plateImage from '../../media/mounting-plate-assembled.png';
 import poleImage from '../../media/pole-holder-assembled.png';
 import kitImage from '../../media/side-extensions-assembled.png';
 import tieDownImage from '../../media/tie-down-block-assembled.png';
+import batteryImage from '../../media/tool-battery-holder-assembled.png';
 
 export const REPO = 'https://github.com/macropin/brepjs-gorillacart';
 
@@ -61,20 +61,20 @@ export const accessories: AccessoryInfo[] = [
     parts: [{ id: 'pole-holder', title: 'Pole tool holder', count: 'Print 2 per pole' }],
   },
   {
-    id: 'machete-sleeve',
-    title: 'Machete sleeve',
-    summary: 'A slotted bar that carries a machete on the rim.',
-    doc: 'machete-sleeve',
-    image: macheteImage,
-    parts: [{ id: 'machete-sleeve', title: 'Machete sleeve', count: 'Print 1' }],
+    id: 'bladed-tool-holder',
+    title: 'Bladed tool holder',
+    summary: 'A slotted bar that carries a machete or another long blade on the rim.',
+    doc: 'bladed-tool-holder',
+    image: bladedImage,
+    parts: [{ id: 'bladed-tool-holder', title: 'Bladed tool holder', count: 'Print 1' }],
   },
   {
-    id: 'ego-battery-holder',
-    title: 'EGO battery holder',
-    summary: 'Upright rails that an EGO 56V battery slides onto, as on a wall mount.',
-    doc: 'ego-battery-holder',
-    image: egoImage,
-    parts: [{ id: 'ego-battery-holder', title: 'EGO battery holder', count: 'Print 1 per battery' }],
+    id: 'tool-battery-holder',
+    title: 'Tool battery holder',
+    summary: 'Upright rails that a power tool battery slides onto, as on its wall mount. EGO 56V for now.',
+    doc: 'tool-battery-holder',
+    image: batteryImage,
+    parts: [{ id: 'tool-battery-holder', title: 'Tool battery holder', count: 'Print 1 per battery' }],
   },
   {
     id: 'mounting-plate',

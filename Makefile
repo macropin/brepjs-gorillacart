@@ -2,7 +2,7 @@
 #
 # Each accessory is a src/<name>.brep.ts module; everything here drives the
 # brepjs CLI against them. Targets act on every part, or on one with
-# PART=<name> (e.g. `make verify PART=machete-sleeve`). Requires Node 24+
+# PART=<name> (e.g. `make verify PART=bladed-tool-holder`). Requires Node 24+
 # (`brew install node`).
 #
 # src/assemblies/ holds scenes, not parts: accessories placed on a schematic
@@ -17,7 +17,7 @@ SCENE   ?=
 SHOW    := $(or $(SCENE),$(SCENES))
 # Scenes whose accessories are too small to read on a whole-cart render. These
 # are framed on the accessories instead.
-CLOSEUPS := ego-battery-holder machete-sleeve mounting-plate pole-holder tie-down-block side-extensions-stacked
+CLOSEUPS := bladed-tool-holder mounting-plate pole-holder tie-down-block tool-battery-holder side-extensions-stacked
 # Scenes drawn against a backdrop of their own, src/assemblies/backdrops/<scene>.brep.ts,
 # instead of the bare cart. Only what the scene adds to its backdrop is coloured.
 BACKDROPS := $(patsubst src/assemblies/backdrops/%.brep.ts,%,$(wildcard src/assemblies/backdrops/*.brep.ts))

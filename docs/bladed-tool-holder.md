@@ -1,18 +1,18 @@
-# Machete sleeve
+# Bladed tool holder
 
 [← All accessories](../README.md)
 
-![The machete sleeve, in orange, standing in a cutout on one side of the cart's rim](../media/machete-sleeve-assembled.png)
+![The bladed tool holder, in orange, standing in a cutout on one side of the cart's rim](../media/bladed-tool-holder-assembled.png)
 
-Carries a machete on the rim. A bar drops into a cutout and stands up above the rim. A slot runs right through the upper part along the rim, open on both narrow faces, for the machete blade to pass through.
+Carries a machete, or another tool with a long flat blade, on the rim. A bar drops into a cutout and stands up above the rim. A slot runs right through the upper part along the rim, open on both narrow faces, for the blade to pass through.
 
-It is made specifically for the [Tramontina 15" Bolo Machete (Wood Handle, model 26625/015)](https://www.google.com/search?q=Tramontina++Bolo+Machete), but other machetes with a similar blade may fit too.
+As printed, it's sized for the [Tramontina 15" Bolo Machete (Wood Handle, model 26625/015)](https://www.google.com/search?q=Tramontina++Bolo+Machete). Other machetes with a similar blade may fit as they are, and the slot can be resized for other blades.
 
 ## What to print
 
-One sleeve. Source: [src/machete-sleeve.brep.ts](../src/machete-sleeve.brep.ts).
+One holder. Source: [src/bladed-tool-holder.brep.ts](../src/bladed-tool-holder.brep.ts).
 
-For a different blade, change `bladeThickness`: the slot adds the fit tolerance. For a wider blade, change `slotSpan`: the bar grows with it, keeping `endWall` of solid above and below the slot. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#machete-sleeve) changes both in your browser.
+For a different blade, change `bladeThickness`: the slot adds the fit tolerance. For a wider blade, change `slotSpan`: the bar grows with it, keeping `endWall` of solid above and below the slot. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#bladed-tool-holder) changes both in your browser.
 
 ## Printing
 
@@ -26,7 +26,7 @@ With the side extension kit fitted, bolt the key to the outside of a post instea
 
 ## Dimensions
 
-![The machete sleeve: a tall bar with a narrow slot through its upper part](../media/machete-sleeve.png)
+![The bladed tool holder: a tall bar with a narrow slot through its upper part](../media/bladed-tool-holder.png)
 
 | | |
 |---|---|

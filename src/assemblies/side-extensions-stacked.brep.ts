@@ -1,9 +1,10 @@
 /**
- * Accessories stacked on the side extension kit: the machete sleeve bolted to
- * the outside of the middle post on the right long side, and the EGO battery
- * holder bolted on outside the sleeve, rails out, through the same two bolts.
- * The post's registration boss locates the sleeve, and a stack locator between
- * the two keys locates the holder on the sleeve. For rendering only.
+ * Accessories stacked on the side extension kit: the bladed tool holder
+ * bolted to the outside of the middle post on the right long side, and the
+ * tool battery holder bolted on outside it, rails out, through the same two
+ * bolts. The post's registration boss locates the bladed tool holder, and a
+ * stack locator between the two keys locates the battery holder on it. For
+ * rendering only.
  *
  * Drawn against its own backdrop, the kit on the cart
  * (./backdrops/side-extensions-stacked.brep.ts), so only the stack is coloured.
@@ -20,11 +21,11 @@ import {
   type Compound,
 } from 'brepjs';
 
+import bladedToolHolder from '../bladed-tool-holder.brep.js';
 import { cart, plug } from '../cart.js';
-import egoBatteryHolder from '../ego-battery-holder.brep.js';
-import macheteSleeve from '../machete-sleeve.brep.js';
 import { defaults as post } from '../side-extension.brep.js';
 import { bolt, registration, stackLocator } from '../stacking.js';
+import toolBatteryHolder from '../tool-battery-holder.brep.js';
 import { cartBodies, half, onRim, RIGHT, sideX, stage } from './cart.brep.js';
 import { kitBodies } from './side-extensions.brep.js';
 
@@ -40,12 +41,12 @@ export function boltedToPost<T extends AnyShape>(shape: T, layer: number): T {
 
 /** The stacked accessories, and the stack locator between them, in the cart's frame. */
 export function stackBodies(): AnyShape[] {
-  // The locator sits on the sleeve's outside face, at its registration pocket.
+  // The locator sits on the bladed tool holder's outside face, at its registration pocket.
   const locator = translate(stackLocator(), [plug.x / 2, 0, registration.centre]);
   return [
-    onRim(boltedToPost(macheteSleeve(), 1), RIGHT, sideX(1), -half),
+    onRim(boltedToPost(bladedToolHolder(), 1), RIGHT, sideX(1), -half),
     onRim(boltedToPost(locator, 1), RIGHT, sideX(1), -half),
-    onRim(boltedToPost(egoBatteryHolder(), 2), RIGHT, sideX(1), -half),
+    onRim(boltedToPost(toolBatteryHolder(), 2), RIGHT, sideX(1), -half),
   ];
 }
 

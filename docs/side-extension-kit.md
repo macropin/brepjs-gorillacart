@@ -18,7 +18,7 @@ The render shows the whole kit in place, in orange. The view looks in over the o
 | [Corner panel](#corner-panels), right | 1 | 142.3 × 164.6 × 150.7 | [src/corner-panel-right.brep.ts](../src/corner-panel-right.brep.ts) |
 | [Stack locator](#stack-locator) | Only for stacking: one between each pair of stacked accessories | 52 × 18 × 6 | [src/stack-locator.brep.ts](../src/stack-locator.brep.ts) |
 
-The kit uses all eight cutouts. The machete sleeve, EGO battery holder and tie-down block can [bolt to its posts](#stacking-accessories) instead.
+The kit uses all eight cutouts. The bladed tool holder, tool battery holder, tie-down block and pole tool holder can [bolt to its posts](#stacking-accessories) instead.
 
 ## Printing
 
@@ -44,9 +44,9 @@ With the far end closed straight across between the two farthest long-side posts
 
 ## Stacking accessories
 
-![The machete sleeve bolted to the outside of a side extension post, and the EGO battery holder bolted on outside it, in orange, against the kit on the cart in grey](../media/side-extensions-stacked-assembled.png)
+![The bladed tool holder bolted to the outside of a side extension post, and the tool battery holder bolted on outside it, in orange, against the kit on the cart in grey](../media/side-extensions-stacked-assembled.png)
 
-With the kit fitted, every cutout holds a post, so the other accessories bolt to the posts instead. Each post has two M5 holes through it above the rim, with nut pockets on the inside face. The machete sleeve, EGO battery holder, tie-down block and pole tool holder have the same two holes through their keys, counterbored for the bolt heads. An accessory bolts flat to the outside face of any post. A second can bolt on outside the first, through the same holes. The render shows the machete sleeve on the middle post of one long side, with the battery holder bolted on outside it.
+With the kit fitted, every cutout holds a post, so the other accessories bolt to the posts instead. Each post has two M5 holes through it above the rim, with nut pockets on the inside face. The bladed tool holder, tool battery holder, tie-down block and pole tool holder have the same two holes through their keys, counterbored for the bolt heads. An accessory bolts flat to the outside face of any post. A second can bolt on outside the first, through the same holes. The render shows the bladed tool holder on the middle post of one long side, with the battery holder bolted on outside it.
 
 The bolts only clamp. What lines the parts up is a shallow rectangular boss with 45° sides around the bolt holes, standing 3 mm proud of the post's outside face. Each accessory's key has a matching pocket in both broad faces, and the inside one drops over the boss. The 45° sides centre the key as it goes on and hold it in line, up and down, along the rim and in rotation, whatever the slack in the bolt holes. A key has to fit the cart's cutout, so it can't carry a boss of its own for a second accessory to locate on. Between two keys, a separate printed [stack locator](#stack-locator), two bosses back to back, sits in the pockets of both.
 
@@ -69,8 +69,8 @@ The bolt lengths land with the nut pulled down onto the floor of its 8 mm pocket
 
 ### What goes where
 
-- **EGO battery holder:** outermost, rails out. Nothing can go over the battery's face, so with the machete sleeve the order is post, sleeve, holder.
-- **Machete sleeve under the battery holder:** the blade passes 8 mm inside the holder's back, so the handle has to sit more than 46 mm along the rim from the middle of the stack, past the ends of the holder's rails.
+- **Tool battery holder:** outermost, rails out. Nothing can go over the battery's face, so with the bladed tool holder the order is post, bladed tool holder, battery holder.
+- **Bladed tool holder under the battery holder:** the blade passes 8 mm inside the battery holder's back, so the handle has to sit more than 46 mm along the rim from the middle of the stack, past the ends of the EGO rails.
 - **Tie-down block:** a strap point above the raised walls, for holding a load down over them.
 - **Pole tool holder:** outermost, with its stand raised. Its clip is wider than its key, so it has to sit above the post's top: a stand of at least the extension less 68.5 mm, 85 mm for the default 150 mm extension. A pair on neighbouring posts carries a pole along the top of the raised walls. See [Bolting it to a post](pole-holder.md#bolting-it-to-a-post).
 - **Mounting plate:** doesn't stack on a post: it hangs over the rim from its own cutout. Its plate can carry a registration boss and bolt holes of its own, though, so an accessory can bolt to it instead: see [Mounting plate](mounting-plate.md#bolting-an-accessory-to-it).

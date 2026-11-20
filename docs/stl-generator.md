@@ -35,10 +35,11 @@ The defaults are the parts as printed from this repo.
 | | Roll bulge (with the rolled edge) | 0–2 mm | 1 mm |
 | | Height above the rim | 10–150 mm | 50 mm |
 | | Bolt holes, registration pockets | On or off | On |
-| Machete sleeve | Blade thickness | 1.5–8 mm | 3 mm |
+| Bladed tool holder | Blade thickness | 1.5–8 mm | 3 mm |
 | | Slot length | 40–200 mm | 110 mm |
 | | Bolt holes, registration pockets | On or off | On |
-| EGO battery holder | Bolt holes, registration pockets | On or off | On |
+| Tool battery holder | Battery | EGO 56V | EGO 56V |
+| | Bolt holes, registration pockets | On or off | On |
 | Mounting plate | Hanging plate | On or off | On |
 | | Plate drop (with the plate) | 50–200 mm | 100 mm |
 | | Plate thickness (with the plate) | 3–8 mm | 4 mm |
@@ -56,9 +57,9 @@ The defaults are the parts as printed from this repo.
 - **The pole tool holder's compliant clip** grows with the pole and its bands. The snap sets how far round the bore the heads sit, so the opening is that much narrower than the pole. See [Compliant clip](pole-holder.md#compliant-clip).
 - **The pole tool holder bolted to a post** needs its height above the rim raised to at least the post's extension less 68.5 mm, so the clip clears the post's top. The page can't check this: the holder doesn't know the kit's settings. See [Bolting it to a post](pole-holder.md#bolting-it-to-a-post).
 - **The pole tool holder's rolled edge**, on the rigid clip, starts where the bore ends, at the snap lip height, and is the wall plus the bulge across. See [Rolled leading edge](pole-holder.md#rolled-leading-edge).
-- **The machete sleeve's bar** grows with its slot, keeping 8.35 mm of solid above and below it.
+- **The bladed tool holder's bar** grows with its slot, keeping 8.35 mm of solid above and below it.
 - **The mounting plate without its plate** is a bracket on the rim: the bridge reaching out past it, with only the holes in its top.
-- **The EGO battery holder's rails** match EGO's own wall mounts, so they don't change.
+- **The tool battery holder's rails** match the battery maker's own wall mounts, so they follow the battery type rather than being set directly. EGO 56V is the only type so far: see [Battery types](tool-battery-holder.md#battery-types).
 - **Some combinations** of settings, each in range on its own, would leave a wall too thin to print, such as a big snap lip on a small pole. The part then refuses to build, and the page says which wall and by how much.
 
 ## How it works
