@@ -33,11 +33,22 @@ The defaults are the parts as printed from this repo.
 | | Slot length | 40–200 mm | 110 mm |
 | | Bolt holes, registration pockets | On or off | On |
 | EGO battery holder | Bolt holes, registration pockets | On or off | On |
+| Mounting plate | Hanging plate | On or off | On |
+| | Plate drop (with the plate) | 50–200 mm | 100 mm |
+| | Plate thickness (with the plate) | 3–8 mm | 4 mm |
+| | Bridge thickness | 3–15 mm | 4 mm |
+| | Gap to the rim (with the plate) | 3–30 mm | 5 mm |
+| | Hole columns | 2–3 | 2 |
+| | Hole rows (with the plate) | 2–5 | 2 |
+| | Hole diameter | 3–7 mm | 5.5 mm (M5) |
+| | Holes in the top (with the plate and a gap of 14 mm or more; always there without it) | On or off | On |
+| | Registration boss, bolt holes (with the plate) | On or off | Off |
 | All but the stack locator | Fit tolerance | 0–1 mm | 0.3 mm |
 
 - **The kit** shares its settings across its parts. The posts, side panels and corner panels are all built from the same extension, lean and groove width, so they always fit each other. The stack locator has nothing to change: the pockets in the keys take the fit.
 - **Fit tolerance** belongs to the printer, not the part, so changing it on one accessory changes it on the others too.
 - **The machete sleeve's bar** grows with its slot, keeping 8.35 mm of solid above and below it.
+- **The mounting plate without its plate** is a bracket on the rim: the bridge reaching out past it, with only the holes in its top.
 - **The EGO battery holder's rails** match EGO's own wall mounts, so they don't change.
 - **Some combinations** of settings, each in range on its own, would leave a wall too thin to print, such as a big snap lip on a small pole. The part then refuses to build, and the page says which wall and by how much.
 
@@ -57,11 +68,11 @@ Every parameter is a number, so a set of them goes in a URL as it is. A schema e
 
 | Kind | Values | Drawn as |
 | --- | --- | --- |
-| Dimension | A `min`, `max` and `step`, in mm or degrees | A slider and a number box |
+| Dimension | A `min`, `max` and `step`, in mm or degrees, or a count with no unit and a step of 1 | A slider and a number box |
 | Toggle | 1 for on, 0 for off | A switch |
 | Choice | Numbered options, such as the tie-down block's `openings`: 0 for two holes, 1 or 2 for that many slits | A row of buttons |
 
-An entry's `group` puts it in a section of the form: Dimensions, Stacking or Fit. A `when` makes it apply only while another parameter has certain values. The form then shows it only in that case, and the build and file name leave it out otherwise: the hole size only for holes, the slit size only for slits.
+An entry's `group` puts it in a section of the form: Dimensions, Holes, Stacking or Fit. A `when` makes it apply only while another parameter has certain values, or lies in a range. The form then shows it only in that case, and the build and file name leave it out otherwise: the hole size only for holes, the slit size only for slits.
 
 `design` throws a `DesignError` for a combination it won't build (see `atLeast`), and the page shows that message in place of the part.
 
@@ -118,7 +129,7 @@ The page itself uses no UI framework or CSS library: plain TypeScript and CSS, w
 - **`make verify`** checks every part at its defaults, as it always has.
 - **`make sweep`** ([scripts/sweep-params.mjs](../scripts/sweep-params.mjs)) checks every setting the generator offers.
   - It builds each part with each dimension at its minimum and at its maximum, and each toggle off and on, with everything else at its defaults.
-  - It builds a choice with each of its options. Under each option, it sweeps every setting that applies to that option the same way.
+  - It builds a choice with each of its options, a switch that other settings depend on both on and off, and a dimension they depend on at its minimum and its maximum, such as the mounting plate's gap. Under each, it sweeps every setting that applies the same way.
   - It verifies each build as `make verify` does. A `DesignError` at a limit counts as a failure too: it means the range is too wide.
   - It's about 90 builds, a couple of minutes.
 
@@ -144,4 +155,5 @@ The site is built for `/brepjs-gorillacart/`. The workflow passes the path Pages
 - **Tie-down slits.** The chamfer round the slit mouths isn't in the declared volume. At the largest pair of slits the gap is 0.39%, inside the block's 0.5% tolerance. Slits much larger than the current limits would need it modelled.
 - **Pole holder bore.** For some sizes OCCT can't chamfer the bore mouths. The part then cuts a 45° countersink at each end instead, which makes the same bevel.
 - **Not byte for byte.** An STL from the generator isn't byte-identical to one from `make export`. The CLI writes ASCII STL and the site writes binary. OCCT can also triangulate a few faces of the leaning parts differently in Node and in the browser. The solids are the same.
+- **The rim's outside edge.** The mounting plate's gap is measured from the rim's outside edge, 14 mm out from the cutout's centre line. That figure comes from product photos, not a measurement.
 - **Assemblies.** The `src/assemblies/` scenes and the README renders stay offline: they aren't parts.

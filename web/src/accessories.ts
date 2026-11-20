@@ -4,6 +4,7 @@
 
 import egoImage from '../../media/ego-battery-holder-assembled.png';
 import macheteImage from '../../media/machete-sleeve-assembled.png';
+import plateImage from '../../media/mounting-plate-assembled.png';
 import poleImage from '../../media/pole-holder-assembled.png';
 import kitImage from '../../media/side-extensions-assembled.png';
 import tieDownImage from '../../media/tie-down-block-assembled.png';
@@ -74,6 +75,14 @@ export const accessories: AccessoryInfo[] = [
     doc: 'ego-battery-holder',
     image: egoImage,
     parts: [{ id: 'ego-battery-holder', title: 'EGO battery holder', count: 'Print 1 per battery' }],
+  },
+  {
+    id: 'mounting-plate',
+    title: 'Mounting plate',
+    summary: 'A flat plate that hangs outside the rim, to bolt a sheet of ply or anything else to.',
+    doc: 'mounting-plate',
+    image: plateImage,
+    parts: [{ id: 'mounting-plate', title: 'Mounting plate', count: 'One per cutout: two or more to carry a sheet' }],
   },
 ];
 

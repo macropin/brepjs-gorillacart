@@ -9,7 +9,8 @@
 // parameter at its minimum and at its maximum and everything else at its
 // defaults; a toggle's range is off and on. A choice is built with each of its
 // options, and under each option every parameter that applies to it is swept
-// as above. Each build is a small wrapper module in out/sweep/ that the brep
+// as above. So is a toggle or dimension that other parameters depend on,
+// through `when`: built at each of its values, or its minimum and maximum. Each build is a small wrapper module in out/sweep/ that the brep
 // CLI verifies. A part whose `design` refuses a limit (a DesignError) fails the
 // sweep too: the range in its schema is too wide.
 
@@ -37,17 +38,30 @@ for (const part of parts) {
   const mod = await import(pathToFileURL(resolve(`src/${part}.brep.ts`)).href);
   const schema = Object.entries(mod.schema ?? {});
 
-  // Every combination of the choices' options: just {} for a part with none.
+  // Every combination of the choices' options, and of the values of toggles
+  // other parameters depend on: just {} for a part with none.
+  const dependedOn = new Set(schema.flatMap(([, s]) => Object.keys(s.when ?? {})));
+  const optionsOf = (spec) =>
+    spec.kind === 'choice' ? spec.options.map((o) => o.value) : [spec.min, spec.max];
+  const contextNames = schema
+    .filter(([name, s]) => s.kind === 'choice' || dependedOn.has(name))
+    .map(([name]) => name);
   let contexts = [{}];
-  for (const [name, spec] of schema.filter(([, s]) => s.kind === 'choice')) {
-    contexts = contexts.flatMap((context) => spec.options.map((o) => ({ ...context, [name]: o.value })));
+  for (const name of contextNames) {
+    const spec = mod.schema[name];
+    // Only where it applies itself: the gap to a plate that isn't there isn't a case.
+    contexts = contexts.flatMap((context) =>
+      applies(spec, { ...mod.defaults, ...context })
+        ? optionsOf(spec).map((v) => ({ ...context, [name]: v }))
+        : [context],
+    );
   }
 
   for (const context of contexts) {
     if (Object.keys(context).length) add(part, context);
     const values = { ...mod.defaults, ...context };
     for (const [name, spec] of schema) {
-      if (spec.kind === 'choice' || !applies(spec, values)) continue;
+      if (contextNames.includes(name) || !applies(spec, values)) continue;
       add(part, { ...context, [name]: spec.min });
       add(part, { ...context, [name]: spec.max });
     }

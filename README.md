@@ -69,6 +69,14 @@ Upright rails that an EGO 56V battery slides onto, as on a wall mount.
 </td>
 <td width="50%" valign="top">
 
+[![Two mounting plates hanging outside the cart's rim, in orange](media/mounting-plate-assembled.png)](docs/mounting-plate.md)
+
+### [Mounting plate](docs/mounting-plate.md)
+
+A flat plate that hangs outside the rim, to bolt a sheet of ply or anything else to. Leave the plate off for a bracket on the rim, with holes in its top.
+
+**Print:** one per cutout, two or more to carry a sheet
+
 </td>
 </tr>
 </table>
@@ -77,7 +85,9 @@ Upright rails that an EGO 56V battery slides onto, as on a wall mount.
 
 The accessories are designed for the 200L poly dump cart linked above. Its rim has eight cutouts, each 51.3 × 19.5 mm and 63.5 mm deep: three along each long side and two at the handle end. Every accessory stands on the same 51.0 × 19.2 mm key that drops into one.
 
-The side extension kit uses all eight cutouts. The other accessories take one cutout each, in any combination. With the kit fitted, the machete sleeve, EGO battery holder and tie-down block bolt to its posts instead, two deep if you like, with M5 bolts: see [Stacking accessories](docs/side-extension-kit.md#stacking-accessories).
+The side extension kit uses all eight cutouts. The other accessories take one cutout each, in any combination. With the kit fitted, the machete sleeve, EGO battery holder and tie-down block bolt to its posts instead, two deep if you like, with M5 bolts: see [Stacking accessories](docs/side-extension-kit.md#stacking-accessories). The pole tool holder and the mounting plate don't stack on the posts, though the mounting plate can carry a registration boss of its own, for an accessory to bolt to it instead.
+
+The mounting plate hangs outside the rim, 5 mm clear of its outside edge. That edge's position comes from Gorilla's product photos rather than a measurement, so check the plate clears your rim: see [Mounting plate](docs/mounting-plate.md#fitting).
 
 Full measurements: [Cart cutout dimensions](docs/cart.md).
 
@@ -92,6 +102,7 @@ Full measurements: [Cart cutout dimensions](docs/cart.md).
 | [Pole tool holder](docs/pole-holder.md) | 2 per pole | 31.6 × 51.0 × 133.3 | Print standing |
 | [Machete sleeve](docs/machete-sleeve.md) | 1 | 19.2 × 51.0 × 193.5 | Print standing, with a brim |
 | [EGO battery holder](docs/ego-battery-holder.md) | 1 per battery | 19.2 × 92 × 186.5 | Print standing, with a brim |
+| [Mounting plate](docs/mounting-plate.md) | 1 per cutout, 2 or more per sheet | 32.6 × 51.0 × 104 | Print lying on one end, no supports |
 | [Stack locator](docs/side-extension-kit.md#stack-locator) | 1 per accessory stacked on another | 52 × 18 × 6 | Print flat, no supports |
 
 Each accessory's page has its printing and fitting instructions.

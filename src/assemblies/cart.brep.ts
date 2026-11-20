@@ -48,8 +48,8 @@ export const tub = {
 
   /** The rim, measured from the lines through the cutouts: its inside and outside edges, and how far it hangs down. */
   rimInside: 17,
-  rimOutside: 14,
-  rimDrop: 25,
+  rimOutside: cart.rimOutside,
+  rimDrop: cart.rimLip,
 
   /** Far-end rim line and its corner radius. The cart has no cutouts there to place it by. */
   farLine: 966,

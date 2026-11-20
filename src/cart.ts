@@ -43,6 +43,15 @@ export const cart = {
    */
   landingLength: 20,
   rimDrop: 1.5,
+
+  /**
+   * The rim's outside edge, this far outside the line through the cutouts (4.4
+   * mm past a key's outer face), and how far the rim hangs down there below its
+   * top, as a lip. Below the lip the tub's wall tapers inward, well clear.
+   * Approximate: read from Gorilla's product photos, not measured.
+   */
+  rimOutside: 14,
+  rimLip: 25,
 } as const;
 
 /** Centre to centre between neighbouring cutouts along a side: 330.7. */

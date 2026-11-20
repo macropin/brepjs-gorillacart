@@ -461,12 +461,11 @@ function renderForm(): void {
   }
   const disabled = kernel.state === 'unavailable';
 
-  // A section per group, in the order the schema first names each, of the
-  // fields that apply to the part as it stands.
-  const values = { ...d.defaults, ...changed() };
+  // A section per group, in the order the schema first names each. Every field
+  // is drawn; those that don't apply to the part as it stands are hidden, and
+  // shown again as other values change, without redrawing what's in use.
   const groups = new Map<string, [string, ParamSpec][]>();
   for (const entry of Object.entries(d.schema)) {
-    if (!applies(entry[1], values)) continue;
     const group = entry[1].group ?? 'Dimensions';
     groups.set(group, [...(groups.get(group) ?? []), entry]);
   }
@@ -476,6 +475,21 @@ function renderForm(): void {
   else if (part.id === 'ego-battery-holder') sections.push(note('The rails match EGO’s own wall mounts, so their dimensions are fixed.'));
   for (const [legend, entries] of groups) sections.push(fieldset(legend, entries, d, disabled));
   ui.form.replaceChildren(...sections);
+  showApplicable();
+}
+
+/** Hides the fields that don't apply as the part stands, and any section left empty. */
+function showApplicable(): void {
+  const d = data();
+  if (!d) return;
+  const values = { ...d.defaults, ...changed() };
+  for (const row of ui.form.querySelectorAll<HTMLElement>('.field[data-param]')) {
+    const spec = d.schema[row.dataset.param!];
+    row.hidden = spec !== undefined && !applies(spec, values);
+  }
+  for (const set of ui.form.querySelectorAll<HTMLFieldSetElement>('fieldset')) {
+    set.hidden = set.querySelector('.field:not([hidden])') === null;
+  }
 }
 
 function note(text: string): HTMLElement {
@@ -495,9 +509,14 @@ function fieldset(legend: string, entries: [string, ParamSpec][], d: PartData, d
 }
 
 function field(name: string, spec: ParamSpec, fallback: number): HTMLElement {
-  if (spec.kind === 'toggle') return toggleField(name, spec, fallback);
-  if (spec.kind === 'choice') return choiceField(name, spec, fallback);
-  return dimensionField(name, spec, fallback);
+  const row =
+    spec.kind === 'toggle'
+      ? toggleField(name, spec, fallback)
+      : spec.kind === 'choice'
+        ? choiceField(name, spec, fallback)
+        : dimensionField(name, spec, fallback);
+  row.dataset.param = name;
+  return row;
 }
 
 /** A row of options, for a choice between forms of a feature. */
@@ -523,9 +542,6 @@ function choiceField(name: string, spec: ChoiceSpec, fallback: number): HTMLElem
       input.addEventListener('change', () => {
         if (!input.checked) return;
         setValue(name, option.value, fallback);
-        // Other fields may now apply, or stop applying: draw them again.
-        renderForm();
-        ui.form.querySelector<HTMLInputElement>(`input[name="param-${name}"][value="${option.value}"]`)?.focus();
       });
       return label;
     }),
@@ -550,6 +566,8 @@ function setValue(name: string, next: number, fallback: number): void {
   }
   changes.set(accessory.id, values);
   ui.reset.disabled = Object.keys(values).length === 0;
+  // Other fields may now apply, or stop applying.
+  showApplicable();
   refresh(true);
 }
 
@@ -599,10 +617,13 @@ function dimensionField(name: string, spec: DimensionSpec, fallback: number): HT
     <p class="field-error" hidden></p>`;
   const [range, number] = row.querySelectorAll('input') as unknown as [HTMLInputElement, HTMLInputElement];
   row.querySelector('label')!.textContent = spec.label;
+  // A count has no unit, and takes whole numbers only.
+  const unit = spec.unit ? ` ${spec.unit}` : '';
+  const whole = !spec.unit && spec.step === 1;
   row.querySelector('.unit')!.textContent = spec.unit;
-  row.querySelector('.field-reset span')!.textContent = `${format(fallback)} ${spec.unit}`;
+  row.querySelector('.field-reset span')!.textContent = `${format(fallback)}${unit}`;
   const help = row.querySelector<HTMLElement>('.help')!;
-  help.textContent = `${spec.help ?? ''} ${format(spec.min)}–${format(spec.max)} ${spec.unit}.`.trim();
+  help.textContent = `${spec.help ?? ''} ${format(spec.min)}–${format(spec.max)}${unit}.`.trim();
   const error = row.querySelector<HTMLElement>('.field-error')!;
   for (const input of [range, number]) {
     input.min = String(spec.min);
@@ -624,11 +645,16 @@ function dimensionField(name: string, spec: DimensionSpec, fallback: number): HT
   });
   number.addEventListener('input', () => {
     const next = Number(number.value);
-    const valid = number.value !== '' && Number.isFinite(next) && next >= spec.min && next <= spec.max;
+    const valid =
+      number.value !== '' &&
+      Number.isFinite(next) &&
+      next >= spec.min &&
+      next <= spec.max &&
+      (!whole || Number.isInteger(next));
     error.hidden = valid;
     if (valid) number.removeAttribute('aria-invalid');
     else number.setAttribute('aria-invalid', 'true');
-    error.textContent = `Between ${format(spec.min)} and ${format(spec.max)} ${spec.unit}.`;
+    error.textContent = `${whole ? 'A whole number b' : 'B'}etween ${format(spec.min)} and ${format(spec.max)}${unit}.`;
     if (!valid) return;
     range.value = number.value;
     set(next);

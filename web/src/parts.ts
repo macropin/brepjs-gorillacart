@@ -7,6 +7,7 @@ import * as cornerPanelLeft from '../../src/corner-panel-left.brep.js';
 import * as cornerPanelRight from '../../src/corner-panel-right.brep.js';
 import * as egoBatteryHolder from '../../src/ego-battery-holder.brep.js';
 import * as macheteSleeve from '../../src/machete-sleeve.brep.js';
+import * as mountingPlate from '../../src/mounting-plate.brep.js';
 import type { ParamSpec } from '../../src/params.js';
 import * as poleHolder from '../../src/pole-holder.brep.js';
 import * as sideExtension from '../../src/side-extension.brep.js';
@@ -56,4 +57,5 @@ export const parts: Record<string, PartModule> = {
   'pole-holder': widen(poleHolder),
   'machete-sleeve': widen(macheteSleeve),
   'ego-battery-holder': widen(egoBatteryHolder),
+  'mounting-plate': widen(mountingPlate),
 };

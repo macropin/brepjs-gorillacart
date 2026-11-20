@@ -188,7 +188,7 @@ const OVER = 1;
  * between its two 45° tangents and the centre, less the quarter circle inside
  * that kite.
  */
-const teardropArea = (r: number) => r ** 2 * (1 + (3 * Math.PI) / 4);
+export const teardropArea = (r: number) => r ** 2 * (1 + (3 * Math.PI) / 4);
 
 /** Section area of a regular hexagon `s` across flats. */
 const hexArea = (s: number) => (Math.sqrt(3) / 2) * s ** 2;
@@ -198,7 +198,7 @@ const hexArea = (s: number) => (Math.sqrt(3) / 2) * s ** 2;
  * `h` tall. Its section shrinks by 2 mm per mm in each direction, so its area
  * is quadratic in height and the prismoidal formula is exact.
  */
-const frustumVolume = (w: number, l: number, h: number) =>
+export const frustumVolume = (w: number, l: number, h: number) =>
   (h / 6) * (w * l + 4 * (w - h) * (l - h) + (w - 2 * h) * (l - 2 * h));
 
 // ---------------------------------------------------------------------------
@@ -252,7 +252,7 @@ function rectangle(w: number, l: number, x: number, z: number) {
  * A rectangular frustum with 45° flanks, `w` × `l` on the plane x = `x0` and
  * centred at height `z`, rising `h` along X toward `dir`.
  */
-function frustum(w: number, l: number, h: number, x0: number, z: number, dir: 1 | -1): ValidSolid {
+export function frustum(w: number, l: number, h: number, x0: number, z: number, dir: 1 | -1): ValidSolid {
   const base = rectangle(w, l, x0, z);
   const top = rectangle(w - 2 * h, l - 2 * h, x0 + dir * h, z);
   return single(base.loftWith(top, { ruled: true }));

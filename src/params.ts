@@ -27,15 +27,20 @@ interface CommonSpec {
   readonly group?: string;
   /**
    * Shown, and used, only while each named parameter has one of the listed
-   * values: a hole's diameter only while the part has holes.
+   * values, or lies in the given range: a hole's diameter only while the part
+   * has holes, holes over a gap only while the gap leaves room for a nut.
    */
-  readonly when?: Readonly<Record<string, readonly number[]>>;
+  readonly when?: Readonly<Record<string, Condition>>;
 }
+
+/** The values of another parameter under which one applies: a list, or a range. */
+export type Condition = readonly number[] | { readonly min?: number; readonly max?: number };
 
 /** A dimension, set on a slider within its range. */
 export interface DimensionSpec extends CommonSpec {
   readonly kind?: 'dimension';
-  readonly unit: 'mm' | '°';
+  /** None for a count, which also takes whole numbers only: a `step` of 1. */
+  readonly unit: 'mm' | '°' | '';
   readonly min: number;
   readonly max: number;
   readonly step: number;
@@ -59,9 +64,12 @@ export type ParamSpec = DimensionSpec | ToggleSpec | ChoiceSpec;
 
 /** Whether a parameter applies, given the values of the others. */
 export function applies(spec: ParamSpec, values: Readonly<Record<string, number>>): boolean {
-  return Object.entries(spec.when ?? {}).every(([name, allowed]) => {
+  return Object.entries(spec.when ?? {}).every(([name, condition]) => {
     const value = values[name];
-    return value !== undefined && allowed.includes(value);
+    if (value === undefined) return false;
+    if (Array.isArray(condition)) return condition.includes(value);
+    const { min = -Infinity, max = Infinity } = condition as { min?: number; max?: number };
+    return value >= min && value <= max;
   });
 }
 

@@ -49,6 +49,11 @@
   box-sizing: border-box;
 }
 
+/* Fields and sections that don't apply: hidden, over any display set below. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -125,7 +130,7 @@ h1 {
 
 .accessory-list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
 }
 
