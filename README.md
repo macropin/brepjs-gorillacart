@@ -85,7 +85,7 @@ A flat plate that hangs outside the rim, to bolt a sheet of ply or anything else
 
 The accessories are designed for the 200L poly dump cart linked above. Its rim has eight cutouts, each 51.3 × 19.5 mm and 63.5 mm deep: three along each long side and two at the handle end. Every accessory stands on the same 51.0 × 19.2 mm key that drops into one.
 
-The side extension kit uses all eight cutouts. The other accessories take one cutout each, in any combination. With the kit fitted, the machete sleeve, EGO battery holder and tie-down block bolt to its posts instead, two deep if you like, with M5 bolts: see [Stacking accessories](docs/side-extension-kit.md#stacking-accessories). The pole tool holder and the mounting plate don't stack on the posts, though the mounting plate can carry a registration boss of its own, for an accessory to bolt to it instead.
+The side extension kit uses all eight cutouts. The other accessories take one cutout each, in any combination. With the kit fitted, the machete sleeve, EGO battery holder and tie-down block bolt to its posts instead, two deep if you like, with M5 bolts: see [Stacking accessories](docs/side-extension-kit.md#stacking-accessories). So does the pole tool holder, printed with a taller stand so its clip clears the post's top. The mounting plate doesn't stack on the posts, though it can carry a registration boss of its own, for an accessory to bolt to it instead.
 
 The mounting plate hangs outside the rim, 5 mm clear of its outside edge. That edge's position comes from Gorilla's product photos rather than a measurement, so check the plate clears your rim: see [Mounting plate](docs/mounting-plate.md#fitting).
 

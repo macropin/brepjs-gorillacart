@@ -16,6 +16,11 @@
  *   into a cylinder along its edge, for the pole to roll in over; without it
  *   the lip is left flat. ./pole-holder-rigid.brep.ts builds it.
  *
+ * The key carries the stacking bolt holes and registration pockets
+ * (./stacking.ts), so the holder can bolt to a side extension post instead.
+ * The clip is wider than the key, so bolted to a post it overhangs the post's
+ * outside face, and the stand must lift it clear of the post's top.
+ *
  * Units and axes as in ./key.ts: Z up from the cutout floor at z = 0, centred
  * in X/Y, X across the rim, Y along it. The rim is at z = insertDepth.
  */
@@ -35,6 +40,7 @@ import {
 
 import { cart, plugFor } from './cart.js';
 import { compliantClip } from './compliant-clip.js';
+import { keyStackingSchema, stacking, stackingDefaults, stackingFeatures } from './stacking.js';
 import { key, keySectionArea } from './key.js';
 import { add, Outline, scale, sub, unit, type Point } from './outline.js';
 import { atLeast, DesignError, fitToleranceSpec, on, type Numeric, type Schema } from './params.js';
@@ -54,7 +60,12 @@ export const defaults = {
   /** Length of bar sunk into the cutout. */
   insertDepth: cart.cutoutDepth,
 
-  /** Bar above the rim, under the clip. */
+  /**
+   * Bar above the rim, under the clip. Bolted to a side extension post, the
+   * key starts `bolt.standOff` (5 mm) up the post, so the clip clears the
+   * post's top once this is at least the extension less 68.5 mm: 81.5 for the
+   * default 150 mm post.
+   */
   standHeight: 50,
 
   /** Outside diameter of the tool pole. The bore adds the fit tolerance. */
@@ -120,6 +131,10 @@ export const defaults = {
 
   /** Printed-fit slop, taken off the cutout's width and length and added to the bore. */
   fitTolerance: cart.fitTolerance,
+
+  /** The stacking features (./stacking.ts): 1 to include each, 0 to leave it off. */
+  boltHoles: stackingDefaults.boltHoles,
+  registration: stackingDefaults.registration,
 } as const;
 
 export type Params = Numeric<typeof defaults>;
@@ -201,8 +216,9 @@ export const schema: Schema<Params> = {
     min: 10,
     max: 150,
     step: 1,
-    help: 'Bar between the rim and the clip.',
+    help: "Bar between the rim and the clip. To bolt it to a side extension post, at least the post's extension less 68.5 mm, so the clip clears the post's top.",
   },
+  ...keyStackingSchema,
   fitTolerance: fitToleranceSpec,
 };
 
@@ -232,7 +248,22 @@ interface Built {
   lipWidth?: number;
 }
 
+/**
+ * The holder: its clip in the form `clip` picks, on a key with the stacking
+ * features cut into it. They sit low in the key, well clear of the clip.
+ */
 export function design(params: Params = defaults): Built {
+  const built = clipDesign(params);
+  const { keyStackingCuts, keyStackingDelta } = stacking(params.fitTolerance, stackingFeatures(params));
+  return {
+    ...built,
+    model: () => keyStackingCuts(built.model()),
+    expected: { ...built.expected, volume: built.expected.volume + keyStackingDelta },
+  };
+}
+
+/** The bar and its clip, before the stacking features. */
+function clipDesign(params: Params): Built {
   const plug = plugFor(params.fitTolerance);
 
   const rim = params.insertDepth; // 63.5

@@ -34,6 +34,7 @@ The defaults are the parts as printed from this repo.
 | | Rolled leading edge (rigid only) | On or off | On |
 | | Roll bulge (with the rolled edge) | 0–2 mm | 1 mm |
 | | Height above the rim | 10–150 mm | 50 mm |
+| | Bolt holes, registration pockets | On or off | On |
 | Machete sleeve | Blade thickness | 1.5–8 mm | 3 mm |
 | | Slot length | 40–200 mm | 110 mm |
 | | Bolt holes, registration pockets | On or off | On |
@@ -53,6 +54,7 @@ The defaults are the parts as printed from this repo.
 - **The kit** shares its settings across its parts. The posts, side panels and corner panels are all built from the same extension, lean and groove width, so they always fit each other. The stack locator has nothing to change: the pockets in the keys take the fit.
 - **Fit tolerance** belongs to the printer, not the part, so changing it on one accessory changes it on the others too.
 - **The pole tool holder's compliant clip** grows with the pole and its bands. The snap sets how far round the bore the heads sit, so the opening is that much narrower than the pole. See [Compliant clip](pole-holder.md#compliant-clip).
+- **The pole tool holder bolted to a post** needs its height above the rim raised to at least the post's extension less 68.5 mm, so the clip clears the post's top. The page can't check this: the holder doesn't know the kit's settings. See [Bolting it to a post](pole-holder.md#bolting-it-to-a-post).
 - **The pole tool holder's rolled edge**, on the rigid clip, starts where the bore ends, at the snap lip height, and is the wall plus the bulge across. See [Rolled leading edge](pole-holder.md#rolled-leading-edge).
 - **The machete sleeve's bar** grows with its slot, keeping 8.35 mm of solid above and below it.
 - **The mounting plate without its plate** is a bracket on the rim: the bridge reaching out past it, with only the holes in its top.

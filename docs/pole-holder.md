@@ -15,11 +15,13 @@ The clip comes in two forms:
 
 Two holders per pole, both with the same clip. Source: [src/pole-holder.brep.ts](../src/pole-holder.brep.ts), with the compliant clip's shape in [src/compliant-clip.ts](../src/compliant-clip.ts). `make export` writes the compliant holder to `out/pole-holder/` and the rigid one to `out/pole-holder-rigid/` ([src/pole-holder-rigid.brep.ts](../src/pole-holder-rigid.brep.ts)).
 
+The key has the same two bolt holes and registration pockets as the other accessories, so with the side extension kit fitted the holder can [bolt to a post](#bolting-it-to-a-post) instead. Fitted in a cutout as usual, both are hidden in the cutout. Set `boltHoles` or `registration` to 0 to leave either off.
+
 For a different pole, change `poleDiameter`. For a taller or shorter stand, change `standHeight`: the clip always sits on the bar's top face. For the rigid clip, set `clip` to 0, and for its flat lip, `rolledEdge` to 0 as well. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#pole-holder) changes all of these in your browser, along with the compliant clip's snap and spring bands and the size of the [rigid clip](https://macropin.github.io/brepjs-gorillacart/#pole-holder?clip=0)'s rolls.
 
 ## Printing
 
-**Compliant clip:** print it lying on one end face, with the clip's profile flat on the bed. Every face then rises straight up from the bed, so nothing needs support. More importantly, the spring bands bend along the layers rather than across them. Standing, the layer lines would cross the bands where they run upright, and the bands could split along a layer. Print it in PETG, which takes the bending far better than PLA.
+**Compliant clip:** print it lying on one end face, with the clip's profile flat on the bed. Every face then rises straight up from the bed, so nothing needs support. More importantly, the spring bands bend along the layers rather than across them. Standing, the layer lines would cross the bands where they run upright, and the bands could split along a layer. Print it in PETG, which takes the bending far better than PLA. Lying down, the bolt holes and counterbores run level, with their teardrop points to one side, and the registration pockets' 45° sides face up and down. At these sizes they print without support either way.
 
 **Rigid clip:** print it standing, as it sits in the cart, on the bottom of the key. The clip's side lines flare out at about 27° from vertical, and the bore prints as an open-topped channel, so neither needs support. Where the clip's square bottom corners sit over the bar's chamfered corners they overhang by a 1 × 1 mm triangle, which prints as a small ledge. The underside of each roll overhangs outward where it stands proud of the clip's outside. At the default 1 mm bulge it's at most about 34° from vertical, over a band 0.35 mm wide, and it stays within 45° up to a 1.5 mm bulge, so it prints without support. At a 2 mm bulge it reaches about 52°, still under a millimetre wide.
 
@@ -27,7 +29,18 @@ For a different pole, change `poleDiameter`. For a taller or shorter stand, chan
 
 Fit two holders in neighbouring cutouts on the same side, 330.7 mm apart, with their clips in line along the rim. Press the pole down into both clips until it snaps in.
 
-Unlike the other accessories, it can't be [stacked on the side extension kit](side-extension-kit.md#stacking-accessories). The clip is wider than the key, so bolted flat to a post it would hit the post. It has no bolt holes.
+### Bolting it to a post
+
+With the side extension kit fitted, bolt the key to the outside of a post through the two holes in it, as for the other [stacking accessories](side-extension-kit.md#stacking-accessories): two M5 × 30 cap screws into the post's nuts, the key's inside pocket over the post's boss. Fit two holders on neighbouring posts on the same side, so the pole runs along the top of the raised walls.
+
+The clip is wider than the key, so bolted flat to a post it overhangs the post's outside face. It has to sit above the post's top to clear it. A bolted-on key starts 5 mm up the post, so the clip clears the top once `standHeight` is at least the post's extension less 68.5 mm:
+
+| Extension | Least stand height | Suggested |
+|---|---|---|
+| 150 mm, the kit's default | 81.5 mm | 85 mm, 3.5 mm clear of the post's top |
+| Any | Extension − 68.5 mm | A few mm more |
+
+The default 50 mm stand is for a cutout, so for a post, print a pair with the stand raised. Both clips overhang the key on both faces, so bolt the holder on outermost, with nothing outside it. To bolt it outside another accessory instead, its clip has to clear that accessory's top in the same way.
 
 ## Compliant clip
 
@@ -41,6 +54,8 @@ Pushing the pole down between the heads presses them apart. The bands bend along
 |---|---|
 | Insert | 19.2 × 51.0 mm key, bottom 63.5 mm into the cutout |
 | Bar | Same section, 50 mm above the rim |
+| Bolt holes | Two Ø5.5 mm through the key across the rim, on its centreline, 15 and 45 mm above its bottom. A Ø9.5 × 5.5 mm counterbore on one face for the cap heads. Teardrops, pointing up |
+| Registration pockets | One in each broad face of the key, around the bolt holes: 18.3 × 52.3 mm at the face, 3.3 mm deep with 45° sides, centred 30 mm above the bottom of the key. The inside one drops over a post's boss, or either takes a [stack locator](side-extension-kit.md#stack-locator) |
 | Clip profile | Rings round the pole's centre, extruded 51 mm along Y. Below them, the convex hull of the bar's top edge and the outer ring |
 | Pole centre | 28.8 mm above the bar top (z = 142.3): the outer ring sits on the bar |
 | Bore | 25.6 mm (25.3 + 0.3), the hooks' inner face |
@@ -70,7 +85,7 @@ The roll starts at the mouth, where the bore ends, at the snap lip height. It's 
 
 | | |
 |---|---|
-| Insert and bar | As the compliant clip: 19.2 × 51.0 mm key, 50 mm above the rim |
+| Insert and bar | As the compliant clip: 19.2 × 51.0 mm key, 50 mm above the rim, with the same bolt holes and registration pockets |
 | Clip profile | Convex hull of the bar's top edge and a 31.6 mm circle round the bore, ending at each lip in a roll; extruded 51 mm along Y |
 | Side lines | From the bar's top corners (±9.6) to tangent points at (±14.02, 8.52) above the bar |
 | Bore | 25.6 mm (25.3 + 0.3) along Y, centre 15.8 mm above the bar top (z = 129.3) |
