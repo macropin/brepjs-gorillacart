@@ -38,7 +38,7 @@ A strap point for holding down an oversize load such as branches.
 
 ### [Pole tool holder](docs/pole-holder.md)
 
-A snap clip that carries a 25 mm tool pole along the rim.
+A snap clip that carries a 25 mm tool pole along the rim. Its hooks hang on spring bands for a deep snap in PETG, or there's a compact rigid clip with rolled lips.
 
 **Print:** two per pole
 
@@ -99,7 +99,8 @@ Full measurements: [Cart cutout dimensions](docs/cart.md).
 | [Side panel](docs/side-extension-kit.md#side-panels) | 5 | 295.4 × 151.5 × 7.7 | **Needs a bed at least 296 mm long.** Print flat, lips up. Print the handle-end panel in PETG |
 | [Corner panel](docs/side-extension-kit.md#corner-panels) | 1 left, 1 right | 142.3 × 164.6 × 150.7 | Print upside down on the top edge, with a brim |
 | [Tie-down block](docs/tie-down-block.md) | 1 per cutout | 19.2 × 72 × 103.5 | Print lying on a broad face, no supports |
-| [Pole tool holder](docs/pole-holder.md) | 2 per pole | 31.6 × 51.0 × 133.3 | Print standing |
+| [Pole tool holder](docs/pole-holder.md) | 2 per pole | 57.6 × 51.0 × 160.5 | Print in PETG, lying on one end face, no supports |
+| [Pole tool holder, rigid clip](docs/pole-holder.md#rigid-clip) | 2 per pole, in place of the compliant ones | 32.1 × 51.0 × 135.9 | Print standing |
 | [Machete sleeve](docs/machete-sleeve.md) | 1 | 19.2 × 51.0 × 193.5 | Print standing, with a brim |
 | [EGO battery holder](docs/ego-battery-holder.md) | 1 per battery | 19.2 × 92 × 186.5 | Print standing, with a brim |
 | [Mounting plate](docs/mounting-plate.md) | 1 per cutout, 2 or more per sheet | 32.6 × 51.0 × 104 | Print lying on one end, no supports |

@@ -39,12 +39,13 @@ Every part that fits into a cutout or a groove takes `fitTolerance`, the slop be
 | Corner panels | [src/corner-panel-left.brep.ts](../src/corner-panel-left.brep.ts), [src/corner-panel-right.brep.ts](../src/corner-panel-right.brep.ts) | [Side extension kit](side-extension-kit.md#corner-panels) |
 | Tie-down block | [src/tie-down-block.brep.ts](../src/tie-down-block.brep.ts) | [Tie-down block](tie-down-block.md) |
 | Pole tool holder | [src/pole-holder.brep.ts](../src/pole-holder.brep.ts) | [Pole tool holder](pole-holder.md) |
+| Pole tool holder, rigid clip | [src/pole-holder-rigid.brep.ts](../src/pole-holder-rigid.brep.ts) | [Pole tool holder](pole-holder.md#rigid-clip) |
 | Machete sleeve | [src/machete-sleeve.brep.ts](../src/machete-sleeve.brep.ts) | [Machete sleeve](machete-sleeve.md) |
 | EGO battery holder | [src/ego-battery-holder.brep.ts](../src/ego-battery-holder.brep.ts) | [EGO battery holder](ego-battery-holder.md) |
 | Mounting plate | [src/mounting-plate.brep.ts](../src/mounting-plate.brep.ts) | [Mounting plate](mounting-plate.md) |
 | Stack locator | [src/stack-locator.brep.ts](../src/stack-locator.brep.ts) | [Side extension kit](side-extension-kit.md#stack-locator) |
 
-Shared code lives alongside: [src/cart.ts](../src/cart.ts) for the [cutout measurements](cart.md), [src/key.ts](../src/key.ts) for the bar, [src/stacking.ts](../src/stacking.ts) for the bolt holes and registration that [stack accessories](side-extension-kit.md#stacking-accessories) on the posts, [src/corner-panel.ts](../src/corner-panel.ts) for the corner panel shape both corner parts share, and [src/solid.ts](../src/solid.ts) for boolean result handling.
+Shared code lives alongside: [src/cart.ts](../src/cart.ts) for the [cutout measurements](cart.md), [src/key.ts](../src/key.ts) for the bar, [src/stacking.ts](../src/stacking.ts) for the bolt holes and registration that [stack accessories](side-extension-kit.md#stacking-accessories) on the posts, [src/corner-panel.ts](../src/corner-panel.ts) for the corner panel shape both corner parts share, [src/compliant-clip.ts](../src/compliant-clip.ts) for the pole tool holder's compliant clip, [src/outline.ts](../src/outline.ts) for profiles drawn whole as exact lines and arcs (that clip, and the rigid clip's rolled lips), and [src/solid.ts](../src/solid.ts) for boolean result handling.
 
 ## Assembly renders
 

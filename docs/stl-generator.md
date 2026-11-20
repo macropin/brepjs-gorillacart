@@ -26,8 +26,13 @@ The defaults are the parts as printed from this repo.
 | | Slit height (slits only) | 3–8 mm | 6 mm |
 | | Bolt holes, registration pockets | On or off | On |
 | Pole tool holder | Pole diameter | 16–40 mm | 25.3 mm |
-| | Snap lip height | 1–7 mm | 4 mm |
-| | Clip wall | 2–6 mm | 3 mm |
+| | Clip | Compliant or rigid | Compliant |
+| | Snap (compliant only) | 2–6 mm | 5 mm |
+| | Spring band thickness (compliant only) | 1.5–3 mm | 2 mm |
+| | Snap lip height (rigid only) | 1–7 mm | 4 mm |
+| | Clip wall (rigid only) | 2–6 mm | 3 mm |
+| | Rolled leading edge (rigid only) | On or off | On |
+| | Roll bulge (with the rolled edge) | 0–2 mm | 1 mm |
 | | Height above the rim | 10–150 mm | 50 mm |
 | Machete sleeve | Blade thickness | 1.5–8 mm | 3 mm |
 | | Slot length | 40–200 mm | 110 mm |
@@ -47,6 +52,8 @@ The defaults are the parts as printed from this repo.
 
 - **The kit** shares its settings across its parts. The posts, side panels and corner panels are all built from the same extension, lean and groove width, so they always fit each other. The stack locator has nothing to change: the pockets in the keys take the fit.
 - **Fit tolerance** belongs to the printer, not the part, so changing it on one accessory changes it on the others too.
+- **The pole tool holder's compliant clip** grows with the pole and its bands. The snap sets how far round the bore the heads sit, so the opening is that much narrower than the pole. See [Compliant clip](pole-holder.md#compliant-clip).
+- **The pole tool holder's rolled edge**, on the rigid clip, starts where the bore ends, at the snap lip height, and is the wall plus the bulge across. See [Rolled leading edge](pole-holder.md#rolled-leading-edge).
 - **The machete sleeve's bar** grows with its slot, keeping 8.35 mm of solid above and below it.
 - **The mounting plate without its plate** is a bracket on the rim: the bridge reaching out past it, with only the holes in its top.
 - **The EGO battery holder's rails** match EGO's own wall mounts, so they don't change.
@@ -131,7 +138,7 @@ The page itself uses no UI framework or CSS library: plain TypeScript and CSS, w
   - It builds each part with each dimension at its minimum and at its maximum, and each toggle off and on, with everything else at its defaults.
   - It builds a choice with each of its options, a switch that other settings depend on both on and off, and a dimension they depend on at its minimum and its maximum, such as the mounting plate's gap. Under each, it sweeps every setting that applies the same way.
   - It verifies each build as `make verify` does. A `DesignError` at a limit counts as a failure too: it means the range is too wide.
-  - It's about 90 builds, a couple of minutes.
+  - It's about 150 builds, a few minutes.
 
 The sweep doesn't try combinations of several settings at their limits. The `DesignError` checks in each `design` cover the walls those could thin. A combination the kernel itself can't build shows an error asking to nudge a value.
 
@@ -153,7 +160,7 @@ The site is built for `/brepjs-gorillacart/`. The workflow passes the path Pages
 
 - **First load.** Check whether Pages serves `occt-wasm.wasm` compressed (`Content-Encoding` in the response). If it doesn't, a first visit downloads 21 MB instead of 6.9 MB. Later visits load it from Cache Storage.
 - **Tie-down slits.** The chamfer round the slit mouths isn't in the declared volume. At the largest pair of slits the gap is 0.39%, inside the block's 0.5% tolerance. Slits much larger than the current limits would need it modelled.
-- **Pole holder bore.** For some sizes OCCT can't chamfer the bore mouths. The part then cuts a 45° countersink at each end instead, which makes the same bevel.
+- **Pole holder bore.** On the rigid clip with a flat lip, OCCT can't chamfer the bore mouths for some sizes. The part then cuts a 45° countersink at each end instead, which makes the same bevel.
 - **Not byte for byte.** An STL from the generator isn't byte-identical to one from `make export`. The CLI writes ASCII STL and the site writes binary. OCCT can also triangulate a few faces of the leaning parts differently in Node and in the browser. The solids are the same.
 - **The rim's outside edge.** The mounting plate's gap is measured from the rim's outside edge, 14 mm out from the cutout's centre line. That figure comes from product photos, not a measurement.
 - **Assemblies.** The `src/assemblies/` scenes and the README renders stay offline: they aren't parts.
