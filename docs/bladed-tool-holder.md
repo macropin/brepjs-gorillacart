@@ -12,7 +12,7 @@ As printed, it's sized for the [Tramontina 15" Bolo Machete (Wood Handle, model 
 
 One holder. Source: [src/bladed-tool-holder.brep.ts](../src/bladed-tool-holder.brep.ts).
 
-For a different blade, change `bladeThickness`: the slot adds the fit tolerance. For a wider blade, change `slotSpan`: the bar grows with it, keeping `endWall` of solid above and below the slot. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#bladed-tool-holder) changes both in your browser.
+For a different blade, change `bladeThickness`: the slot adds the fit tolerance. For a wider blade, change `slotSpan`: the bar grows with it, keeping `endWall` of solid above and below the slot. The [STL generator](https://macropin.github.io/gorillacart/#bladed-tool-holder) changes both in your browser.
 
 ## Printing
 

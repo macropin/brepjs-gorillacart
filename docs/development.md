@@ -59,10 +59,10 @@ Scenes listed in `CLOSEUPS` in the [Makefile](../Makefile) are framed on the acc
 
 ## STL generator
 
-[web/](../web) is the STL generator, published at <https://macropin.github.io/brepjs-gorillacart/>. It builds the parts in the browser from the `src/` modules above. [STL generator](stl-generator.md) describes what each accessory lets you change, how it works, adding a setting, and publishing.
+[web/](../web) is the STL generator, published at <https://macropin.github.io/gorillacart/>. It builds the parts in the browser from the `src/` modules above. [STL generator](stl-generator.md) describes what each accessory lets you change, how it works, adding a setting, and publishing.
 
 ```bash
-make web        # http://localhost:5173/brepjs-gorillacart/, rebuilding on save
+make web        # http://localhost:5173/gorillacart/, rebuilding on save
 make web-build  # type-check, then build web/dist as GitHub Pages serves it
 make sweep      # build every part at the limits of what the generator lets you change
 ```

@@ -125,7 +125,7 @@ assemblies: node_modules
 sweep: node_modules
 	node scripts/sweep-params.mjs $(PART)
 
-## web: run the web generator locally at http://localhost:5173/brepjs-gorillacart/
+## web: run the web generator locally at http://localhost:5173/gorillacart/
 web: node_modules
 	npx vite web
 

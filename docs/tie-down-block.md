@@ -4,7 +4,7 @@
 
 ![Two tie-down blocks, in orange, fitted to neighbouring cutouts on one side of the cart's rim](../media/tie-down-block-assembled.png)
 
-A strap point for holding down an oversize load such as branches. The key drops into a cutout. The head on top rests on the rim either side of the cutout and has two holes through it, across the rim, for a rope or hook. For flat strap webbing, the [STL generator](https://macropin.github.io/brepjs-gorillacart/#tie-down-block?openings=2) can give it one or two horizontal slits instead.
+A strap point for holding down an oversize load such as branches. The key drops into a cutout. The head on top rests on the rim either side of the cutout and has two holes through it, across the rim, for a rope or hook. For flat strap webbing, the [STL generator](https://macropin.github.io/gorillacart/#tie-down-block?openings=2) can give it one or two horizontal slits instead.
 
 ## What to print
 

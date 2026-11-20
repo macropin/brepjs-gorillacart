@@ -1,6 +1,6 @@
 # Verifies every part, checks the web generator's parameter limits, then builds
 # the generator and publishes it to GitHub Pages:
-# https://macropin.github.io/brepjs-gorillacart/
+# https://macropin.github.io/gorillacart/
 #
 # One-time setup: Settings → Pages → Build and deployment → Source: GitHub Actions.
 
@@ -50,7 +50,7 @@ jobs:
       - name: Build the generator
         run: make web-build
         env:
-          # "/brepjs-gorillacart/" here, or "/" behind a custom domain.
+          # "/gorillacart/" here, or "/" behind a custom domain.
           BASE_PATH: ${{ steps.pages.outputs.base_path }}/
 
       - uses: actions/upload-pages-artifact@v5

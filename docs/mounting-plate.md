@@ -10,7 +10,7 @@ A flat plate that hangs outside the cart, to bolt or screw a sheet of ply, or an
 
 One plate per cutout. To carry a sheet, fit two or more in neighbouring cutouts along a side, 330.7 mm apart centre to centre. Source: [src/mounting-plate.brep.ts](../src/mounting-plate.brep.ts).
 
-The [STL generator](https://macropin.github.io/brepjs-gorillacart/#mounting-plate) changes:
+The [STL generator](https://macropin.github.io/gorillacart/#mounting-plate) changes:
 
 - whether it has the plate at all
 - the plate's drop, thickness and gap to the rim

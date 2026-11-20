@@ -9,7 +9,7 @@ import kitImage from '../../media/side-extensions-assembled.png';
 import tieDownImage from '../../media/tie-down-block-assembled.png';
 import batteryImage from '../../media/tool-battery-holder-assembled.png';
 
-export const REPO = 'https://github.com/macropin/brepjs-gorillacart';
+export const REPO = 'https://github.com/macropin/gorillacart';
 
 export interface PartInfo {
   /** The part's module, src/<id>.brep.ts, and its file names. */

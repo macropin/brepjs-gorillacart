@@ -10,7 +10,7 @@ The rails are the battery's interface, so they depend on which battery it carrie
 
 ## What to print
 
-One holder per battery. Source: [src/tool-battery-holder.brep.ts](../src/tool-battery-holder.brep.ts). Pick the battery with `batteryType`, or **Battery** in the [STL generator](https://macropin.github.io/brepjs-gorillacart/#tool-battery-holder).
+One holder per battery. Source: [src/tool-battery-holder.brep.ts](../src/tool-battery-holder.brep.ts). Pick the battery with `batteryType`, or **Battery** in the [STL generator](https://macropin.github.io/gorillacart/#tool-battery-holder).
 
 If the battery is tight or loose on the rails, change `flangeWidth` and `flangeThickness` in its entry in `RAILS`, which set how far the rails reach into the battery's channel. To stand the rails taller or shorter, change `railLength` there.
 

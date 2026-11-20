@@ -17,7 +17,7 @@ Two holders per pole, both with the same clip. Source: [src/pole-holder.brep.ts]
 
 The key has the same two bolt holes and registration pockets as the other accessories, so with the side extension kit fitted the holder can [bolt to a post](#bolting-it-to-a-post) instead. Fitted in a cutout as usual, both are hidden in the cutout. Set `boltHoles` or `registration` to 0 to leave either off.
 
-For a different pole, change `poleDiameter`. For a taller or shorter stand, change `standHeight`: the clip always sits on the bar's top face. For the rigid clip, set `clip` to 0, and for its flat lip, `rolledEdge` to 0 as well. The [STL generator](https://macropin.github.io/brepjs-gorillacart/#pole-holder) changes all of these in your browser, along with the compliant clip's snap and spring bands and the size of the [rigid clip](https://macropin.github.io/brepjs-gorillacart/#pole-holder?clip=0)'s rolls.
+For a different pole, change `poleDiameter`. For a taller or shorter stand, change `standHeight`: the clip always sits on the bar's top face. For the rigid clip, set `clip` to 0, and for its flat lip, `rolledEdge` to 0 as well. The [STL generator](https://macropin.github.io/gorillacart/#pole-holder) changes all of these in your browser, along with the compliant clip's snap and spring bands and the size of the [rigid clip](https://macropin.github.io/gorillacart/#pole-holder?clip=0)'s rolls.
 
 ## Printing
 

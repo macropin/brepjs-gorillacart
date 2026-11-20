@@ -2,10 +2,10 @@
 
 [← Development](development.md)
 
-The [STL generator](https://macropin.github.io/brepjs-gorillacart/) is a static site, in [web/](../web). You pick an accessory, change its dimensions, preview it in 3D and download an STL or STEP file. It builds each part in your browser from the same `src/` modules, on the same kernel, as `make export`. There's no server, and nothing is uploaded.
+The [STL generator](https://macropin.github.io/gorillacart/) is a static site, in [web/](../web). You pick an accessory, change its dimensions, preview it in 3D and download an STL or STEP file. It builds each part in your browser from the same `src/` modules, on the same kernel, as `make export`. There's no server, and nothing is uploaded.
 
 ```bash
-make web        # http://localhost:5173/brepjs-gorillacart/, rebuilding on save
+make web        # http://localhost:5173/gorillacart/, rebuilding on save
 make web-build  # type-check, then build web/dist as GitHub Pages serves it
 make sweep      # build every part at the limits of what the generator lets you change
 ```
@@ -157,7 +157,7 @@ If a limit fails, narrow the range. If it only fails in combination with another
 
 [.github/workflows/pages.yml](../.github/workflows/pages.yml) runs `make verify`, `make sweep` and `make web-build` on every push to `main`, then deploys `web/dist` to GitHub Pages. It needs setting up once, in the repository's Settings → Pages → Build and deployment: set Source to **GitHub Actions**.
 
-The site is built for `/brepjs-gorillacart/`. The workflow passes the path Pages reports in `BASE_PATH`, so a custom domain or a fork under another name works too.
+The site is built for `/gorillacart/`. The workflow passes the path Pages reports in `BASE_PATH`, so a custom domain or a fork under another name works too.
 
 ## Known issues
 

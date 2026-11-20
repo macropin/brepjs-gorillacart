@@ -15,7 +15,7 @@ const kernel = require.resolve('occt-wasm/dist/occt-wasm.wasm');
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
-  base: process.env.BASE_PATH ?? '/brepjs-gorillacart/',
+  base: process.env.BASE_PATH ?? '/gorillacart/',
   define: {
     // The kernel's size, so its download can show progress whatever encoding it
     // is served with.
